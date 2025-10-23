@@ -20,6 +20,14 @@ interface Particle {
   standalone: true,
   imports: [ReactiveFormsModule, NgIf, NgFor],
   encapsulation: ViewEncapsulation.None,
+  styles: [`
+    :host {
+      display: block !important;
+      width: 100% !important;
+      height: 100vh !important;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+    }
+  `]
 })
 export class SigninPage implements OnInit, OnDestroy {
   form: FormGroup;

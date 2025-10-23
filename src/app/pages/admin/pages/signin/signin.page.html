@@ -1,150 +1,72 @@
-<!-- Modern Admin Login Page -->
-<div class="signin-container">
-  <!-- Background Elements -->
-  <div class="background-elements">
-    <div class="geometric-shape shape-1 animate-float"></div>
-    <div class="geometric-shape shape-2 animate-float" style="animation-delay: 1s;"></div>
-    <div class="geometric-shape shape-3 animate-float" style="animation-delay: 2s;"></div>
-    
-    <!-- Animated Background Text -->
-    <div class="background-text">
-      <span class="text-word" style="animation-delay: 0s;">S</span>
-      <span class="text-word" style="animation-delay: 0.2s;">C</span>
-      <span class="text-word" style="animation-delay: 0.4s;">A</span>
-      <span class="text-word" style="animation-delay: 0.6s;">M</span>
-      <span class="text-word" style="animation-delay: 0.8s;">&nbsp;</span>
-      <span class="text-word" style="animation-delay: 1s;">f</span>
-      <span class="text-word" style="animation-delay: 1.2s;">o</span>
-      <span class="text-word" style="animation-delay: 1.4s;">r</span>
-      <span class="text-word" style="animation-delay: 1.6s;">&nbsp;</span>
-      <span class="text-word" style="animation-delay: 1.8s;">y</span>
-      <span class="text-word" style="animation-delay: 2s;">o</span>
-      <span class="text-word" style="animation-delay: 2.2s;">u</span>
-      <span class="text-word" style="animation-delay: 2.4s;">r</span>
-      <span class="text-word" style="animation-delay: 2.6s;">&nbsp;</span>
-      <span class="text-word" style="animation-delay: 2.8s;">d</span>
-      <span class="text-word" style="animation-delay: 3s;">r</span>
-      <span class="text-word" style="animation-delay: 3.2s;">e</span>
-      <span class="text-word" style="animation-delay: 3.4s;">a</span>
-      <span class="text-word" style="animation-delay: 3.6s;">m</span>
+<div class="login-container">
+  <div class="login-card">
+    <div class="login-header">
+      <h1 class="login-title">Login</h1>
     </div>
-  </div>
 
-  <!-- Main Login Form -->
-  <div class="login-wrapper">
-    <div class="login-card card animate-scale-in">
-      <!-- Header -->
-      <div class="login-header">
-        <div class="logo-icon animate-glow">
-          <i class="fas fa-shield-alt"></i>
-        </div>
-        <h1 class="login-title animate-slide-in-top">
-          <span class="title-main">Admin Panel</span>
-          <span class="title-sub">Система управления</span>
-        </h1>
-        <p class="login-subtitle animate-fade-in">Войдите в систему управления</p>
-      </div>
-
-      <!-- Login Form -->
-      <form
-        [formGroup]="form"
-        (ngSubmit)="signin()"
-        class="login-form animate-slide-in-bottom"
-        autocomplete="off"
-      >
-        <!-- Email Field -->
-        <div class="form-group">
-          <label class="form-label">
-            <i class="fas fa-envelope me-2"></i>
-            Email
-          </label>
+    <form [formGroup]="form" (ngSubmit)="signin()" class="login-form">
+      <div class="form-group">
+        <label class="form-label">Username</label>
+        <div class="input-with-icon">
+          <i class="fas fa-user input-icon"></i>
           <input
             formControlName="email"
-            class="form-control"
-            placeholder="Введите ваш email"
+            class="form-input"
+            placeholder="Type your username"
             type="email"
             autocomplete="username"
           />
-          <div
-            *ngIf="form.get('email')?.invalid && form.get('email')?.touched"
-            class="error-message animate-slide-in-right"
-          >
-            <i class="fas fa-exclamation-circle me-1"></i>
-            Введите корректный email
-          </div>
         </div>
-
-        <!-- Password Field -->
-        <div class="form-group">
-          <label class="form-label">
-            <i class="fas fa-lock me-2"></i>
-            Пароль
-          </label>
-          <div class="password-input-wrapper">
-            <input
-              formControlName="password"
-              class="form-control"
-              placeholder="Введите ваш пароль"
-              type="password"
-              autocomplete="current-password"
-              [type]="showPassword ? 'text' : 'password'"
-            />
-            <button
-              type="button"
-              class="password-toggle"
-              (click)="togglePassword()"
-              [attr.aria-label]="showPassword ? 'Скрыть пароль' : 'Показать пароль'"
-            >
-              <i class="fas" [class.fa-eye]="!showPassword" [class.fa-eye-slash]="showPassword"></i>
-            </button>
-          </div>
-          <div
-            *ngIf="form.get('password')?.invalid && form.get('password')?.touched"
-            class="error-message animate-slide-in-right"
-          >
-            <i class="fas fa-exclamation-circle me-1"></i>
-            Введите пароль
-          </div>
+        <div *ngIf="form.get('email')?.invalid && form.get('email')?.touched" class="error-message">
+          Please enter a valid email
         </div>
-
-        <!-- Submit Button -->
-        <button
-          class="btn btn-primary w-100"
-          type="submit"
-          [disabled]="loading || form.invalid"
-          [class.loading]="loading"
-        >
-          <span *ngIf="!loading" class="btn-content">
-            <i class="fas fa-sign-in-alt me-2"></i>
-            Войти в систему
-          </span>
-          <span *ngIf="loading" class="btn-content">
-            <div class="loading-spinner me-2"></div>
-            Загрузка...
-          </span>
-        </button>
-
-        <!-- Error Message -->
-        <div class="error-container" *ngIf="error">
-          <div class="alert alert-danger animate-slide-in-top">
-            <i class="fas fa-exclamation-triangle me-2"></i>
-            {{ error }}
-          </div>
-        </div>
-      </form>
-
-      <!-- Footer -->
-      <div class="login-footer animate-fade-in">
-        <p class="footer-text">
-          <i class="fas fa-shield-alt me-1"></i>
-          Защищено современными технологиями
-        </p>
       </div>
-    </div>
-  </div>
 
-  <!-- Floating Particles -->
-  <div class="particles">
-    <div class="particle" *ngFor="let particle of particles" [style]="particle.style"></div>
+      <div class="form-group">
+        <label class="form-label">Password</label>
+        <div class="input-with-icon">
+          <i class="fas fa-lock input-icon"></i>
+          <input
+            formControlName="password"
+            class="form-input"
+            placeholder="Type your password"
+            [type]="showPassword ? 'text' : 'password'"
+            autocomplete="current-password"
+          />
+          <button
+            type="button"
+            class="password-toggle"
+            (click)="togglePassword()"
+            [attr.aria-label]="showPassword ? 'Hide password' : 'Show password'"
+          >
+            <i class="fas" [class.fa-eye]="!showPassword" [class.fa-eye-slash]="showPassword"></i>
+          </button>
+        </div>
+        <div *ngIf="form.get('password')?.invalid && form.get('password')?.touched" class="error-message">
+          Please enter your password
+        </div>
+      </div>
+
+      <div class="forgot-password">
+        <a href="#" class="forgot-password-link">Forgot password?</a>
+      </div>
+
+      <button
+        class="login-button"
+        type="submit"
+        [disabled]="loading || form.invalid"
+      >
+        <span *ngIf="!loading">LOGIN</span>
+        <span *ngIf="loading">Loading...</span>
+      </button>
+
+      <div *ngIf="error" class="error-container">
+        <div class="error-alert">
+          {{ error }}
+        </div>
+      </div>
+    </form>
+
+  
   </div>
 </div>

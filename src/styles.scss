@@ -1040,6 +1040,190 @@ hr {
 }
 
 /* ==========================================================================
+   LOGIN PAGE OVERRIDES - FORCE MODERN DESIGN
+   ========================================================================== */
+
+app-signin {
+  display: block !important;
+  width: 100% !important;
+  height: 100vh !important;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+app-signin .login-container {
+  min-height: 100vh !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 20px !important;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
+  margin: 0 !important;
+  border: none !important;
+  position: relative !important;
+  z-index: 10 !important;
+}
+
+app-signin .login-card {
+  background: #ffffff !important;
+  border-radius: 20px !important;
+  padding: 40px !important;
+  width: 100% !important;
+  max-width: 400px !important;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1) !important;
+  position: relative !important;
+  border: none !important;
+  margin: 0 !important;
+}
+
+app-signin .login-title {
+  font-size: 28px !important;
+  font-weight: 700 !important;
+  color: #333 !important;
+  margin: 0 !important;
+  background: none !important;
+  border: none !important;
+  padding: 0 !important;
+  text-align: center !important;
+}
+
+app-signin .form-label {
+  display: block !important;
+  color: #333 !important;
+  font-weight: 500 !important;
+  margin-bottom: 8px !important;
+  font-size: 14px !important;
+  background: none !important;
+  border: none !important;
+}
+
+app-signin .input-with-icon {
+  position: relative !important;
+}
+
+app-signin .input-icon {
+  position: absolute !important;
+  left: 12px !important;
+  top: 50% !important;
+  transform: translateY(-50%) !important;
+  color: #6c757d !important;
+  font-size: 14px !important;
+  z-index: 1 !important;
+}
+
+app-signin .form-input {
+  width: 100% !important;
+  padding: 12px 16px 12px 40px !important;
+  border: 1px solid #e1e5e9 !important;
+  border-radius: 8px !important;
+  font-size: 16px !important;
+  background: #f8f9fa !important;
+  color: #333 !important;
+  transition: all 0.3s ease !important;
+  box-sizing: border-box !important;
+  margin: 0 !important;
+  outline: none !important;
+}
+
+app-signin .form-input:focus {
+  outline: none !important;
+  border-color: #667eea !important;
+  background: #ffffff !important;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1) !important;
+  color: #333 !important;
+}
+
+app-signin .form-input::placeholder {
+  color: #6c757d !important;
+}
+
+app-signin .password-toggle {
+  position: absolute !important;
+  right: 12px !important;
+  top: 50% !important;
+  transform: translateY(-50%) !important;
+  background: none !important;
+  border: none !important;
+  color: #6c757d !important;
+  cursor: pointer !important;
+  padding: 4px !important;
+  border-radius: 4px !important;
+  transition: all 0.3s ease !important;
+  z-index: 2 !important;
+}
+
+app-signin .password-toggle:hover {
+  color: #667eea !important;
+  background: rgba(102, 126, 234, 0.1) !important;
+}
+
+app-signin .forgot-password-link {
+  color: #6c757d !important;
+  font-size: 14px !important;
+  text-decoration: none !important;
+  transition: color 0.3s ease !important;
+  background: none !important;
+  border: none !important;
+}
+
+app-signin .forgot-password-link:hover {
+  color: #667eea !important;
+}
+
+app-signin .login-button {
+  width: 100% !important;
+  padding: 12px 24px !important;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+  color: #ffffff !important;
+  border: none !important;
+  border-radius: 8px !important;
+  font-size: 16px !important;
+  font-weight: 600 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.5px !important;
+  cursor: pointer !important;
+  transition: all 0.3s ease !important;
+  margin-top: 10px !important;
+  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4) !important;
+}
+
+app-signin .login-button:hover:not(:disabled) {
+  transform: translateY(-2px) !important;
+  box-shadow: 0 8px 25px rgba(102, 126, 234, 0.6) !important;
+}
+
+app-signin .signup-text {
+  color: #6c757d !important;
+  font-size: 14px !important;
+  margin: 0 0 15px 0 !important;
+  background: none !important;
+  border: none !important;
+}
+
+app-signin .signup-button {
+  background: transparent !important;
+  border: 1px solid #667eea !important;
+  color: #667eea !important;
+  padding: 10px 20px !important;
+  border-radius: 8px !important;
+  font-weight: 600 !important;
+  font-size: 14px !important;
+  cursor: pointer !important;
+  transition: all 0.3s ease !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.5px !important;
+}
+
+app-signin .signup-button:hover {
+  background: #667eea !important;
+  color: #ffffff !important;
+  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4) !important;
+}
+
+
+/* ==========================================================================
    Responsive Tweaks
    ========================================================================== */
 
