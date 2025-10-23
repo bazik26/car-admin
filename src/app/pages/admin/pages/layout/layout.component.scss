@@ -4,7 +4,7 @@
 
 .admin-layout {
   min-height: 100vh;
-  background: transparent;
+  background: radial-gradient(160deg, rgba(5, 11, 24, 0.98) 0%, rgba(9, 17, 33, 0.95) 45%, rgba(12, 22, 42, 0.92) 100%);
   color: var(--white);
 }
 
@@ -324,4 +324,3 @@
     transition: none !important;
   }
 }
-

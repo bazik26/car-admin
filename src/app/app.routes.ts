@@ -5,6 +5,7 @@ import { SigninPage } from './pages/admin/pages/signin/signin.page';
 import { AdminAdminsPage } from './pages/admin/pages/admins/admins.page';
 import { AdminCarsPage } from './pages/admin/pages/cars/cars.page';
 import { AdminProblematicCarsPage } from './pages/admin/pages/problematic-cars/problematic-cars.page';
+import { AdminProductivityPage } from './pages/admin/pages/productivity/productivity.page';
 
 export const routes: Routes = [
   {
@@ -38,6 +39,11 @@ export const routes: Routes = [
             path: 'problematic-cars',
             component: AdminProblematicCarsPage,
             title: 'Проблемные автомобили',
+          },
+          {
+            path: 'productivity',
+            component: AdminProductivityPage,
+            title: 'Продуктивность администраторов',
           },
         ],
       },

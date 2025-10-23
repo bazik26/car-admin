@@ -156,10 +156,15 @@
   padding: 0;
   border-radius: var(--radius-xl);
   overflow: hidden;
+  background: rgba(9, 17, 33, 0.92);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: var(--shadow-lg);
 }
 
 .table-card .table {
   margin: 0;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.88);
 }
 
 .cell-primary {
@@ -199,6 +204,24 @@
   display: inline-flex;
   gap: 0.5rem;
   justify-content: flex-start;
+}
+
+.data-table thead {
+  background: rgba(15, 26, 48, 0.85);
+}
+
+.data-table tbody tr {
+  background: rgba(12, 22, 42, 0.78);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.data-table tbody tr:hover {
+  background: rgba(18, 30, 56, 0.86);
+}
+
+.data-table td,
+.data-table th {
+  color: rgba(255, 255, 255, 0.88);
 }
 
 .data-empty {

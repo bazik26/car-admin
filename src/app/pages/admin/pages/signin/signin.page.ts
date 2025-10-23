@@ -1,4 +1,4 @@
-import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
+import { Component, Inject, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
 import {
   FormBuilder,
   Validators,
@@ -19,6 +19,7 @@ interface Particle {
   templateUrl: './signin.page.html',
   standalone: true,
   imports: [ReactiveFormsModule, NgIf, NgFor],
+  encapsulation: ViewEncapsulation.None,
 })
 export class SigninPage implements OnInit, OnDestroy {
   form: FormGroup;

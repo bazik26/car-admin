@@ -2,13 +2,22 @@
 
 .signin-container {
   min-height: 100vh;
-  background: var(--dark-bg);
   position: relative;
   overflow: hidden;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 2rem;
+  padding: 2rem 1.5rem;
+  background: radial-gradient(120deg, rgba(6, 12, 26, 0.95) 0%, rgba(9, 16, 32, 0.92) 45%, rgba(13, 24, 44, 0.9) 100%);
+}
+
+.signin-container::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at top, rgba(234, 164, 48, 0.18), transparent 55%);
+  opacity: 0.85;
+  pointer-events: none;
 }
 
 /* ===== BACKGROUND ELEMENTS ===== */
@@ -66,7 +75,7 @@
   font-size: 8rem;
   font-weight: 900;
   color: var(--primary-gold);
-  opacity: 0.05;
+  opacity: 0.04;
   z-index: 1;
   white-space: nowrap;
   user-select: none;
@@ -147,7 +156,7 @@
 }
 
 .login-card {
-  background: rgba(7, 13, 28, 0.9);
+  background: rgba(7, 13, 28, 0.92);
   border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 18px;
   padding: 3rem 2.5rem;
@@ -250,6 +259,11 @@
   color: rgba(209, 213, 219, 0.55);
 }
 
+.signin-container .form-control,
+.signin-container .form-control:focus {
+  box-shadow: none;
+}
+
 /* ===== PASSWORD INPUT WRAPPER ===== */
 .password-input-wrapper {
   position: relative;
@@ -272,6 +286,10 @@
 .password-toggle:hover {
   background: rgba(234, 164, 48, 0.15);
   color: var(--primary-gold-light);
+}
+
+.password-toggle i {
+  font-size: 0.9rem;
 }
 
 /* ===== ERROR MESSAGES ===== */
@@ -377,7 +395,7 @@
   }
   
   .login-card {
-    padding: 2rem 1.5rem;
+    padding: 2.25rem 1.75rem;
   }
   
   .login-title {
@@ -399,7 +417,7 @@
 
 @media (max-width: 480px) {
   .login-card {
-    padding: 1.5rem 1rem;
+    padding: 1.75rem 1.2rem;
   }
   
   .login-title {
