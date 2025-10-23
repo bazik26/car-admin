@@ -262,11 +262,12 @@
   display: inline-flex;
   align-items: center;
   gap: 0.45rem;
-  color: rgba(255, 255, 255, 0.75);
+  color: #374151 !important;
 }
 
 .car-author i {
-  color: rgba(255, 255, 255, 0.55);
+  color: #6b7280 !important;
+  font-size: 1.1rem;
 }
 
 .data-table thead {

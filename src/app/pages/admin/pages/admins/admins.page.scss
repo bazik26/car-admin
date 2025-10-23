@@ -184,20 +184,29 @@
   gap: 0.4rem;
   padding: 0.4rem 0.8rem;
   border-radius: var(--radius-full);
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  color: rgba(255, 255, 255, 0.78);
+  background: rgba(0, 0, 0, 0.05) !important;
+  border: 1px solid rgba(0, 0, 0, 0.1) !important;
+  color: #374151 !important;
   font-size: 0.78rem;
   font-weight: 600;
   letter-spacing: 0.04em;
   text-transform: uppercase;
 }
 
+.role-tag i {
+  color: #6b7280 !important;
+  font-size: 0.9rem;
+}
+
 .role-tag--super {
-  background: rgba(234, 164, 48, 0.16);
-  border-color: rgba(234, 164, 48, 0.35);
-  color: var(--lion-gold);
-  box-shadow: 0 12px 20px rgba(234, 164, 48, 0.25);
+  background: rgba(234, 164, 48, 0.15) !important;
+  border-color: rgba(234, 164, 48, 0.3) !important;
+  color: #b45309 !important;
+  box-shadow: 0 4px 8px rgba(234, 164, 48, 0.2);
+}
+
+.role-tag--super i {
+  color: #d97706 !important;
 }
 
 .action-menu {
