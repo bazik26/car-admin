@@ -1,4 +1,4 @@
-/* ===== LION CROWN THEME - CAR ADMIN PANEL ===== */
+/* ===== MODERN ADMIN PANEL THEME ===== */
 
 /* Import Bootstrap and other dependencies */
 @import 'bootstrap/dist/css/bootstrap.min.css';
@@ -6,24 +6,24 @@
 
 /* ===== CSS VARIABLES ===== */
 :root {
-  /* Primary Colors - Lion Crown Theme */
-  --lion-gold: #D4AF37;
-  --lion-gold-light: #F4E4BC;
-  --lion-gold-dark: #B8860B;
-  --crown-black: #1a1a1a;
-  --crown-black-light: #2d2d2d;
-  --crown-black-dark: #0d0d0d;
+  /* Primary Colors - Modern Theme */
+  --primary-gold: #D4AF37;
+  --primary-gold-light: #F4E4BC;
+  --primary-gold-dark: #B8860B;
+  --dark-bg: #0f0f0f;
+  --dark-bg-light: #1a1a1a;
+  --dark-bg-lighter: #2a2a2a;
   
   /* Accent Colors */
-  --royal-purple: #6B46C1;
-  --royal-purple-light: #A78BFA;
-  --royal-purple-dark: #4C1D95;
+  --accent-blue: #3B82F6;
+  --accent-blue-light: #60A5FA;
+  --accent-blue-dark: #1D4ED8;
   
   /* Status Colors */
-  --success-emerald: #10B981;
-  --warning-amber: #F59E0B;
-  --danger-ruby: #EF4444;
-  --info-sapphire: #3B82F6;
+  --success: #10B981;
+  --warning: #F59E0B;
+  --danger: #EF4444;
+  --info: #3B82F6;
   
   /* Neutral Colors */
   --white: #FFFFFF;
@@ -38,17 +38,17 @@
   --gray-800: #1F2937;
   --gray-900: #111827;
   
-  /* Shadows */
+  /* Modern Shadows */
   --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
   --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
   --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
   --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-  --shadow-gold: 0 10px 25px -5px rgba(212, 175, 55, 0.3);
+  --shadow-glow: 0 0 20px rgba(212, 175, 55, 0.3);
   
-  /* Gradients */
-  --gradient-lion: linear-gradient(135deg, var(--lion-gold) 0%, var(--lion-gold-dark) 100%);
-  --gradient-crown: linear-gradient(135deg, var(--crown-black) 0%, var(--crown-black-light) 100%);
-  --gradient-royal: linear-gradient(135deg, var(--royal-purple) 0%, var(--crown-black) 100%);
+  /* Modern Gradients */
+  --gradient-primary: linear-gradient(135deg, var(--primary-gold) 0%, var(--primary-gold-dark) 100%);
+  --gradient-dark: linear-gradient(135deg, var(--dark-bg) 0%, var(--dark-bg-light) 100%);
+  --gradient-accent: linear-gradient(135deg, var(--accent-blue) 0%, var(--dark-bg) 100%);
   
   /* Animations */
   --transition-fast: 0.15s ease-in-out;
@@ -64,14 +64,15 @@
 
 body {
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  background: var(--crown-black);
+  background: var(--dark-bg);
   color: var(--white);
   line-height: 1.6;
   overflow-x: hidden;
+  font-size: 14px;
 }
 
 body.admin {
-  background: var(--crown-black);
+  background: var(--dark-bg);
   min-height: 100vh;
 }
 
@@ -292,241 +293,235 @@ body.admin {
   left: 0;
 }
 
-/* ===== LION CROWN BUTTONS ===== */
-.btn-lion {
-  background: var(--gradient-lion);
-  border: 2px solid var(--lion-gold);
-  color: var(--crown-black);
+/* ===== MODERN BUTTONS ===== */
+.btn-primary {
+  background: var(--gradient-primary);
+  border: 1px solid var(--primary-gold);
+  color: var(--dark-bg);
   font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
   transition: all var(--transition-normal);
-  position: relative;
-  overflow: hidden;
   border-radius: 8px;
+  padding: 0.75rem 1.5rem;
+  font-size: 0.875rem;
 }
 
-.btn-lion::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-  transition: left var(--transition-slow);
-}
-
-.btn-lion:hover::before {
-  left: 100%;
-}
-
-.btn-lion:hover {
-  transform: translateY(-2px);
-  box-shadow: var(--shadow-gold);
-  border-color: var(--lion-gold-light);
-}
-
-.btn-lion:active {
-  transform: translateY(0);
-}
-
-.btn-outline-lion {
-  background: transparent;
-  border: 2px solid var(--lion-gold);
-  color: var(--lion-gold);
-  font-weight: 600;
-  transition: all var(--transition-normal);
-}
-
-.btn-outline-lion:hover {
-  background: var(--gradient-lion);
-  color: var(--crown-black);
-  transform: translateY(-2px);
-  box-shadow: var(--shadow-gold);
-}
-
-/* ===== CROWN CARDS ===== */
-.card-crown {
-  background: var(--gradient-crown);
-  border: 1px solid var(--lion-gold);
-  border-radius: 12px;
+.btn-primary:hover {
+  transform: translateY(-1px);
   box-shadow: var(--shadow-lg);
+  background: var(--primary-gold);
+}
+
+.btn-outline-primary {
+  background: transparent;
+  border: 1px solid var(--primary-gold);
+  color: var(--primary-gold);
+  font-weight: 500;
+  transition: all var(--transition-normal);
+  border-radius: 8px;
+  padding: 0.75rem 1.5rem;
+  font-size: 0.875rem;
+}
+
+.btn-outline-primary:hover {
+  background: var(--primary-gold);
+  color: var(--dark-bg);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-md);
+}
+
+/* ===== MODERN CARDS ===== */
+.card {
+  background: var(--dark-bg-light);
+  border: 1px solid var(--gray-700);
+  border-radius: 12px;
+  box-shadow: var(--shadow-md);
   transition: all var(--transition-normal);
   position: relative;
   overflow: hidden;
 }
 
-.card-crown::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 2px;
-  background: var(--gradient-lion);
+.card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
+  border-color: var(--primary-gold);
 }
 
-.card-crown:hover {
-  transform: translateY(-5px);
-  box-shadow: var(--shadow-xl), var(--shadow-gold);
-  border-color: var(--lion-gold-light);
-}
-
-.card-crown .card-header {
-  background: var(--gradient-lion);
-  color: var(--crown-black);
-  border-bottom: 1px solid var(--lion-gold);
+.card-header {
+  background: var(--dark-bg-lighter);
+  color: var(--white);
+  border-bottom: 1px solid var(--gray-700);
   font-weight: 600;
+  padding: 1rem 1.5rem;
 }
 
-/* ===== FORMS ===== */
-.form-control-lion {
-  background: var(--crown-black-light);
-  border: 2px solid var(--gray-600);
+.card-body {
+  padding: 1.5rem;
+  color: var(--white);
+}
+
+/* ===== MODERN FORMS ===== */
+.form-control {
+  background: var(--dark-bg-lighter);
+  border: 1px solid var(--gray-600);
   color: var(--white);
   transition: all var(--transition-normal);
   border-radius: 8px;
+  padding: 0.75rem 1rem;
+  font-size: 0.875rem;
 }
 
-.form-control-lion:focus {
-  background: var(--crown-black-light);
-  border-color: var(--lion-gold);
-  box-shadow: 0 0 0 0.2rem rgba(212, 175, 55, 0.25);
+.form-control:focus {
+  background: var(--dark-bg-lighter);
+  border-color: var(--primary-gold);
+  box-shadow: 0 0 0 0.2rem rgba(212, 175, 55, 0.15);
   color: var(--white);
 }
 
-.form-control-lion::placeholder {
+.form-control::placeholder {
   color: var(--gray-400);
 }
 
-.form-label-lion {
-  color: var(--lion-gold);
-  font-weight: 600;
+.form-label {
+  color: var(--white);
+  font-weight: 500;
   margin-bottom: 0.5rem;
+  font-size: 0.875rem;
 }
 
-/* ===== TABLES ===== */
-.table-lion {
-  background: var(--crown-black-light);
+/* ===== MODERN TABLES ===== */
+.table {
+  background: var(--dark-bg-light);
   border-radius: 8px;
   overflow: hidden;
   box-shadow: var(--shadow-md);
-  border: 1px solid var(--lion-gold);
+  border: 1px solid var(--gray-700);
+  color: var(--white);
 }
 
-.table-lion thead {
-  background: var(--gradient-lion);
-  color: var(--crown-black);
+.table thead {
+  background: var(--dark-bg-lighter);
+  color: var(--white);
 }
 
-.table-lion thead th {
-  border-bottom: 2px solid var(--lion-gold);
+.table thead th {
+  border-bottom: 1px solid var(--gray-700);
   font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
+  font-size: 0.875rem;
+  padding: 1rem;
 }
 
-.table-lion tbody tr {
+.table tbody tr {
   transition: all var(--transition-fast);
   border-bottom: 1px solid var(--gray-700);
 }
 
-.table-lion tbody tr:hover {
-  background: var(--crown-black);
-  transform: scale(1.01);
+.table tbody tr:hover {
+  background: var(--dark-bg-lighter);
 }
 
-.table-lion tbody td {
+.table tbody td {
   color: var(--white);
   vertical-align: middle;
+  padding: 1rem;
+  font-size: 0.875rem;
 }
 
-/* ===== MODALS ===== */
-.modal-lion .modal-content {
-  background: var(--gradient-crown);
-  border: 2px solid var(--lion-gold);
+/* ===== MODERN MODALS ===== */
+.modal-content {
+  background: var(--dark-bg-light);
+  border: 1px solid var(--gray-700);
   border-radius: 12px;
   box-shadow: var(--shadow-xl);
 }
 
-.modal-lion .modal-header {
-  border-bottom: 1px solid var(--lion-gold);
-  background: var(--gradient-lion);
-  color: var(--crown-black);
-  border-radius: 10px 10px 0 0;
-}
-
-.modal-lion .modal-footer {
-  border-top: 1px solid var(--lion-gold);
-  background: var(--crown-black-light);
-}
-
-.modal-lion .modal-body {
-  background: var(--crown-black-light);
+.modal-header {
+  border-bottom: 1px solid var(--gray-700);
+  background: var(--dark-bg-lighter);
   color: var(--white);
+  border-radius: 12px 12px 0 0;
+  padding: 1.5rem;
 }
 
-/* ===== ALERTS ===== */
-.alert-lion {
-  border: 2px solid var(--lion-gold);
+.modal-footer {
+  border-top: 1px solid var(--gray-700);
+  background: var(--dark-bg-lighter);
+  padding: 1.5rem;
+}
+
+.modal-body {
+  background: var(--dark-bg-light);
+  color: var(--white);
+  padding: 1.5rem;
+}
+
+/* ===== MODERN ALERTS ===== */
+.alert {
+  border: 1px solid var(--gray-600);
   border-radius: 8px;
-  background: var(--gradient-crown);
+  background: var(--dark-bg-light);
   color: var(--white);
-  box-shadow: var(--shadow-md);
+  box-shadow: var(--shadow-sm);
+  padding: 1rem 1.25rem;
+  font-size: 0.875rem;
 }
 
-.alert-success-lion {
-  border-color: var(--success-emerald);
-  background: linear-gradient(135deg, var(--crown-black) 0%, rgba(16, 185, 129, 0.1) 100%);
+.alert-success {
+  border-color: var(--success);
+  background: var(--dark-bg-light);
+  color: var(--success);
 }
 
-.alert-danger-lion {
-  border-color: var(--danger-ruby);
-  background: linear-gradient(135deg, var(--crown-black) 0%, rgba(239, 68, 68, 0.1) 100%);
+.alert-danger {
+  border-color: var(--danger);
+  background: var(--dark-bg-light);
+  color: var(--danger);
 }
 
-.alert-warning-lion {
-  border-color: var(--warning-amber);
-  background: linear-gradient(135deg, var(--crown-black) 0%, rgba(245, 158, 11, 0.1) 100%);
+.alert-warning {
+  border-color: var(--warning);
+  background: var(--dark-bg-light);
+  color: var(--warning);
 }
 
-.alert-info-lion {
-  border-color: var(--info-sapphire);
-  background: linear-gradient(135deg, var(--crown-black) 0%, rgba(59, 130, 246, 0.1) 100%);
+.alert-info {
+  border-color: var(--info);
+  background: var(--dark-bg-light);
+  color: var(--info);
 }
 
 /* ===== NG-SELECT CUSTOMIZATION ===== */
-.ng-select.ng-select-lion .ng-select-container {
-  background: var(--crown-black-light);
-  border: 2px solid var(--gray-600);
+.ng-select .ng-select-container {
+  background: var(--dark-bg-lighter);
+  border: 1px solid var(--gray-600);
   border-radius: 8px;
   color: var(--white);
   transition: all var(--transition-normal);
+  min-height: 2.5rem;
 }
 
-.ng-select.ng-select-lion .ng-select-container:hover {
-  border-color: var(--lion-gold);
+.ng-select .ng-select-container:hover {
+  border-color: var(--primary-gold);
 }
 
-.ng-select.ng-select-lion.ng-select-focused .ng-select-container {
-  border-color: var(--lion-gold);
-  box-shadow: 0 0 0 0.2rem rgba(212, 175, 55, 0.25);
+.ng-select.ng-select-focused .ng-select-container {
+  border-color: var(--primary-gold);
+  box-shadow: 0 0 0 0.2rem rgba(212, 175, 55, 0.15);
 }
 
-.ng-select.ng-select-lion .ng-option {
-  background: var(--crown-black-light);
+.ng-select .ng-option {
+  background: var(--dark-bg-light);
   color: var(--white);
+  padding: 0.75rem 1rem;
 }
 
-.ng-select.ng-select-lion .ng-option:hover {
-  background: var(--crown-black);
-  color: var(--lion-gold);
+.ng-select .ng-option:hover {
+  background: var(--dark-bg-lighter);
+  color: var(--primary-gold);
 }
 
-.ng-select.ng-select-lion .ng-option.ng-option-selected {
-  background: var(--gradient-lion);
-  color: var(--crown-black);
+.ng-select .ng-option.ng-option-selected {
+  background: var(--primary-gold);
+  color: var(--dark-bg);
 }
 
 /* ===== RESPONSIVE DESIGN ===== */

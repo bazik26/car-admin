@@ -1,0 +1,291 @@
+<!-- Lion Crown Productivity Page -->
+<div class="productivity-container">
+  <!-- Header Section -->
+  <div class="productivity-header animate-slide-in-top">
+    <div class="container-fluid">
+      <div class="row align-items-center">
+        <div class="col-md-8">
+          <h1 class="page-title">
+            <i class="fas fa-chart-line me-3"></i>
+            Продуктивность админов
+          </h1>
+          <p class="page-subtitle">Анализ эффективности работы команды</p>
+        </div>
+        <div class="col-md-4 text-end">
+          <button 
+            class="btn-lion"
+            (click)="refreshData()"
+            [disabled]="loading"
+          >
+            <i class="fas fa-sync-alt me-2" [class.fa-spin]="loading"></i>
+            Обновить данные
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="loading" class="loading-container">
+    <div class="loading-spinner-large">
+      <i class="fas fa-crown fa-spin"></i>
+    </div>
+    <p class="loading-text">Загрузка статистики...</p>
+  </div>
+
+  <!-- Error State -->
+  <div *ngIf="error" class="error-container animate-slide-in-top">
+    <div class="alert-danger-lion">
+      <i class="fas fa-exclamation-triangle me-2"></i>
+      {{ error }}
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <div *ngIf="!loading && !error" class="productivity-content">
+    <div class="container-fluid">
+      
+      <!-- Top Stats Cards -->
+      <div class="row mb-4">
+        <div class="col-lg-3 col-md-6 mb-3">
+          <div class="stat-card card-crown animate-scale-in">
+            <div class="stat-icon">
+              <i class="fas fa-trophy"></i>
+            </div>
+            <div class="stat-content">
+              <h3 class="stat-number">{{ topProductiveAdmins[0]?.carsAdded || 0 }}</h3>
+              <p class="stat-label">Лучший результат</p>
+            </div>
+          </div>
+        </div>
+        
+        <div class="col-lg-3 col-md-6 mb-3">
+          <div class="stat-card card-crown animate-scale-in" style="animation-delay: 0.1s;">
+            <div class="stat-icon">
+              <i class="fas fa-users"></i>
+            </div>
+            <div class="stat-content">
+              <h3 class="stat-number">{{ adminStats.length }}</h3>
+              <p class="stat-label">Всего админов</p>
+            </div>
+          </div>
+        </div>
+        
+        <div class="col-lg-3 col-md-6 mb-3">
+          <div class="stat-card card-crown animate-scale-in" style="animation-delay: 0.2s;">
+            <div class="stat-icon">
+              <i class="fas fa-car"></i>
+            </div>
+            <div class="stat-content">
+              <h3 class="stat-number">{{ adminStats.reduce((sum, admin) => sum + admin.carsAdded, 0) }}</h3>
+              <p class="stat-label">Всего автомобилей</p>
+            </div>
+          </div>
+        </div>
+        
+        <div class="col-lg-3 col-md-6 mb-3">
+          <div class="stat-card card-crown animate-scale-in" style="animation-delay: 0.3s;">
+            <div class="stat-icon">
+              <i class="fas fa-exclamation-triangle"></i>
+            </div>
+            <div class="stat-content">
+              <h3 class="stat-number">{{ adminStats.reduce((sum, admin) => sum + admin.errorsCount, 0) }}</h3>
+              <p class="stat-label">Всего ошибок</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Charts Section -->
+      <div class="row mb-4">
+        <!-- Productivity Chart -->
+        <div class="col-lg-8 mb-4">
+          <div class="chart-card card-crown animate-slide-in-left">
+            <div class="chart-header">
+              <h3 class="chart-title">
+                <i class="fas fa-chart-bar me-2"></i>
+                Топ продуктивных админов
+              </h3>
+            </div>
+            <div class="chart-content">
+              <canvas baseChart
+                [data]="productivityChartData"
+                [options]="productivityChartOptions"
+                type="bar">
+              </canvas>
+            </div>
+          </div>
+        </div>
+
+        <!-- Errors Distribution -->
+        <div class="col-lg-4 mb-4">
+          <div class="chart-card card-crown animate-slide-in-right">
+            <div class="chart-header">
+              <h3 class="chart-title">
+                <i class="fas fa-exclamation-circle me-2"></i>
+                Распределение ошибок
+              </h3>
+            </div>
+            <div class="chart-content">
+              <canvas baseChart
+                [data]="errorsChartData"
+                [options]="errorsChartOptions"
+                type="doughnut">
+              </canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Dynamic Chart -->
+      <div class="row mb-4">
+        <div class="col-12">
+          <div class="chart-card card-crown animate-slide-in-bottom">
+            <div class="chart-header">
+              <h3 class="chart-title">
+                <i class="fas fa-chart-line me-2"></i>
+                Динамика добавления автомобилей
+              </h3>
+            </div>
+            <div class="chart-content">
+              <canvas baseChart
+                [data]="carsAddedChartData"
+                [options]="carsAddedChartOptions"
+                type="line">
+              </canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Rankings Section -->
+      <div class="row">
+        <!-- Top Productive -->
+        <div class="col-lg-4 mb-4">
+          <div class="ranking-card card-crown animate-slide-in-left">
+            <div class="ranking-header">
+              <h3 class="ranking-title">
+                <i class="fas fa-trophy text-warning me-2"></i>
+                Топ 5 продуктивных
+              </h3>
+            </div>
+            <div class="ranking-list">
+              <div 
+                *ngFor="let admin of topProductiveAdmins; let i = index" 
+                class="ranking-item"
+                [class.animate-slide-in-left]="true"
+                [style.animation-delay]="(i * 0.1) + 's'"
+              >
+                <div class="ranking-position">
+                  <span class="position-number">{{ i + 1 }}</span>
+                </div>
+                <div class="ranking-info">
+                  <div class="admin-name">{{ admin.name }}</div>
+                  <div class="admin-stats">
+                    <span class="stat-item">
+                      <i class="fas fa-car me-1"></i>
+                      {{ admin.carsAdded }} авто
+                    </span>
+                    <span class="stat-item">
+                      <i class="fas fa-star me-1"></i>
+                      {{ admin.productivityScore }}%
+                    </span>
+                  </div>
+                </div>
+                <div class="ranking-score">
+                  <div class="score-badge" [ngClass]="getProductivityClass(admin.productivityScore)">
+                    {{ getProductivityLevel(admin.productivityScore) }}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Top Unproductive -->
+        <div class="col-lg-4 mb-4">
+          <div class="ranking-card card-crown animate-slide-in-bottom">
+            <div class="ranking-header">
+              <h3 class="ranking-title">
+                <i class="fas fa-chart-line-down text-danger me-2"></i>
+                Топ 5 непродуктивных
+              </h3>
+            </div>
+            <div class="ranking-list">
+              <div 
+                *ngFor="let admin of topUnproductiveAdmins; let i = index" 
+                class="ranking-item"
+                [class.animate-slide-in-bottom]="true"
+                [style.animation-delay]="(i * 0.1) + 's'"
+              >
+                <div class="ranking-position">
+                  <span class="position-number">{{ i + 1 }}</span>
+                </div>
+                <div class="ranking-info">
+                  <div class="admin-name">{{ admin.name }}</div>
+                  <div class="admin-stats">
+                    <span class="stat-item">
+                      <i class="fas fa-car me-1"></i>
+                      {{ admin.carsAdded }} авто
+                    </span>
+                    <span class="stat-item">
+                      <i class="fas fa-star me-1"></i>
+                      {{ admin.productivityScore }}%
+                    </span>
+                  </div>
+                </div>
+                <div class="ranking-score">
+                  <div class="score-badge" [ngClass]="getProductivityClass(admin.productivityScore)">
+                    {{ getProductivityLevel(admin.productivityScore) }}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Top Problematic -->
+        <div class="col-lg-4 mb-4">
+          <div class="ranking-card card-crown animate-slide-in-right">
+            <div class="ranking-header">
+              <h3 class="ranking-title">
+                <i class="fas fa-exclamation-triangle text-danger me-2"></i>
+                Топ 3 проблемных
+              </h3>
+            </div>
+            <div class="ranking-list">
+              <div 
+                *ngFor="let admin of topProblematicAdmins; let i = index" 
+                class="ranking-item"
+                [class.animate-slide-in-right]="true"
+                [style.animation-delay]="(i * 0.1) + 's'"
+              >
+                <div class="ranking-position">
+                  <span class="position-number">{{ i + 1 }}</span>
+                </div>
+                <div class="ranking-info">
+                  <div class="admin-name">{{ admin.name }}</div>
+                  <div class="admin-stats">
+                    <span class="stat-item">
+                      <i class="fas fa-exclamation-circle me-1"></i>
+                      {{ admin.errorsCount }} ошибок
+                    </span>
+                    <span class="stat-item">
+                      <i class="fas fa-car me-1"></i>
+                      {{ admin.carsAdded }} авто
+                    </span>
+                  </div>
+                </div>
+                <div class="ranking-score">
+                  <div class="score-badge text-danger">
+                    Требует внимания
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

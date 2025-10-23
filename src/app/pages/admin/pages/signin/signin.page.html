@@ -1,25 +1,48 @@
-<!-- Lion Crown Login Page -->
+<!-- Modern Admin Login Page -->
 <div class="signin-container">
   <!-- Background Elements -->
   <div class="background-elements">
-    <div class="crown-decoration crown-top animate-float"></div>
-    <div class="crown-decoration crown-bottom animate-float" style="animation-delay: 1s;"></div>
-    <div class="lion-silhouette animate-float" style="animation-delay: 2s;"></div>
+    <div class="geometric-shape shape-1 animate-float"></div>
+    <div class="geometric-shape shape-2 animate-float" style="animation-delay: 1s;"></div>
+    <div class="geometric-shape shape-3 animate-float" style="animation-delay: 2s;"></div>
+    
+    <!-- Animated Background Text -->
+    <div class="background-text">
+      <span class="text-word" style="animation-delay: 0s;">S</span>
+      <span class="text-word" style="animation-delay: 0.2s;">C</span>
+      <span class="text-word" style="animation-delay: 0.4s;">A</span>
+      <span class="text-word" style="animation-delay: 0.6s;">M</span>
+      <span class="text-word" style="animation-delay: 0.8s;">&nbsp;</span>
+      <span class="text-word" style="animation-delay: 1s;">f</span>
+      <span class="text-word" style="animation-delay: 1.2s;">o</span>
+      <span class="text-word" style="animation-delay: 1.4s;">r</span>
+      <span class="text-word" style="animation-delay: 1.6s;">&nbsp;</span>
+      <span class="text-word" style="animation-delay: 1.8s;">y</span>
+      <span class="text-word" style="animation-delay: 2s;">o</span>
+      <span class="text-word" style="animation-delay: 2.2s;">u</span>
+      <span class="text-word" style="animation-delay: 2.4s;">r</span>
+      <span class="text-word" style="animation-delay: 2.6s;">&nbsp;</span>
+      <span class="text-word" style="animation-delay: 2.8s;">d</span>
+      <span class="text-word" style="animation-delay: 3s;">r</span>
+      <span class="text-word" style="animation-delay: 3.2s;">e</span>
+      <span class="text-word" style="animation-delay: 3.4s;">a</span>
+      <span class="text-word" style="animation-delay: 3.6s;">m</span>
+    </div>
   </div>
 
   <!-- Main Login Form -->
   <div class="login-wrapper">
-    <div class="login-card card-crown animate-scale-in">
-      <!-- Header with Crown Icon -->
+    <div class="login-card card animate-scale-in">
+      <!-- Header -->
       <div class="login-header">
-        <div class="crown-icon animate-glow">
-          <i class="fas fa-crown"></i>
+        <div class="logo-icon animate-glow">
+          <i class="fas fa-shield-alt"></i>
         </div>
         <h1 class="login-title animate-slide-in-top">
-          <span class="title-main">Lion Crown</span>
-          <span class="title-sub">Admin Panel</span>
+          <span class="title-main">Admin Panel</span>
+          <span class="title-sub">Система управления</span>
         </h1>
-        <p class="login-subtitle animate-fade-in">Войдите в королевство управления</p>
+        <p class="login-subtitle animate-fade-in">Войдите в систему управления</p>
       </div>
 
       <!-- Login Form -->
@@ -30,14 +53,14 @@
         autocomplete="off"
       >
         <!-- Email Field -->
-        <div class="form-group-lion">
-          <label class="form-label-lion">
+        <div class="form-group">
+          <label class="form-label">
             <i class="fas fa-envelope me-2"></i>
             Email
           </label>
           <input
             formControlName="email"
-            class="form-control-lion"
+            class="form-control"
             placeholder="Введите ваш email"
             type="email"
             autocomplete="username"
@@ -52,15 +75,15 @@
         </div>
 
         <!-- Password Field -->
-        <div class="form-group-lion">
-          <label class="form-label-lion">
+        <div class="form-group">
+          <label class="form-label">
             <i class="fas fa-lock me-2"></i>
             Пароль
           </label>
           <div class="password-input-wrapper">
             <input
               formControlName="password"
-              class="form-control-lion"
+              class="form-control"
               placeholder="Введите ваш пароль"
               type="password"
               autocomplete="current-password"
@@ -86,13 +109,13 @@
 
         <!-- Submit Button -->
         <button
-          class="btn-lion w-100"
+          class="btn btn-primary w-100"
           type="submit"
           [disabled]="loading || form.invalid"
           [class.loading]="loading"
         >
           <span *ngIf="!loading" class="btn-content">
-            <i class="fas fa-crown me-2"></i>
+            <i class="fas fa-sign-in-alt me-2"></i>
             Войти в систему
           </span>
           <span *ngIf="loading" class="btn-content">
@@ -103,7 +126,7 @@
 
         <!-- Error Message -->
         <div class="error-container" *ngIf="error">
-          <div class="alert-danger-lion animate-slide-in-top">
+          <div class="alert alert-danger animate-slide-in-top">
             <i class="fas fa-exclamation-triangle me-2"></i>
             {{ error }}
           </div>
@@ -114,7 +137,7 @@
       <div class="login-footer animate-fade-in">
         <p class="footer-text">
           <i class="fas fa-shield-alt me-1"></i>
-          Защищено технологиями Lion Crown
+          Защищено современными технологиями
         </p>
       </div>
     </div>
