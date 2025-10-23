@@ -1,61 +1,86 @@
 @if(admin) {
 <div class="admin-layout">
-  <div class="container">
-    <header class="admin-header d-flex justify-content-between align-items-center py-3">
-      <div class="admin-user-info">
-        <span class="text-muted">Добро пожаловать, {{ admin.name || admin.email }}</span>
-      </div>
-      
-      <ul class="nav nav-pills">
-        @if(admin.isSuper) {
-        <li class="nav-item">
-          <a
-            class="nav-link"
-            [routerLink]="['/admin', 'admins']"
-            routerLinkActive="active"
-          >
-            Менеджеры
-          </a>
-        </li>
-        }
+  <!-- Lion Crown Header -->
+  <header class="admin-header">
+    <div class="container">
+      <div class="d-flex justify-content-between align-items-center py-3">
+        <!-- User Info with Crown -->
+        <div class="admin-user-info d-flex align-items-center">
+          <div class="user-avatar me-3">
+            <i class="fas fa-crown"></i>
+          </div>
+          <div class="user-details">
+            <div class="user-name">{{ admin.name || admin.email }}</div>
+            <div class="user-role">
+              <i class="fas fa-shield-alt me-1"></i>
+              {{ admin.isSuper ? 'Супер Администратор' : 'Администратор' }}
+            </div>
+          </div>
+        </div>
+        
+        <!-- Navigation -->
+        <nav class="nav-lion">
+          <ul class="nav nav-pills">
+            @if(admin.isSuper) {
+            <li class="nav-item">
+              <a
+                class="nav-link"
+                [routerLink]="['/admin', 'admins']"
+                routerLinkActive="active"
+                title="Управление менеджерами"
+              >
+                <i class="fas fa-users me-1"></i>
+                Менеджеры
+              </a>
+            </li>
+            }
 
-        <li class="nav-item">
-          <a
-            class="nav-link"
-            [routerLink]="['/admin', 'cars']"
-            routerLinkActive="active"
-          >
-            Автомобили
-          </a>
-        </li>
+            <li class="nav-item">
+              <a
+                class="nav-link"
+                [routerLink]="['/admin', 'cars']"
+                routerLinkActive="active"
+                title="Управление автомобилями"
+              >
+                <i class="fas fa-car me-1"></i>
+                Автомобили
+              </a>
+            </li>
 
-        <li class="nav-item">
-          <a
-            class="nav-link"
-            [routerLink]="['/admin', 'problematic-cars']"
-            routerLinkActive="active"
+            <li class="nav-item">
+              <a
+                class="nav-link"
+                [routerLink]="['/admin', 'problematic-cars']"
+                routerLinkActive="active"
+                title="Проблемные автомобили"
+              >
+                <i class="fas fa-exclamation-triangle me-1"></i>
+                Проблемные
+              </a>
+            </li>
+          </ul>
+        </nav>
+        
+        <!-- Admin Actions -->
+        <div class="admin-actions">
+          <button 
+            class="btn btn-outline-lion" 
+            (click)="logout()"
+            title="Выйти из системы"
           >
-            <i class="fas fa-exclamation-triangle me-1"></i>
-            Проблемные машины
-          </a>
-        </li>
-      </ul>
-      
-      <div class="admin-actions">
-        <button 
-          class="btn btn-outline-danger btn-sm" 
-          (click)="logout()"
-          title="Выйти из системы"
-        >
-          <i class="fas fa-sign-out-alt me-1"></i>
-          Выйти
-        </button>
+            <i class="fas fa-sign-out-alt me-1"></i>
+            Выйти
+          </button>
+        </div>
       </div>
-    </header>
-  </div>
+    </div>
+  </header>
   
+  <!-- Main Content Area -->
   <div class="admin-content">
-    <router-outlet></router-outlet>
+    <div class="container-fluid">
+      <router-outlet></router-outlet>
+    </div>
   </div>
 </div>
 }
