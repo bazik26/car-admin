@@ -1,27 +1,71 @@
 @if (cars && admin) {
-  <div class="admin-page">
-    <div class="container">
-      <div class="row">
-        <div class="col-12">
-          <div class="page-header">
-            <h2 class="page-title">Управление автомобилями</h2>
-            <div class="d-flex align-items-center gap-3">
-              <span class="cars-count">Всего: {{ cars.length }}</span>
-              <button class="btn btn-primary" (click)="openModal()">
-                <i class="fas fa-plus me-2"></i>Добавить автомобиль
-              </button>
-            </div>
-          </div>
+  <section class="cars-page animate-fade-in">
+    <header class="page-header-glass animate-slide-in-top">
+      <div class="page-header-text">
+        <span class="eyebrow-label">
+          <i class="fas fa-warehouse"></i>
+          Автопарк
+        </span>
+        <h2 class="page-title">Управление автомобилями</h2>
+        <p class="page-subtitle">
+          Отслеживайте доступность, статус продаж и обновляйте карточки автомобилей в один клик.
+        </p>
+      </div>
+      <div class="page-header-actions">
+        <div class="stats-chip">
+          <i class="fas fa-car-side"></i>
+          <span>{{ cars.length }}</span>
+          <small>в базе</small>
         </div>
+        <button class="btn btn-lion" type="button" (click)="openModal()">
+          <i class="fas fa-plus"></i>
+          <span>Добавить автомобиль</span>
+        </button>
+      </div>
+    </header>
 
-        <table
-          class="mt-3 table table-bordered table-hover align-middle text-center"
-        >
-          <thead class="table-light">
+    <div class="metrics-grid animate-scale-in">
+      <div class="metric-card glass-card">
+        <div class="metric-icon success">
+          <i class="fas fa-bolt"></i>
+        </div>
+        <div class="metric-content">
+          <span class="metric-label">Активно</span>
+          <strong class="metric-value">{{ activeCarsCount }}</strong>
+        </div>
+      </div>
+      <div class="metric-card glass-card">
+        <div class="metric-icon warning">
+          <i class="fas fa-tags"></i>
+        </div>
+        <div class="metric-content">
+          <span class="metric-label">Продано</span>
+          <strong class="metric-value">{{ soldCarsCount }}</strong>
+        </div>
+      </div>
+      <div class="metric-card glass-card">
+        <div class="metric-icon danger">
+          <i class="fas fa-trash-restore"></i>
+        </div>
+        <div class="metric-content">
+          <span class="metric-label">Удалено</span>
+          <strong class="metric-value">{{ deletedCarsCount }}</strong>
+        </div>
+      </div>
+    </div>
+
+    @if (cars.length === 0) {
+      <div class="data-empty animate-fade-in">
+        <i class="fas fa-car-crash"></i>
+        <h3>Автомобили не найдены</h3>
+        <p>Добавьте первый автомобиль, чтобы начать наполнять каталог.</p>
+      </div>
+    } @else {
+      <div class="table-card glass-card animate-slide-in-bottom">
+        <table class="table table-hover align-middle data-table">
+          <thead>
             <tr>
-              <th>Марка</th>
-              <th>Модель</th>
-              <th>Год</th>
+              <th>Автомобиль</th>
               <th>Фото</th>
               <th>Статус</th>
               <th>Действия</th>
@@ -32,94 +76,136 @@
           </thead>
           <tbody>
             @for (car of cars; track car; let index = $index) {
-              <tr [class.table-danger]="car.deletedAt">
-                <td>{{ car.brand }}</td>
-                <td>{{ car.model }}</td>
-                <td>{{ car.year }}</td>
-                <td>
-                  @if (car.files?.length > 0) {
-                    <img
-                      [ngSrc]="appService.getFileUrl(car.files[0])"
-                      alt="car"
-                      height="80"
-                      width="80"
-                      class="img-thumbnail"
-                      [priority]="index < 10"
-                    />
-                  } @else {
-                    <span>Нет фото</span>
-                  }
-                </td>
-                <td>
-                  @if (car.deletedAt) {
-                    <span class="badge bg-danger status-badge deleted">Удалена</span>
-                  } @else if (car.isSold) {
-                    <span class="badge bg-warning status-badge sold">Продан</span>
-                  } @else {
-                    <span class="badge bg-success status-badge active">Активна</span>
-                  }
-                </td>
-                <td>
-                  <div class="action-buttons">
-                    @if (!car.deletedAt) {
-                      <button
-                        class="btn btn-sm btn-primary"
-                        (click)="openModal(car)"
-                      >
-                        <i class="fas fa-edit me-1"></i>Редактировать
-                      </button>
-                      
-                      @if (!car.isSold) {
-                        <button
-                          class="btn btn-sm btn-warning"
-                          (click)="markAsSold(car)"
-                        >
-                          <i class="fas fa-check me-1"></i>Продана
-                        </button>
-                      } @else {
-                        <button
-                          class="btn btn-sm btn-success"
-                          (click)="markAsAvailable(car)"
-                        >
-                          <i class="fas fa-undo me-1"></i>Доступна
-                        </button>
-                      }
-                      
-                      @if (admin.isSuper || car.adminId === admin.id) {
-                        <button
-                          class="btn btn-sm btn-danger"
-                          (click)="deleteCar(car)"
-                        >
-                          <i class="fas fa-trash me-1"></i>Удалить
-                        </button>
-                      }
-                    } @else {
-                      @if (admin.isSuper) {
-                        <button
-                          class="btn btn-sm btn-warning"
-                          (click)="restoreCar(car)"
-                        >
-                          <i class="fas fa-undo me-1"></i>Восстановить
-                        </button>
-                      }
+              <tr [class.table-danger]="car.deletedAt" class="animate-fade-in">
+                <td data-label="Автомобиль">
+                  <div class="car-meta">
+                    <div class="car-name">
+                      <strong>{{ car.brand }} {{ car.model }}</strong>
+                      <span class="car-year">{{ car.year }}</span>
+                    </div>
+                    @if (car.vin) {
+                      <span class="car-vin">
+                        <i class="fas fa-fingerprint"></i>
+                        {{ car.vin }}
+                      </span>
                     }
                   </div>
                 </td>
+                <td data-label="Фото">
+                  @if (car.files?.length > 0) {
+                    <div class="car-thumb">
+                      <img
+                        [ngSrc]="appService.getFileUrl(car.files[0])"
+                        alt="car"
+                        height="80"
+                        width="120"
+                        [priority]="index < 10"
+                      />
+                    </div>
+                  } @else {
+                    <div class="car-thumb placeholder">
+                      <i class="fas fa-image"></i>
+                      <small>Нет фото</small>
+                    </div>
+                  }
+                </td>
+                <td data-label="Статус">
+                  <span
+                    class="status-pill"
+                    [ngClass]="{
+                      success: !car.deletedAt && !car.isSold,
+                      warning: !car.deletedAt && car.isSold,
+                      danger: car.deletedAt
+                    }"
+                  >
+                    <i
+                      class="fas"
+                      [ngClass]="{
+                        'fa-check-circle': !car.deletedAt && !car.isSold,
+                        'fa-award': !car.deletedAt && car.isSold,
+                        'fa-ban': car.deletedAt
+                      }"
+                    ></i>
+                    @if (car.deletedAt) {
+                      Удалена
+                    } @else if (car.isSold) {
+                      Продана
+                    } @else {
+                      Активна
+                    }
+                  </span>
+                </td>
+                <td data-label="Действия">
+                  <div class="action-menu">
+                    @if (!car.deletedAt) {
+                      <button
+                        type="button"
+                        class="btn btn-ghost btn-action accent"
+                        (click)="openModal(car)"
+                      >
+                        <i class="fas fa-edit"></i>
+                        <span>Редактировать</span>
+                      </button>
 
-                @if (admin.isSuper && car.admin) {
-                  <td>
-                    {{ car.admin.email }}
+                      @if (!car.isSold) {
+                        <button
+                          type="button"
+                          class="btn btn-ghost btn-action warning"
+                          (click)="markAsSold(car)"
+                        >
+                          <i class="fas fa-check-circle"></i>
+                          <span>Продана</span>
+                        </button>
+                      } @else {
+                        <button
+                          type="button"
+                          class="btn btn-ghost btn-action success"
+                          (click)="markAsAvailable(car)"
+                        >
+                          <i class="fas fa-undo"></i>
+                          <span>Доступна</span>
+                        </button>
+                      }
+
+                      @if (admin.isSuper || car.adminId === admin.id) {
+                        <button
+                          type="button"
+                          class="btn btn-ghost btn-action danger"
+                          (click)="deleteCar(car)"
+                        >
+                          <i class="fas fa-times"></i>
+                          <span>Удалить</span>
+                        </button>
+                      }
+                    } @else if (admin.isSuper) {
+                      <button
+                        type="button"
+                        class="btn btn-ghost btn-action accent"
+                        (click)="restoreCar(car)"
+                      >
+                        <i class="fas fa-trash-restore"></i>
+                        <span>Восстановить</span>
+                      </button>
+                    }
+                  </div>
+                </td>
+                @if (admin.isSuper) {
+                  <td data-label="Автор">
+                    @if (car.admin) {
+                      <div class="car-author">
+                        <i class="fas fa-user-circle"></i>
+                        <span>{{ car.admin.email }}</span>
+                      </div>
+                    } @else {
+                      <span class="author-missing">Не указан</span>
+                    }
                   </td>
                 }
-              </tr>
-            } @empty {
-              <tr>
-                <td colspan="6" class="text-center">Нет автомобилей</td>
               </tr>
             }
           </tbody>
         </table>
       </div>
-    </div>
-  </div>
+    }
+  </section>
 }

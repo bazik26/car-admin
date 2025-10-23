@@ -1,0 +1,281 @@
+/* ==========================================================================
+   Admins Page Styling
+   ========================================================================== */
+
+.admin-page {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-lg);
+}
+
+.page-header-glass {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--spacing-md);
+  padding: var(--spacing-lg);
+  border-radius: var(--radius-xl);
+  background: linear-gradient(125deg, rgba(12, 22, 44, 0.9), rgba(15, 26, 48, 0.85));
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: var(--shadow-md);
+  position: relative;
+  overflow: hidden;
+}
+
+.page-header-glass::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 0% 0%, rgba(234, 164, 48, 0.28), transparent 55%), radial-gradient(circle at 80% 20%, rgba(59, 130, 246, 0.2), transparent 60%);
+  opacity: 0.8;
+  pointer-events: none;
+}
+
+.page-header-glass > * {
+  position: relative;
+  z-index: 2;
+}
+
+.page-header-text {
+  max-width: 540px;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.eyebrow-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-size: 0.78rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.65);
+}
+
+.eyebrow-label i {
+  color: var(--lion-gold);
+}
+
+.page-title {
+  font-size: 2rem;
+  margin: 0;
+}
+
+.page-subtitle {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.65);
+}
+
+.page-header-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  flex-wrap: wrap;
+}
+
+.metric-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.65rem 1.1rem;
+  border-radius: var(--radius-full);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.06);
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.85);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.metric-chip small {
+  font-size: 0.72rem;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+  gap: var(--spacing-md);
+}
+
+.metric-card {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  padding: 1.5rem;
+}
+
+.metric-icon {
+  width: 56px;
+  height: 56px;
+  border-radius: var(--radius-lg);
+  display: grid;
+  place-items: center;
+  font-size: 1.4rem;
+  color: var(--white);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08);
+}
+
+.metric-icon.success {
+  background: rgba(34, 197, 94, 0.18);
+  color: #86efac;
+}
+
+.metric-icon.warning {
+  background: rgba(245, 158, 11, 0.18);
+  color: #fcd34d;
+}
+
+.metric-icon.accent {
+  background: rgba(59, 130, 246, 0.15);
+  color: #93c5fd;
+}
+
+.metric-content {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.metric-label {
+  font-size: 0.78rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.58);
+}
+
+.metric-value {
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: var(--white);
+}
+
+.table-card {
+  padding: 0;
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+}
+
+.table-card .table {
+  margin: 0;
+}
+
+.cell-primary {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.cell-primary i {
+  color: rgba(234, 164, 48, 0.75);
+}
+
+.role-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.4rem 0.8rem;
+  border-radius: var(--radius-full);
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: rgba(255, 255, 255, 0.78);
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.role-tag--super {
+  background: rgba(234, 164, 48, 0.16);
+  border-color: rgba(234, 164, 48, 0.35);
+  color: var(--lion-gold);
+  box-shadow: 0 12px 20px rgba(234, 164, 48, 0.25);
+}
+
+.action-menu {
+  display: inline-flex;
+  gap: 0.5rem;
+  justify-content: flex-start;
+}
+
+.data-empty {
+  display: grid;
+  place-items: center;
+  gap: 0.75rem;
+  padding: var(--spacing-xl);
+  border-radius: var(--radius-xl);
+  background: rgba(12, 22, 44, 0.82);
+  border: 1px dashed rgba(255, 255, 255, 0.12);
+  color: rgba(255, 255, 255, 0.7);
+  text-align: center;
+}
+
+.data-empty i {
+  font-size: 2.4rem;
+  color: rgba(234, 164, 48, 0.65);
+}
+
+.data-empty h3 {
+  margin: 0;
+  font-size: 1.4rem;
+  color: var(--white);
+}
+
+/* ==========================================================================
+   Responsive Behaviour
+   ========================================================================== */
+
+@media (max-width: 992px) {
+  .page-header-actions {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .metric-chip {
+    flex: 1;
+    justify-content: center;
+  }
+}
+
+@media (max-width: 768px) {
+  .page-header-glass {
+    padding: var(--spacing-md);
+  }
+
+  .page-title {
+    font-size: 1.6rem;
+  }
+
+  .page-header-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .metric-chip {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .action-menu {
+    width: 100%;
+    flex-direction: column;
+  }
+
+  .btn-action {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+@media (max-width: 576px) {
+  .metrics-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .page-header-text {
+    gap: 0.5rem;
+  }
+}

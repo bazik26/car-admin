@@ -1,38 +1,53 @@
-@if(admin) {
-<div class="admin-layout">
-  <!-- Modern Header -->
-  <header class="admin-header">
-    <div class="container">
-      <div class="d-flex justify-content-between align-items-center py-3">
-        <!-- User Info -->
-        <div class="admin-user-info d-flex align-items-center">
-          <div class="user-avatar me-3">
-            <i class="fas fa-user-shield"></i>
-          </div>
-          <div class="user-details">
-            <div class="user-name">{{ admin.name || admin.email }}</div>
-            <div class="user-role">
-              <i class="fas fa-shield-alt me-1"></i>
-              {{ admin.isSuper ? 'Супер Администратор' : 'Администратор' }}
+@if (admin) {
+  <div class="admin-layout">
+    <header class="admin-header animate-slide-in-top">
+      <div class="page-shell header-shell">
+        <div class="header-top">
+          <div class="header-profile animate-slide-in-left">
+            <div class="avatar-glow animate-float">
+              <i class="fas fa-crown"></i>
+              <span class="status-pulse"></span>
+            </div>
+            <div class="profile-details">
+              <span class="profile-greeting">Приветствуем,</span>
+              <h1 class="profile-name">{{ admin.name || admin.email }}</h1>
+              <span
+                class="role-chip"
+                [class.role-chip--super]="admin.isSuper"
+              >
+                <i class="fas fa-shield-alt"></i>
+                {{ admin.isSuper ? 'Супер администратор' : 'Администратор' }}
+              </span>
             </div>
           </div>
+
+          <div class="header-actions animate-slide-in-right">
+            <button
+              class="btn btn-ghost btn-outline"
+              type="button"
+              (click)="logout()"
+              title="Выйти из системы"
+            >
+              <i class="fas fa-sign-out-alt"></i>
+              <span>Выйти</span>
+            </button>
+          </div>
         </div>
-        
-        <!-- Navigation -->
-        <nav class="admin-nav">
-          <ul class="nav nav-pills">
-            @if(admin.isSuper) {
-            <li class="nav-item">
-              <a
-                class="nav-link"
-                [routerLink]="['/admin', 'admins']"
-                routerLinkActive="active"
-                title="Управление менеджерами"
-              >
-                <i class="fas fa-users me-1"></i>
-                Менеджеры
-              </a>
-            </li>
+
+        <nav class="header-nav animate-fade-in">
+          <ul class="nav nav-pills nav-elevated">
+            @if (admin.isSuper) {
+              <li class="nav-item">
+                <a
+                  class="nav-link"
+                  [routerLink]="['/admin', 'admins']"
+                  routerLinkActive="active"
+                  title="Управление менеджерами"
+                >
+                  <i class="fas fa-users"></i>
+                  <span>Менеджеры</span>
+                </a>
+              </li>
             }
 
             <li class="nav-item">
@@ -42,8 +57,8 @@
                 routerLinkActive="active"
                 title="Управление автомобилями"
               >
-                <i class="fas fa-car me-1"></i>
-                Автомобили
+                <i class="fas fa-car"></i>
+                <span>Автомобили</span>
               </a>
             </li>
 
@@ -54,33 +69,19 @@
                 routerLinkActive="active"
                 title="Проблемные автомобили"
               >
-                <i class="fas fa-exclamation-triangle me-1"></i>
-                Проблемные
+                <i class="fas fa-exclamation-triangle"></i>
+                <span>Проблемные</span>
               </a>
             </li>
           </ul>
         </nav>
-        
-        <!-- Admin Actions -->
-        <div class="admin-actions">
-          <button 
-            class="btn btn-outline-primary" 
-            (click)="logout()"
-            title="Выйти из системы"
-          >
-            <i class="fas fa-sign-out-alt me-1"></i>
-            Выйти
-          </button>
-        </div>
       </div>
-    </div>
-  </header>
-  
-  <!-- Main Content Area -->
-  <div class="admin-content">
-    <div class="container-fluid">
-      <router-outlet></router-outlet>
-    </div>
+    </header>
+
+    <main class="admin-content">
+      <div class="page-shell admin-content-shell animate-fade-in">
+        <router-outlet></router-outlet>
+      </div>
+    </main>
   </div>
-</div>
 }

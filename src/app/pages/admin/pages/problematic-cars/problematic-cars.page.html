@@ -1,175 +1,211 @@
 @if (admin && admin.isSuper) {
-  <div class="admin-page">
-    <div class="container">
-      <div class="row">
-        <div class="col-12">
-          <div class="page-header">
-            <h2 class="page-title">
-              <i class="fas fa-exclamation-triangle me-2 text-warning"></i>
-              Проблемные машины
-            </h2>
-            <div class="d-flex align-items-center gap-3">
-              <span class="cars-count">
-                Найдено проблем: {{ problematicCars.length }}
-              </span>
-              <button 
-                class="btn btn-outline-primary" 
-                (click)="loadProblematicCars()"
-                [disabled]="loading"
+  <section class="problematic-page animate-fade-in">
+    <header class="page-header-glass animate-slide-in-top">
+      <div class="page-header-text">
+        <span class="eyebrow-label">
+          <i class="fas fa-exclamation-circle"></i>
+          Контроль качества
+        </span>
+        <h2 class="page-title">Проблемные автомобили</h2>
+        <p class="page-subtitle">
+          Проверяйте заполненность карточек, отслеживайте критичные ошибки и исправляйте их до публикации.
+        </p>
+      </div>
+      <div class="page-header-actions">
+        <div class="refresh-chip" [class.refresh-chip--active]="loading">
+          <i class="fas fa-sync-alt" [class.fa-spin]="loading"></i>
+          <span>Обновлено {{ loadTimestamp ? (loadTimestamp | date:'HH:mm') : '—' }}</span>
+        </div>
+        <button
+          class="btn btn-lion"
+          type="button"
+          (click)="loadProblematicCars()"
+          [disabled]="loading"
+        >
+          <i class="fas fa-sync-alt"></i>
+          <span>Обновить</span>
+        </button>
+      </div>
+    </header>
+
+    <div class="metrics-grid animate-scale-in">
+      <div class="metric-card glass-card">
+        <div class="metric-icon danger">
+          <i class="fas fa-car-crash"></i>
+        </div>
+        <div class="metric-content">
+          <span class="metric-label">Всего авто</span>
+          <strong class="metric-value">{{ problematicCars.length }}</strong>
+        </div>
+      </div>
+      <div class="metric-card glass-card">
+        <div class="metric-icon warning">
+          <i class="fas fa-exclamation"></i>
+        </div>
+        <div class="metric-content">
+          <span class="metric-label">Всего проблем</span>
+          <strong class="metric-value">{{ getTotalProblems() }}</strong>
+        </div>
+      </div>
+      <div class="metric-card glass-card">
+        <div class="metric-icon accent">
+          <i class="fas fa-chart-line"></i>
+        </div>
+        <div class="metric-content">
+          <span class="metric-label">Среднее проблем</span>
+          <strong class="metric-value">{{ getAverageProblems() }}</strong>
+        </div>
+      </div>
+      <div class="metric-card glass-card">
+        <div class="metric-icon muted">
+          <i class="fas fa-image-slash"></i>
+        </div>
+        <div class="metric-content">
+          <span class="metric-label">Без фото</span>
+          <strong class="metric-value">{{ carsWithoutImagesCount }}</strong>
+        </div>
+      </div>
+    </div>
+
+    @if (loading) {
+      <div class="loading-state glass-card animate-fade-in">
+        <div class="loading-spinner-large">
+          <i class="fas fa-crown fa-spin"></i>
+        </div>
+        <p class="loading-text">Анализируем автомобили...</p>
+      </div>
+    } @else if (problematicCars.length === 0) {
+      <div class="data-empty animate-fade-in">
+        <i class="fas fa-check-circle"></i>
+        <h3>Отлично! Критичных проблем не найдено</h3>
+        <p>Все карточки заполнены корректно. Продолжайте в том же духе.</p>
+      </div>
+    } @else {
+      <div class="problems-grid">
+        @for (car of problematicCars; track car.id; let i = $index) {
+          <article
+            class="problem-card glass-card animate-slide-in-bottom"
+            [style.animation-delay]="(i * 0.05) + 's'"
+          >
+            <div class="problem-card__header">
+              <div class="problem-card__title">
+                <h3>
+                  {{ car.brand }} {{ car.model }}
+                  <span class="car-year">{{ car.year }}</span>
+                </h3>
+                <div class="problem-count">
+                  <i class="fas fa-bolt"></i>
+                  {{ car.problems.length }} проблем
+                </div>
+              </div>
+              <span
+                class="status-pill"
+                [ngClass]="{
+                  danger: car.deletedAt,
+                  warning: car.isSold && !car.deletedAt,
+                  success: !car.isSold && !car.deletedAt
+                }"
               >
-                <i class="fas fa-sync-alt me-2" [class.fa-spin]="loading"></i>
-                Обновить
+                <i
+                  class="fas"
+                  [ngClass]="{
+                    'fa-ban': car.deletedAt,
+                    'fa-award': car.isSold && !car.deletedAt,
+                    'fa-check-circle': !car.isSold && !car.deletedAt
+                  }"
+                ></i>
+                @if (car.deletedAt) {
+                  Удалена
+                } @else if (car.isSold) {
+                  Продана
+                } @else {
+                  Активна
+                }
+              </span>
+            </div>
+
+            <div class="problem-card__body">
+              <div class="problem-card__media">
+                @if (car.files?.length > 0) {
+                  <img
+                    [ngSrc]="appService.getFileUrl(car.files[0])"
+                    alt="{{ car.brand }} {{ car.model }}"
+                    height="140"
+                    width="220"
+                    [priority]="i < 8"
+                  />
+                } @else {
+                  <div class="media-placeholder">
+                    <i class="fas fa-image"></i>
+                    <span>Нет фото</span>
+                  </div>
+                }
+              </div>
+              <div class="problem-card__meta">
+                <div class="meta-row">
+                  <span>Пробег</span>
+                  <strong>{{ car.mileage ? (car.mileage | number) + ' км' : '—' }}</strong>
+                </div>
+                <div class="meta-row">
+                  <span>Цена</span>
+                  <strong>{{ car.price ? (car.price | number:'1.0-0') + ' ₸' : '—' }}</strong>
+                </div>
+                <div class="meta-row">
+                  <span>Двигатель</span>
+                  <strong>
+                    @if (car.engine && car.powerValue) {
+                      {{ car.engine }} л • {{ car.powerValue }} л.с.
+                    } @else {
+                      —
+                    }
+                  </strong>
+                </div>
+                <div class="meta-row">
+                  <span>Автор</span>
+                  <strong>{{ car.admin?.email || 'Не указан' }}</strong>
+                </div>
+              </div>
+            </div>
+
+            <div class="problem-card__issues">
+              @for (problem of car.problems; track problem) {
+                <span class="problem-chip">
+                  <i class="fas fa-exclamation-circle"></i>
+                  {{ problem }}
+                </span>
+              }
+            </div>
+
+            <div class="problem-card__actions">
+              <button
+                type="button"
+                class="btn btn-ghost btn-action accent"
+                (click)="openModal(car)"
+              >
+                <i class="fas fa-edit"></i>
+                <span>Редактировать</span>
+              </button>
+
+              <button
+                type="button"
+                class="btn btn-ghost btn-action danger"
+                (click)="deleteCar(car)"
+              >
+                <i class="fas fa-trash"></i>
+                <span>Удалить</span>
               </button>
             </div>
-          </div>
-
-          @if (loading) {
-            <div class="text-center py-5">
-              <div class="spinner-border text-primary" role="status">
-                <span class="visually-hidden">Загрузка...</span>
-              </div>
-              <p class="mt-3 text-muted">Поиск проблемных автомобилей...</p>
-            </div>
-          } @else if (problematicCars.length === 0) {
-            <div class="text-center py-5">
-              <i class="fas fa-check-circle text-success" style="font-size: 4rem;"></i>
-              <h4 class="mt-3 text-success">Отлично!</h4>
-              <p class="text-muted">Проблемных автомобилей не найдено</p>
-            </div>
-          } @else {
-            <div class="table-responsive">
-              <table class="table table-bordered table-hover align-middle">
-                <thead class="table-light">
-                  <tr>
-                    <th>Автомобиль</th>
-                    <th>Фото</th>
-                    <th>Проблемы</th>
-                    <th>Статус</th>
-                    <th>Действия</th>
-                    <th>Автор</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  @for (car of problematicCars; track car.id; let index = $index) {
-                    <tr [class.table-warning]="car.problems.length > 5">
-                      <td>
-                        <div class="car-info">
-                          <strong>{{ car.brand }} {{ car.model }}</strong>
-                          <br>
-                          <small class="text-muted">
-                            {{ car.year }} • {{ car.mileage ? (car.mileage | number) + ' км' : 'Нет пробега' }}
-                          </small>
-                        </div>
-                      </td>
-                      <td>
-                        @if (car.files?.length > 0) {
-                          <img
-                            [ngSrc]="appService.getFileUrl(car.files[0])"
-                            alt="car"
-                            height="60"
-                            width="80"
-                            class="img-thumbnail"
-                            [priority]="index < 10"
-                          />
-                        } @else {
-                          <div class="no-image-placeholder">
-                            <i class="fas fa-image text-muted"></i>
-                            <small class="d-block text-muted">Нет фото</small>
-                          </div>
-                        }
-                      </td>
-                      <td>
-                        <div class="problems-list">
-                          @for (problem of car.problems; track problem) {
-                            <span class="badge bg-danger me-1 mb-1">{{ problem }}</span>
-                          }
-                        </div>
-                      </td>
-                      <td>
-                        @if (car.deletedAt) {
-                          <span class="badge bg-danger">Удалена</span>
-                        } @else if (car.isSold) {
-                          <span class="badge bg-warning">Продан</span>
-                        } @else {
-                          <span class="badge bg-success">Активна</span>
-                        }
-                      </td>
-                      <td>
-                        <div class="action-buttons">
-                          @if (!car.deletedAt) {
-                            <button
-                              class="btn btn-sm btn-primary me-2"
-                              (click)="openModal(car)"
-                              title="Редактировать"
-                            >
-                              <i class="fas fa-edit"></i>
-                            </button>
-                            <button
-                              class="btn btn-sm btn-danger"
-                              (click)="deleteCar(car)"
-                              title="Удалить"
-                            >
-                              <i class="fas fa-trash"></i>
-                            </button>
-                          }
-                        </div>
-                      </td>
-                      <td>
-                        @if (car.admin) {
-                          <small class="text-muted">{{ car.admin.email }}</small>
-                        } @else {
-                          <small class="text-muted">Не указан</small>
-                        }
-                      </td>
-                    </tr>
-                  }
-                </tbody>
-              </table>
-            </div>
-
-            <!-- Статистика -->
-            <div class="mt-4 row">
-              <div class="col-md-4">
-                <div class="card bg-light">
-                  <div class="card-body text-center">
-                    <h5 class="card-title text-danger">{{ problematicCars.length }}</h5>
-                    <p class="card-text">Проблемных автомобилей</p>
-                  </div>
-                </div>
-              </div>
-              <div class="col-md-4">
-                <div class="card bg-light">
-                  <div class="card-body text-center">
-                    <h5 class="card-title text-warning">{{ getTotalProblems() }}</h5>
-                    <p class="card-text">Всего проблем</p>
-                  </div>
-                </div>
-              </div>
-              <div class="col-md-4">
-                <div class="card bg-light">
-                  <div class="card-body text-center">
-                    <h5 class="card-title text-info">{{ getAverageProblems() }}</h5>
-                    <p class="card-text">Среднее проблем на авто</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          }
-        </div>
+          </article>
+        }
       </div>
-    </div>
-  </div>
+    }
+  </section>
 } @else {
-  <div class="admin-page">
-    <div class="container">
-      <div class="row">
-        <div class="col-12">
-          <div class="alert alert-danger text-center">
-            <i class="fas fa-lock me-2"></i>
-            Доступ запрещен. Эта страница доступна только для супер-администраторов.
-          </div>
-        </div>
-      </div>
+  <section class="problematic-page animate-fade-in">
+    <div class="data-empty animate-fade-in">
+      <i class="fas fa-lock"></i>
+      <h3>Доступ ограничен</h3>
+      <p>Раздел доступен только супер администраторам.</p>
     </div>
-  </div>
+  </section>
 }

@@ -55,4 +55,28 @@ export class AdminAdminsPage implements OnInit {
   restoreAdmin(admin: any) {
     this.appService.restoreAdmin(admin.id).subscribe(() => this.getAdminsAll());
   }
+
+  get activeAdminsCount(): number {
+    if (!Array.isArray(this.admins)) {
+      return 0;
+    }
+
+    return this.admins.filter((admin: any) => !admin.deletedAt).length;
+  }
+
+  get removedAdminsCount(): number {
+    if (!Array.isArray(this.admins)) {
+      return 0;
+    }
+
+    return this.admins.filter((admin: any) => admin.deletedAt).length;
+  }
+
+  get superAdminsCount(): number {
+    if (!Array.isArray(this.admins)) {
+      return 0;
+    }
+
+    return this.admins.filter((admin: any) => admin.isSuper).length;
+  }
 }

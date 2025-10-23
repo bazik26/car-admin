@@ -29,6 +29,7 @@ export class AdminProblematicCarsPage implements OnInit {
   public admin!: any;
   public problematicCars: any[] = [];
   public loading = false;
+  public loadTimestamp: Date | null = null;
 
   ngOnInit() {
     this.appService.auth().subscribe((admin) => {
@@ -44,6 +45,7 @@ export class AdminProblematicCarsPage implements OnInit {
     this.appService.getCarsAll().subscribe((cars) => {
       this.cars = cars;
       this.problematicCars = this.findProblematicCars(cars);
+      this.loadTimestamp = new Date();
       this.loading = false;
     });
   }
@@ -182,6 +184,14 @@ export class AdminProblematicCarsPage implements OnInit {
   getAverageProblems(): number {
     if (this.problematicCars.length === 0) return 0;
     return Math.round((this.getTotalProblems() / this.problematicCars.length) * 10) / 10;
+  }
+
+  get carsWithoutImagesCount(): number {
+    if (!Array.isArray(this.problematicCars)) {
+      return 0;
+    }
+
+    return this.problematicCars.filter((car) => !car.files || car.files.length === 0).length;
   }
 
   private showNotification(message: string, type: 'success' | 'error' | 'info') {

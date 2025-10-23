@@ -1,176 +1,340 @@
-// Стили для страницы управления автомобилями
-.admin-page {
-  background-color: #ffffff !important;
-  color: #212529 !important;
+/* ==========================================================================
+   Cars Management Page Styling
+   ========================================================================== */
+
+.cars-page {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-lg);
+}
+
+.page-header-glass {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--spacing-md);
+  padding: var(--spacing-lg);
+  border-radius: var(--radius-xl);
+  background: linear-gradient(130deg, rgba(12, 24, 46, 0.92), rgba(18, 32, 60, 0.88));
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: var(--shadow-lg);
+  position: relative;
+  overflow: hidden;
+}
+
+.page-header-glass::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 85% 15%, rgba(59, 130, 246, 0.25), transparent 55%), radial-gradient(circle at 10% 85%, rgba(234, 164, 48, 0.25), transparent 55%);
+  opacity: 0.85;
+  pointer-events: none;
+}
+
+.page-header-glass > * {
+  position: relative;
+  z-index: 2;
+}
+
+.page-header-text {
+  max-width: 620px;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.eyebrow-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: rgba(255, 255, 255, 0.65);
+}
+
+.eyebrow-label i {
+  color: var(--lion-gold);
+}
+
+.page-title {
+  font-size: 2rem;
+  margin: 0;
+}
+
+.page-subtitle {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.68);
+}
+
+.page-header-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  flex-wrap: wrap;
+}
+
+.stats-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.65rem 1.1rem;
+  border-radius: var(--radius-full);
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.stats-chip small {
+  font-size: 0.72rem;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+  gap: var(--spacing-md);
+}
+
+.metric-card {
+  display: flex;
+  gap: var(--spacing-sm);
+  align-items: center;
   padding: 1.5rem;
-  border-radius: 0.5rem;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-  margin-bottom: 2rem;
-  
-  .container {
-    max-width: 1200px;
-  }
-  
-  .page-header {
-    display: flex;
+  position: relative;
+  overflow: hidden;
+}
+
+.metric-card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(140deg, rgba(255, 255, 255, 0.06), transparent 65%);
+  opacity: 0.85;
+  pointer-events: none;
+}
+
+.metric-icon {
+  width: 58px;
+  height: 58px;
+  border-radius: var(--radius-lg);
+  display: grid;
+  place-items: center;
+  font-size: 1.45rem;
+  color: var(--white);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08);
+}
+
+.metric-icon.success {
+  background: rgba(34, 197, 94, 0.18);
+  color: #86efac;
+}
+
+.metric-icon.warning {
+  background: rgba(245, 158, 11, 0.18);
+  color: #fcd34d;
+}
+
+.metric-icon.danger {
+  background: rgba(239, 68, 68, 0.18);
+  color: #fca5a5;
+}
+
+.metric-content {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.metric-label {
+  font-size: 0.78rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.58);
+}
+
+.metric-value {
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: var(--white);
+}
+
+.table-card {
+  padding: 0;
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+}
+
+.table-card .table {
+  margin: 0;
+}
+
+.car-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.car-name {
+  display: flex;
+  align-items: baseline;
+  gap: 0.75rem;
+  color: var(--white);
+}
+
+.car-name strong {
+  font-size: 1.05rem;
+  letter-spacing: 0.02em;
+}
+
+.car-year {
+  padding: 0.25rem 0.6rem;
+  border-radius: var(--radius-full);
+  background: rgba(59, 130, 246, 0.18);
+  border: 1px solid rgba(59, 130, 246, 0.35);
+  font-size: 0.7rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #bfdbfe;
+}
+
+.car-vin {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.78rem;
+  letter-spacing: 0.04em;
+  color: rgba(255, 255, 255, 0.65);
+}
+
+.car-thumb {
+  width: 120px;
+  height: 80px;
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(15, 26, 48, 0.75);
+  display: grid;
+  place-items: center;
+  box-shadow: var(--shadow-sm);
+}
+
+.car-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform var(--transition-normal);
+}
+
+.car-thumb:hover img {
+  transform: scale(1.05);
+}
+
+.car-thumb.placeholder {
+  flex-direction: column;
+  gap: 0.35rem;
+  color: rgba(255, 255, 255, 0.55);
+  font-size: 0.75rem;
+}
+
+.car-thumb.placeholder i {
+  font-size: 1.4rem;
+  color: rgba(255, 255, 255, 0.45);
+}
+
+.action-menu {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+}
+
+.car-author {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  color: rgba(255, 255, 255, 0.75);
+}
+
+.car-author i {
+  color: rgba(255, 255, 255, 0.55);
+}
+
+.author-missing {
+  color: rgba(255, 255, 255, 0.48);
+  font-size: 0.82rem;
+}
+
+/* ==========================================================================
+   Modal-specific tweaks leverage the global modal styling
+   ========================================================================== */
+
+.modal-content {
+  max-width: 640px;
+  margin: 0 auto;
+}
+
+/* ==========================================================================
+   Responsive Adjustments
+   ========================================================================== */
+
+@media (max-width: 992px) {
+  .page-header-actions {
+    width: 100%;
     justify-content: space-between;
-    align-items: center;
-    margin-bottom: 1.5rem;
-    padding: 1rem 0;
-    border-bottom: 2px solid #dee2e6;
-    
-    .page-title {
-      font-size: 1.5rem;
-      font-weight: 600;
-      color: #212529 !important;
-      margin: 0;
-    }
-    
-    .cars-count {
-      font-size: 1rem;
-      color: #6c757d !important;
-      font-weight: 500;
-    }
   }
-  
-  .table {
-    margin-top: 1rem;
-    background-color: #ffffff !important;
-    
-    thead {
-      background-color: #f8f9fa !important;
-      
-      th {
-        color: #212529 !important;
-        font-weight: 600;
-        border-color: #dee2e6 !important;
-      }
-    }
-    
-    tbody {
-      tr {
-        background-color: #ffffff !important;
-        
-        td {
-          color: #212529 !important;
-          border-color: #dee2e6 !important;
-          vertical-align: middle;
-        }
-        
-        &.table-danger {
-          background-color: #f8d7da !important;
-          
-          td {
-            color: #721c24 !important;
-          }
-        }
-      }
-    }
-    
-    .status-badge {
-      &.sold {
-        background-color: #ffc107 !important;
-        color: #212529 !important;
-      }
-      
-      &.active {
-        background-color: #28a745 !important;
-        color: #ffffff !important;
-      }
-      
-      &.deleted {
-        background-color: #dc3545 !important;
-        color: #ffffff !important;
-      }
-    }
-    
-    .action-buttons {
-      display: flex;
-      gap: 0.5rem;
-      justify-content: center;
-      flex-wrap: wrap;
-      
-      .btn {
-        min-width: 80px;
-        font-size: 0.875rem;
-        padding: 0.375rem 0.75rem;
-        
-        &.btn-sm {
-          font-size: 0.75rem;
-          padding: 0.25rem 0.5rem;
-        }
-      }
-    }
-    
-    .img-thumbnail {
-      border-radius: 0.375rem;
-      border: 1px solid #dee2e6;
-      object-fit: cover;
-    }
+
+  .stats-chip {
+    flex: 1;
+    justify-content: center;
   }
 }
 
-// Стили для модального окна
-.modal-content {
-  border-radius: 0.5rem;
-  border: none;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-  background-color: #ffffff !important;
-  
-  .modal-header {
-    background-color: #f8f9fa !important;
-    border-bottom: 1px solid #dee2e6 !important;
-    border-radius: 0.5rem 0.5rem 0 0;
-    
-    .modal-title {
-      font-weight: 600;
-      color: #212529 !important;
-    }
-    
-    .btn-close {
-      background-color: transparent;
-      border: none;
-      color: #6c757d;
-      
-      &:hover {
-        color: #212529;
-      }
-    }
+@media (max-width: 768px) {
+  .page-header-glass {
+    padding: var(--spacing-md);
   }
-  
-  .modal-body {
-    padding: 1.5rem;
-    background-color: #ffffff !important;
-    color: #212529 !important;
+
+  .page-title {
+    font-size: 1.65rem;
   }
-  
-  .modal-footer {
-    background-color: #f8f9fa !important;
-    border-top: 1px solid #dee2e6 !important;
-    border-radius: 0 0 0.5rem 0.5rem;
-    
-    .btn {
-      color: #ffffff !important;
-      
-      &.btn-secondary {
-        background-color: #6c757d !important;
-        border-color: #6c757d !important;
-        
-        &:hover {
-          background-color: #5a6268 !important;
-          border-color: #545b62 !important;
-        }
-      }
-      
-      &.btn-primary {
-        background-color: #217e02 !important;
-        border-color: #217e02 !important;
-        
-        &:hover {
-          background-color: #1a6b02 !important;
-          border-color: #1a6b02 !important;
-        }
-      }
-    }
+
+  .page-header-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .stats-chip {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .action-menu {
+    width: 100%;
+    flex-direction: column;
+  }
+
+  .btn-action {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .car-thumb {
+    width: 100%;
+  }
+}
+
+@media (max-width: 576px) {
+  .metrics-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .car-name {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.45rem;
   }
 }

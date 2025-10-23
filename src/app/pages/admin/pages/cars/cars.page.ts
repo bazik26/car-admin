@@ -90,6 +90,30 @@ export class AdminCarsPage implements OnInit {
     }
   }
 
+  get activeCarsCount(): number {
+    if (!Array.isArray(this.cars)) {
+      return 0;
+    }
+
+    return this.cars.filter((car: any) => !car.deletedAt && !car.isSold).length;
+  }
+
+  get soldCarsCount(): number {
+    if (!Array.isArray(this.cars)) {
+      return 0;
+    }
+
+    return this.cars.filter((car: any) => !car.deletedAt && car.isSold).length;
+  }
+
+  get deletedCarsCount(): number {
+    if (!Array.isArray(this.cars)) {
+      return 0;
+    }
+
+    return this.cars.filter((car: any) => car.deletedAt).length;
+  }
+
   private showNotification(message: string, type: 'success' | 'error' | 'info') {
     // Простое уведомление (можно заменить на toast или другой компонент)
     const alertClass = type === 'success' ? 'alert-success' : 

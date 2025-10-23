@@ -1,159 +1,445 @@
-// Стили для страницы проблемных автомобилей
-.admin-page {
-  .page-header {
-    .page-title {
-      .text-warning {
-        color: #ffc107 !important;
-      }
-    }
+/* ==========================================================================
+   Problematic Cars — Quality Control Dashboard Styling
+   ========================================================================== */
+
+.problematic-page {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-lg);
+}
+
+.page-header-glass {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--spacing-md);
+  padding: var(--spacing-lg);
+  border-radius: var(--radius-xl);
+  background: linear-gradient(135deg, rgba(17, 32, 60, 0.92), rgba(11, 22, 44, 0.9));
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: var(--shadow-lg);
+  position: relative;
+  overflow: hidden;
+}
+
+.page-header-glass::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 0% 0%, rgba(234, 164, 48, 0.25), transparent 55%), radial-gradient(circle at 100% 20%, rgba(59, 130, 246, 0.2), transparent 60%);
+  opacity: 0.85;
+  pointer-events: none;
+}
+
+.page-header-glass > * {
+  position: relative;
+  z-index: 2;
+}
+
+.page-header-text {
+  max-width: 640px;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.eyebrow-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-size: 0.78rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.65);
+}
+
+.eyebrow-label i {
+  color: var(--lion-gold);
+}
+
+.page-title {
+  margin: 0;
+  font-size: 2rem;
+}
+
+.page-subtitle {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.68);
+}
+
+.page-header-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  flex-wrap: wrap;
+}
+
+.refresh-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.65rem 1.1rem;
+  border-radius: var(--radius-full);
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.75);
+  transition: border-color var(--transition-fast), background var(--transition-fast);
+}
+
+.refresh-chip--active {
+  border-color: rgba(59, 130, 246, 0.32);
+  background: rgba(59, 130, 246, 0.14);
+  color: #bfdbfe;
+}
+
+.metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: var(--spacing-md);
+}
+
+.metric-card {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  padding: 1.5rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.metric-card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(140deg, rgba(255, 255, 255, 0.06), transparent 65%);
+  pointer-events: none;
+}
+
+.metric-icon {
+  width: 58px;
+  height: 58px;
+  border-radius: var(--radius-lg);
+  display: grid;
+  place-items: center;
+  font-size: 1.45rem;
+  color: var(--white);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08);
+}
+
+.metric-icon.danger {
+  background: rgba(239, 68, 68, 0.18);
+  color: #fca5a5;
+}
+
+.metric-icon.warning {
+  background: rgba(245, 158, 11, 0.18);
+  color: #fcd34d;
+}
+
+.metric-icon.accent {
+  background: rgba(168, 85, 247, 0.18);
+  color: #e9d5ff;
+}
+
+.metric-icon.muted {
+  background: rgba(148, 163, 184, 0.18);
+  color: #cbd5f5;
+}
+
+.metric-content {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.metric-label {
+  font-size: 0.78rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.58);
+}
+
+.metric-value {
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: var(--white);
+}
+
+.loading-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  padding: var(--spacing-xl);
+}
+
+.problems-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: var(--spacing-md);
+}
+
+.problem-card {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  padding: 1.75rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.problem-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(155deg, rgba(239, 68, 68, 0.12), transparent 55%);
+  opacity: 0.85;
+  pointer-events: none;
+}
+
+.problem-card__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.problem-card__title {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+}
+
+.problem-card__title h3 {
+  margin: 0;
+  font-size: 1.35rem;
+  letter-spacing: 0.01em;
+  color: var(--white);
+}
+
+.car-year {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.25rem 0.6rem;
+  border-radius: var(--radius-full);
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: rgba(255, 255, 255, 0.75);
+}
+
+.problem-count {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.85rem;
+  color: #fca5a5;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.problem-count i {
+  color: rgba(239, 68, 68, 0.75);
+}
+
+.problem-card__body {
+  display: flex;
+  gap: 1.25rem;
+  align-items: stretch;
+  flex-wrap: wrap;
+}
+
+.problem-card__media {
+  position: relative;
+  width: 220px;
+  height: 140px;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(8, 15, 33, 0.75);
+  box-shadow: var(--shadow-sm);
+}
+
+.problem-card__media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform var(--transition-normal);
+}
+
+.problem-card__media:hover img {
+  transform: scale(1.06);
+}
+
+.media-placeholder {
+  width: 100%;
+  height: 100%;
+  display: grid;
+  place-items: center;
+  gap: 0.45rem;
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 0.82rem;
+}
+
+.media-placeholder i {
+  font-size: 1.5rem;
+  color: rgba(255, 255, 255, 0.45);
+}
+
+.problem-card__meta {
+  flex: 1;
+  min-width: 210px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 0.75rem;
+}
+
+.meta-row {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  padding: 0.75rem;
+  border-radius: var(--radius-md);
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.meta-row span {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.meta-row strong {
+  color: var(--white);
+  font-size: 0.95rem;
+}
+
+.problem-card__issues {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.problem-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.45rem 0.75rem;
+  border-radius: var(--radius-full);
+  background: rgba(239, 68, 68, 0.16);
+  border: 1px solid rgba(239, 68, 68, 0.35);
+  color: #fca5a5;
+  font-size: 0.78rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.problem-chip i {
+  font-size: 0.75rem;
+}
+
+.problem-card__actions {
+  display: flex;
+  gap: 0.65rem;
+  flex-wrap: wrap;
+}
+
+.problem-card .btn-action {
+  padding: 0.55rem 1rem;
+}
+
+.data-empty {
+  display: grid;
+  place-items: center;
+  gap: 1rem;
+  padding: var(--spacing-xl);
+  border-radius: var(--radius-xl);
+  background: rgba(12, 22, 44, 0.82);
+  border: 1px dashed rgba(255, 255, 255, 0.12);
+  color: rgba(255, 255, 255, 0.7);
+  text-align: center;
+}
+
+.data-empty i {
+  font-size: 2.6rem;
+  color: rgba(234, 164, 48, 0.6);
+}
+
+.data-empty h3 {
+  margin: 0;
+  color: var(--white);
+  font-size: 1.5rem;
+}
+
+/* ==========================================================================
+   Responsive Adjustments
+   ========================================================================== */
+
+@media (max-width: 992px) {
+  .page-header-actions {
+    width: 100%;
+    justify-content: space-between;
   }
 
-  .table {
-    .table-warning {
-      background-color: #fff3cd;
-      
-      &:hover {
-        background-color: #ffeaa7;
-      }
-    }
-
-    .car-info {
-      strong {
-        color: #212529;
-        font-size: 1rem;
-      }
-      
-      small {
-        font-size: 0.875rem;
-      }
-    }
-
-    .no-image-placeholder {
-      width: 80px;
-      height: 60px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      background-color: #f8f9fa;
-      border: 1px solid #dee2e6;
-      border-radius: 0.375rem;
-      
-      i {
-        font-size: 1.5rem;
-        margin-bottom: 0.25rem;
-      }
-    }
-
-    .problems-list {
-      max-width: 300px;
-      
-      .badge {
-        font-size: 0.75rem;
-        white-space: normal;
-        word-break: break-word;
-        line-height: 1.2;
-        padding: 0.375rem 0.5rem;
-        margin-bottom: 0.25rem;
-        display: inline-block;
-      }
-    }
-
-    .action-buttons {
-      display: flex;
-      gap: 0.5rem;
-      justify-content: center;
-      
-      .btn {
-        min-width: 36px;
-        height: 36px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        
-        i {
-          font-size: 0.875rem;
-        }
-      }
-    }
-  }
-
-  .spinner-border {
-    width: 3rem;
-    height: 3rem;
-  }
-
-  .card {
-    border: 1px solid #dee2e6;
-    border-radius: 0.5rem;
-    transition: transform 0.2s ease;
-    
-    &:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-    }
-    
-    .card-title {
-      font-size: 2rem;
-      font-weight: 700;
-      margin-bottom: 0.5rem;
-    }
-    
-    .card-text {
-      color: #6c757d;
-      font-size: 0.875rem;
-      margin-bottom: 0;
-    }
-  }
-
-  .alert {
-    border-radius: 0.5rem;
-    border: none;
-    
-    &.alert-danger {
-      background-color: #f8d7da;
-      color: #721c24;
-      border-left: 4px solid #dc3545;
-    }
+  .refresh-chip,
+  .btn.btn-lion {
+    flex: 1;
+    justify-content: center;
   }
 }
 
-// Адаптивность
 @media (max-width: 768px) {
-  .admin-page {
-    .table-responsive {
-      font-size: 0.875rem;
-    }
-    
-    .problems-list {
-      max-width: 200px;
-      
-      .badge {
-        font-size: 0.7rem;
-        padding: 0.25rem 0.375rem;
-      }
-    }
-    
-    .action-buttons {
-      flex-direction: column;
-      gap: 0.25rem;
-      
-      .btn {
-        min-width: 32px;
-        height: 32px;
-        
-        i {
-          font-size: 0.75rem;
-        }
-      }
-    }
-    
-    .card {
-      margin-bottom: 1rem;
-      
-      .card-title {
-        font-size: 1.5rem;
-      }
-    }
+  .page-header-glass {
+    padding: var(--spacing-md);
+  }
+
+  .metrics-grid {
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  }
+
+  .problem-card {
+    padding: 1.5rem;
+  }
+
+  .problem-card__body {
+    flex-direction: column;
+  }
+
+  .problem-card__media {
+    width: 100%;
+  }
+
+  .problem-card__meta {
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  }
+
+  .problem-card__actions {
+    flex-direction: column;
+  }
+
+  .problem-card__actions .btn-action {
+    width: 100%;
+    justify-content: center;
   }
 }
+
+@media (max-width: 576px) {
+  .metrics-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .problem-card__meta {
+    grid-template-columns: 1fr;
+  }
+}
+

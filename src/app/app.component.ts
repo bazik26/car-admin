@@ -11,3 +11,4 @@ export class AppComponent implements OnInit {
     document.body.classList.add('admin');
   }
 }
+
