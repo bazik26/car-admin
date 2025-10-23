@@ -283,24 +283,45 @@
 
 .data-table td,
 .data-table th {
-  color: rgba(255, 255, 255, 0.9) !important;
+  color: #1a1a1a !important;
 }
 
-/* Force dark text on light backgrounds */
+/* Force light backgrounds for better text visibility */
 .data-table tbody tr {
-  background: rgba(12, 22, 42, 0.8) !important;
+  background: rgba(255, 255, 255, 0.95) !important;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1) !important;
 }
 
 .data-table tbody tr:hover {
-  background: rgba(18, 32, 60, 0.88) !important;
+  background: rgba(248, 250, 252, 0.98) !important;
 }
 
-/* Ensure text is always visible */
+.data-table thead {
+  background: rgba(249, 250, 251, 0.95) !important;
+}
+
+/* Ensure text is always visible with dark color */
 .car-name strong,
 .car-vin,
 .car-author,
 .author-missing {
-  color: rgba(255, 255, 255, 0.9) !important;
+  color: #1a1a1a !important;
+}
+
+.car-name strong {
+  font-weight: 600;
+}
+
+.car-vin {
+  color: #4b5563 !important;
+}
+
+.car-author {
+  color: #374151 !important;
+}
+
+.author-missing {
+  color: #9ca3af !important;
 }
 
 .author-missing {
