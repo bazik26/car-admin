@@ -8,7 +8,7 @@
     "build": "ng build --configuration production",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
-    "serve": "ng serve --host 0.0.0.0 --port $PORT --configuration production"
+    "serve": "serve -s dist/car-admin/browser -l $PORT"
   },
   "prettier": {
     "overrides": [
@@ -33,6 +33,7 @@
     "ngx-bootstrap": "^20.0.0",
     "prettier": "^3.6.2",
     "rxjs": "~7.8.0",
+    "serve": "^14.2.1",
     "swiper": "^11.2.10",
     "tslib": "^2.3.0",
     "zone.js": "~0.15.0"

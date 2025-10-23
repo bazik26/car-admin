@@ -23,4 +23,4 @@ RUN npm install -g serve
 EXPOSE 3000
 
 # Запускаем приложение
-CMD ["serve", "-s", "dist/car-admin/browser", "-l", "3000"]
+CMD ["serve", "-s", "dist/car-admin/browser", "-l", "3000", "--single"]
