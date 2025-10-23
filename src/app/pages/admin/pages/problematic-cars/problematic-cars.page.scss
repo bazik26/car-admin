@@ -356,27 +356,27 @@
 
 .problem-card .btn-action {
   padding: 0.55rem 1rem;
-  background: rgba(0, 0, 0, 0.05) !important;
-  border: 1px solid rgba(0, 0, 0, 0.15) !important;
-  color: #1a1a1a !important;
+  background: rgba(255, 255, 255, 0.1) !important;
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+  color: rgba(255, 255, 255, 0.9) !important;
 }
 
 .problem-card .btn-action i {
-  color: #6b7280 !important;
+  color: rgba(255, 255, 255, 0.8) !important;
 }
 
 .problem-card .btn-action.accent:hover {
-  border-color: rgba(59, 130, 246, 0.4) !important;
-  box-shadow: 0 14px 24px rgba(59, 130, 246, 0.25) !important;
-  color: #2563eb !important;
-  background: rgba(59, 130, 246, 0.1) !important;
+  border-color: rgba(59, 130, 246, 0.6) !important;
+  box-shadow: 0 14px 24px rgba(59, 130, 246, 0.3) !important;
+  color: #93c5fd !important;
+  background: rgba(59, 130, 246, 0.2) !important;
 }
 
 .problem-card .btn-action.danger:hover {
-  border-color: rgba(239, 68, 68, 0.4) !important;
-  box-shadow: 0 14px 24px rgba(239, 68, 68, 0.25) !important;
-  color: #dc2626 !important;
-  background: rgba(239, 68, 68, 0.1) !important;
+  border-color: rgba(239, 68, 68, 0.6) !important;
+  box-shadow: 0 14px 24px rgba(239, 68, 68, 0.3) !important;
+  color: #fca5a5 !important;
+  background: rgba(239, 68, 68, 0.2) !important;
 }
 
 .data-empty {
