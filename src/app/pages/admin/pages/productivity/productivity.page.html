@@ -77,7 +77,7 @@
               <i class="fas fa-car"></i>
             </div>
             <div class="stat-content">
-              <h3 class="stat-number">{{ adminStats.reduce((sum, admin) => sum + admin.carsAdded, 0) }}</h3>
+              <h3 class="stat-number">{{ getTotalCars() }}</h3>
               <p class="stat-label">Всего автомобилей</p>
             </div>
           </div>
@@ -89,7 +89,7 @@
               <i class="fas fa-exclamation-triangle"></i>
             </div>
             <div class="stat-content">
-              <h3 class="stat-number">{{ adminStats.reduce((sum, admin) => sum + admin.errorsCount, 0) }}</h3>
+              <h3 class="stat-number">{{ getTotalErrors() }}</h3>
               <p class="stat-label">Всего ошибок</p>
             </div>
           </div>

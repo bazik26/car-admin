@@ -50,7 +50,7 @@ export class AdminProductivityPage implements OnInit {
           font: {
             family: 'Inter',
             size: 12,
-            weight: '600'
+            weight: 600
           }
         }
       },
@@ -61,7 +61,7 @@ export class AdminProductivityPage implements OnInit {
         font: {
           family: 'Inter',
           size: 16,
-          weight: '700'
+          weight: 700
         }
       }
     },
@@ -104,7 +104,7 @@ export class AdminProductivityPage implements OnInit {
           font: {
             family: 'Inter',
             size: 12,
-            weight: '600'
+            weight: 600
           }
         }
       },
@@ -115,7 +115,7 @@ export class AdminProductivityPage implements OnInit {
         font: {
           family: 'Inter',
           size: 16,
-          weight: '700'
+          weight: 700
         }
       }
     }
@@ -131,7 +131,7 @@ export class AdminProductivityPage implements OnInit {
           font: {
             family: 'Inter',
             size: 12,
-            weight: '600'
+            weight: 600
           }
         }
       },
@@ -142,7 +142,7 @@ export class AdminProductivityPage implements OnInit {
         font: {
           family: 'Inter',
           size: 16,
-          weight: '700'
+          weight: 700
         }
       }
     },
@@ -236,12 +236,12 @@ export class AdminProductivityPage implements OnInit {
     this.error = null;
 
     // Загружаем данные админов
-    this.appService.getAdmins().subscribe({
-      next: (admins) => {
+    this.appService.getAdminsAll().subscribe({
+      next: (admins: any[]) => {
         this.processAdminData(admins);
         this.loading = false;
       },
-      error: (err) => {
+      error: (err: any) => {
         this.error = 'Ошибка загрузки данных';
         this.loading = false;
         console.error('Error loading admin data:', err);
@@ -348,5 +348,13 @@ export class AdminProductivityPage implements OnInit {
 
   refreshData() {
     this.loadProductivityData();
+  }
+
+  getTotalCars(): number {
+    return this.adminStats.reduce((sum, admin) => sum + admin.carsAdded, 0);
+  }
+
+  getTotalErrors(): number {
+    return this.adminStats.reduce((sum, admin) => sum + admin.errorsCount, 0);
   }
 }
