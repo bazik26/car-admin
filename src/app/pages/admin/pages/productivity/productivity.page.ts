@@ -1,8 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ChartConfiguration, ChartOptions } from 'chart.js';
+import { ChartConfiguration, ChartOptions, Chart, registerables } from 'chart.js';
 import { BaseChartDirective } from 'ng2-charts';
 import { AppService } from '../../../../services/app.service';
+
+// Регистрируем все контроллеры и шкалы Chart.js
+Chart.register(...registerables);
 
 interface AdminStats {
   id: number;
@@ -302,13 +305,20 @@ export class AdminProductivityPage implements OnInit {
   }
 
   updateCharts() {
-    // Обновляем данные для графиков
+    // Обновляем данные для графиков с проверкой на пустые данные
+    const productiveLabels = this.topProductiveAdmins.length > 0 
+      ? this.topProductiveAdmins.map(admin => admin.name)
+      : ['Нет данных'];
+    const productiveData = this.topProductiveAdmins.length > 0 
+      ? this.topProductiveAdmins.map(admin => admin.carsAdded)
+      : [0];
+
     this.productivityChartData = {
-      labels: this.topProductiveAdmins.map(admin => admin.name),
+      labels: productiveLabels,
       datasets: [
         {
           label: 'Автомобили добавлено',
-          data: this.topProductiveAdmins.map(admin => admin.carsAdded),
+          data: productiveData,
           backgroundColor: 'rgba(212, 175, 55, 0.8)',
           borderColor: '#D4AF37',
           borderWidth: 2
@@ -316,12 +326,19 @@ export class AdminProductivityPage implements OnInit {
       ]
     };
 
+    const problematicLabels = this.topProblematicAdmins.length > 0 
+      ? this.topProblematicAdmins.map(admin => admin.name)
+      : ['Нет данных'];
+    const problematicData = this.topProblematicAdmins.length > 0 
+      ? this.topProblematicAdmins.map(admin => admin.errorsCount)
+      : [0];
+
     this.errorsChartData = {
-      labels: this.topProblematicAdmins.map(admin => admin.name),
+      labels: problematicLabels,
       datasets: [
         {
           label: 'Ошибки',
-          data: this.topProblematicAdmins.map(admin => admin.errorsCount),
+          data: problematicData,
           backgroundColor: [
             '#D4AF37',
             '#B8860B',
