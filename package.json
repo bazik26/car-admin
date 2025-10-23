@@ -7,7 +7,8 @@
     "start:prod": "ng serve --configuration production",
     "build": "ng build --configuration production",
     "watch": "ng build --watch --configuration development",
-    "test": "ng test"
+    "test": "ng test",
+    "serve": "ng serve --host 0.0.0.0 --port $PORT --configuration production"
   },
   "prettier": {
     "overrides": [
