@@ -1,26 +1,15 @@
-# Используем официальный Node.js образ
-FROM node:20-alpine
-
-# Устанавливаем рабочую директорию
+FROM node:20.19.0-alpine AS build
 WORKDIR /app
 
-# Копируем package.json и package-lock.json
 COPY package*.json ./
-
-# Устанавливаем все зависимости (включая dev)
 RUN npm ci
 
-# Копируем исходный код
 COPY . .
+RUN npm run build --configuration=production
 
-# Собираем приложение
-RUN npm run build
+FROM nginx:alpine
+COPY --from=build /app/dist/car-admin/browser /usr/share/nginx/html
+COPY nginx.conf /etc/nginx/conf.d/default.conf
 
-# Устанавливаем serve для статических файлов
-RUN npm install -g serve
-
-# Открываем порт
-EXPOSE 3000
-
-# Запускаем приложение
-CMD ["serve", "-s", "dist/car-admin/browser", "-l", "3000", "--single"]
+EXPOSE 80
+CMD ["nginx", "-g", "daemon off;"]
