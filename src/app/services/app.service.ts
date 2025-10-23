@@ -190,4 +190,29 @@ export class AppService {
       .post(`${this.API_URL}/contact-us`, payload)
       .pipe(map((response) => response));
   }
+
+  // Productivity and Statistics API endpoints
+  getProductivityStats(): Observable<any> {
+    return this.http
+      .get(`${this.API_URL}/stats/productivity`)
+      .pipe(map((response) => response));
+  }
+
+  getAdminProductivity(adminId: number): Observable<any> {
+    return this.http
+      .get(`${this.API_URL}/stats/admin/${adminId}/productivity`)
+      .pipe(map((response) => response));
+  }
+
+  getCarsStats(): Observable<any> {
+    return this.http
+      .get(`${this.API_URL}/stats/cars`)
+      .pipe(map((response) => response));
+  }
+
+  getErrorsStats(): Observable<any> {
+    return this.http
+      .get(`${this.API_URL}/stats/errors`)
+      .pipe(map((response) => response));
+  }
 }

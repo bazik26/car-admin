@@ -235,18 +235,38 @@ export class AdminProductivityPage implements OnInit {
     this.loading = true;
     this.error = null;
 
-    // Загружаем данные админов
-    this.appService.getAdminsAll().subscribe({
-      next: (admins: any[]) => {
-        this.processAdminData(admins);
+    // Пытаемся загрузить реальные данные статистики
+    this.appService.getProductivityStats().subscribe({
+      next: (stats: any) => {
+        this.processRealStatsData(stats);
         this.loading = false;
       },
       error: (err: any) => {
-        this.error = 'Ошибка загрузки данных';
-        this.loading = false;
-        console.error('Error loading admin data:', err);
+        console.warn('Productivity stats API not available, falling back to admin data:', err);
+        // Fallback к данным админов, если API статистики недоступен
+        this.appService.getAdminsAll().subscribe({
+          next: (admins: any[]) => {
+            this.processAdminData(admins);
+            this.loading = false;
+          },
+          error: (fallbackErr: any) => {
+            this.error = 'Ошибка загрузки данных';
+            this.loading = false;
+            console.error('Error loading admin data:', fallbackErr);
+          }
+        });
       }
     });
+  }
+
+  processRealStatsData(stats: any) {
+    // Обрабатываем реальные данные статистики
+    this.adminStats = stats.admins || [];
+    this.topProductiveAdmins = stats.topProductive || [];
+    this.topUnproductiveAdmins = stats.topUnproductive || [];
+    this.topProblematicAdmins = stats.topProblematic || [];
+    
+    this.updateCharts();
   }
 
   processAdminData(admins: any[]) {

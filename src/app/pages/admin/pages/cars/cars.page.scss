@@ -199,12 +199,13 @@
 .car-year {
   padding: 0.25rem 0.6rem;
   border-radius: var(--radius-full);
-  background: rgba(59, 130, 246, 0.18);
-  border: 1px solid rgba(59, 130, 246, 0.35);
+  background: rgba(59, 130, 246, 0.15) !important;
+  border: 1px solid rgba(59, 130, 246, 0.3) !important;
   font-size: 0.7rem;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: #bfdbfe;
+  color: #1e40af !important;
+  font-weight: 600;
 }
 
 .car-vin {
