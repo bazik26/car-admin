@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import {
   FormBuilder,
   Validators,
@@ -6,9 +6,9 @@ import {
   FormGroup,
 } from '@angular/forms';
 import { Router } from '@angular/router';
+import { DOCUMENT, NgIf, NgFor } from '@angular/common';
 import { AppService } from '../../../../services/app.service';
 import { AuthService } from '../../../../services/auth.service';
-import { NgIf, NgFor } from '@angular/common';
 
 interface Particle {
   style: string;
@@ -20,7 +20,7 @@ interface Particle {
   standalone: true,
   imports: [ReactiveFormsModule, NgIf, NgFor],
 })
-export class SigninPage implements OnInit {
+export class SigninPage implements OnInit, OnDestroy {
   form: FormGroup;
   loading = false;
   error: string | null = null;
@@ -32,6 +32,7 @@ export class SigninPage implements OnInit {
     private appService: AppService,
     private authService: AuthService,
     private router: Router,
+    @Inject(DOCUMENT) private document: Document,
   ) {
     this.form = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
@@ -49,7 +50,12 @@ export class SigninPage implements OnInit {
   }
 
   ngOnInit() {
+    this.document.body.classList.add('auth-view');
     this.createParticles();
+  }
+
+  ngOnDestroy() {
+    this.document.body.classList.remove('auth-view');
   }
 
   togglePassword() {

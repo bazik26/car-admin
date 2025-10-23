@@ -147,14 +147,15 @@
 }
 
 .login-card {
-  background: var(--dark-bg-light);
-  border: 1px solid var(--gray-700);
-  border-radius: 16px;
+  background: rgba(7, 13, 28, 0.9);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 18px;
   padding: 3rem 2.5rem;
-  box-shadow: var(--shadow-xl);
+  box-shadow: 0 35px 65px rgba(4, 9, 20, 0.45);
   position: relative;
   overflow: hidden;
-  backdrop-filter: blur(10px);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
 }
 
 .login-card::before {
@@ -227,25 +228,26 @@
 .form-control {
   width: 100%;
   padding: 0.875rem 1rem;
-  background: var(--dark-bg-lighter);
-  border: 1px solid var(--gray-600);
-  border-radius: 8px;
+  background: rgba(12, 22, 44, 0.85);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 10px;
   color: var(--white);
-  font-size: 0.875rem;
+  font-size: 0.9rem;
   transition: all var(--transition-normal);
   position: relative;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.02);
 }
 
 .form-control:focus {
-  background: var(--dark-bg-lighter);
-  border-color: var(--primary-gold);
-  box-shadow: 0 0 0 0.2rem rgba(212, 175, 55, 0.15);
+  background: rgba(16, 30, 56, 0.95);
+  border-color: rgba(234, 164, 48, 0.45);
+  box-shadow: 0 0 0 0.25rem rgba(212, 175, 55, 0.18);
   color: var(--white);
   outline: none;
 }
 
 .form-control::placeholder {
-  color: var(--gray-400);
+  color: rgba(209, 213, 219, 0.55);
 }
 
 /* ===== PASSWORD INPUT WRAPPER ===== */
@@ -258,17 +260,17 @@
   right: 0.75rem;
   top: 50%;
   transform: translateY(-50%);
-  background: none;
-  border: none;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.08);
   color: var(--primary-gold);
   cursor: pointer;
-  padding: 0.5rem;
-  border-radius: 4px;
+  padding: 0.4rem;
+  border-radius: 8px;
   transition: all var(--transition-fast);
 }
 
 .password-toggle:hover {
-  background: var(--dark-bg);
+  background: rgba(234, 164, 48, 0.15);
   color: var(--primary-gold-light);
 }
 
@@ -288,19 +290,27 @@
 
 /* ===== SUBMIT BUTTON ===== */
 .btn-primary {
-  padding: 0.875rem 2rem;
-  font-size: 0.875rem;
+  padding: 0.95rem 2.25rem;
+  font-size: 0.9rem;
   font-weight: 600;
-  border-radius: 8px;
+  border-radius: 12px;
   position: relative;
   overflow: hidden;
   transition: all var(--transition-normal);
-  margin-top: 1rem;
+  margin-top: 1.25rem;
+  background: linear-gradient(135deg, rgba(234, 164, 48, 0.92), rgba(217, 145, 20, 0.88));
+  border-color: rgba(234, 164, 48, 0.35);
+  box-shadow: 0 22px 38px rgba(234, 164, 48, 0.28);
 }
 
 .btn-primary.loading {
   pointer-events: none;
   opacity: 0.8;
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 26px 45px rgba(234, 164, 48, 0.35);
 }
 
 .btn-content {

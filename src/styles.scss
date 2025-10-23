@@ -184,6 +184,17 @@ body::after {
   z-index: -1;
 }
 
+body.auth-view {
+  background: radial-gradient(120deg, #050b18 0%, #080f1f 45%, #0f1b33 100%);
+  color: var(--gray-100);
+  overflow-x: hidden;
+}
+
+body.auth-view::before,
+body.auth-view::after {
+  display: none;
+}
+
 body.admin {
   background: var(--dark-bg);
   color: var(--gray-100);
