@@ -8,7 +8,8 @@
     "build": "ng build --configuration production",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
-    "serve": "serve -s dist/car-admin/browser -l ${PORT:-3000}"
+    "serve": "serve -s dist/car-admin/browser -l ${PORT:-3000}",
+    "start:prod": "node start.js"
   },
   "prettier": {
     "overrides": [
