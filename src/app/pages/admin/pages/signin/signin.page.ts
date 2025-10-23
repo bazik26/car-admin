@@ -18,7 +18,7 @@ interface Particle {
   selector: 'app-signin',
   templateUrl: './signin.page.html',
   standalone: true,
-  imports: [ReactiveFormsModule, NgIf, NgFor],
+  imports: [ReactiveFormsModule, NgIf],
   encapsulation: ViewEncapsulation.None,
   styles: [`
     :host {

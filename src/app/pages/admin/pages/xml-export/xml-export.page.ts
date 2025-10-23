@@ -22,6 +22,7 @@ interface Car {
   description: string;
   createdAt: string;
   updatedAt: string;
+  deletedAt?: string | null;
   admin?: {
     id: number;
     email: string;
@@ -41,6 +42,7 @@ export class XmlExportPage implements OnInit {
   error: string | null = null;
   xmlContent = '';
   showXml = false;
+  currentDate = new Date().toLocaleDateString('ru-RU');
 
   constructor(private appService: AppService) {}
 
