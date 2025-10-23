@@ -1,0 +1,55 @@
+<div class="d-flex align-items-center justify-content-center vh-100">
+  <form
+    [formGroup]="form"
+    (ngSubmit)="signin()"
+    class="p-4 shadow rounded bg-white"
+    style="min-width: 320px; max-width: 400px; width: 100%"
+    autocomplete="off"
+  >
+    <h2 class="mb-4 text-center">Вход</h2>
+
+    <div class="mb-3">
+      <input
+        formControlName="email"
+        class="form-control"
+        placeholder="Email"
+        type="email"
+        autocomplete="username"
+      />
+      <div
+        *ngIf="form.get('email')?.invalid && form.get('email')?.touched"
+        class="text-danger mt-1"
+        style="font-size: 13px"
+      >
+        Введите корректный email
+      </div>
+    </div>
+
+    <div class="mb-3">
+      <input
+        formControlName="password"
+        class="form-control"
+        placeholder="Пароль"
+        type="password"
+        autocomplete="current-password"
+      />
+      <div
+        *ngIf="form.get('password')?.invalid && form.get('password')?.touched"
+        class="text-danger mt-1"
+        style="font-size: 13px"
+      >
+        Введите пароль
+      </div>
+    </div>
+
+    <button
+      class="btn btn-dark w-100"
+      type="submit"
+      [disabled]="loading || form.invalid"
+    >
+      {{ loading ? "Загрузка..." : "Войти" }}
+    </button>
+
+    <div class="mt-3 text-danger text-center" *ngIf="error">{{ error }}</div>
+  </form>
+</div>

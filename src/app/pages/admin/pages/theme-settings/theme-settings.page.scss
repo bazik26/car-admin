@@ -1,0 +1,509 @@
+// Стили для страницы настроек темы - принудительные стили для админки
+.admin-page {
+  // Принудительно устанавливаем светлый фон для админки
+  background-color: #f8f9fa !important;
+  color: #333333 !important;
+  .page-header {
+    text-align: center;
+    margin-bottom: 2rem;
+    padding: 2rem 0;
+    border-bottom: 2px solid var(--border-color);
+
+    .page-title {
+      font-size: 2rem;
+      font-weight: 600;
+      color: #333333 !important;
+      margin-bottom: 0.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 1rem;
+
+      .beta-badge {
+        background: linear-gradient(45deg, #ff6b6b, #ff8e8e);
+        color: white;
+        padding: 0.25rem 0.75rem;
+        border-radius: 20px;
+        font-size: 0.7rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        box-shadow: 0 2px 4px rgba(255, 107, 107, 0.3);
+        animation: pulse 2s infinite;
+      }
+    }
+
+    .page-subtitle {
+      color: #666666 !important;
+      font-size: 1.1rem;
+      margin: 0 0 1rem 0;
+    }
+
+    .beta-notice {
+      background: linear-gradient(135deg, rgba(255, 193, 7, 0.1), rgba(255, 193, 7, 0.05));
+      border: 1px solid rgba(255, 193, 7, 0.3);
+      border-radius: var(--border-radius);
+      padding: 1rem;
+      margin: 1rem auto 0;
+      max-width: 600px;
+      color: #333333 !important;
+      font-size: 0.95rem;
+      line-height: 1.5;
+
+      i {
+        color: #ffc107;
+      }
+
+      strong {
+        color: #ffc107;
+        font-weight: 600;
+      }
+
+      ul {
+        text-align: left;
+        margin: 0.5rem 0;
+        
+        li {
+          margin-bottom: 0.25rem;
+          color: #333333 !important;
+        }
+      }
+    }
+  }
+
+  .theme-section {
+    background: #ffffff !important;
+    border-radius: 8px !important;
+    padding: 1.5rem;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1) !important;
+    margin-bottom: 1.5rem;
+    border: 1px solid #dee2e6 !important;
+
+    .section-header {
+      margin-bottom: 1.5rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid #dee2e6 !important;
+
+      .section-title {
+        font-size: 1.25rem;
+        font-weight: 600;
+        color: #333333 !important;
+        margin: 0;
+      }
+    }
+  }
+
+  // Вкладки кастомизации
+  .customization-tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid #dee2e6 !important;
+
+    .tab-button {
+      background: transparent !important;
+      border: 1px solid #dee2e6 !important;
+      color: #333333 !important;
+      padding: 0.5rem 1rem;
+      border-radius: 8px !important;
+      cursor: pointer;
+      transition: all 0.3s ease !important;
+      font-size: 0.9rem;
+      white-space: nowrap;
+
+      &:hover {
+        background: #217e02 !important;
+        color: white !important;
+        border-color: #217e02 !important;
+      }
+
+      &.active {
+        background: #217e02 !important;
+        color: white !important;
+        border-color: #217e02 !important;
+      }
+    }
+  }
+
+  // Форма кастомизации
+  .custom-theme-form {
+    .tab-content {
+      .tab-title {
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: #333333 !important;
+        margin-bottom: 1rem;
+        padding-bottom: 0.5rem;
+        border-bottom: 1px solid #dee2e6 !important;
+      }
+
+      .form-label {
+        color: #333333 !important;
+        font-weight: 500;
+        margin-bottom: 0.5rem;
+        display: block;
+      }
+
+      .form-control,
+      .form-select {
+        background: #ffffff !important;
+        border: 1px solid #dee2e6 !important;
+        color: #333333 !important;
+        border-radius: 8px !important;
+
+        &:focus {
+          border-color: #217e02 !important;
+          box-shadow: 0 0 0 0.2rem rgba(33, 126, 2, 0.25) !important;
+        }
+      }
+
+      .form-range {
+        background: transparent;
+
+        &::-webkit-slider-track {
+          background: var(--border-color);
+          border-radius: var(--border-radius);
+        }
+
+        &::-webkit-slider-thumb {
+          background: var(--primary-color);
+          border-radius: 50%;
+        }
+      }
+
+      .form-check-input {
+        &:checked {
+          background-color: #217e02 !important;
+          border-color: #217e02 !important;
+        }
+      }
+
+      .form-check-label {
+        color: #333333 !important;
+      }
+
+      // Группа цветовых полей
+      .color-input-group {
+        display: flex;
+        gap: 0.5rem;
+
+        .color-picker {
+          width: 50px;
+          height: 38px;
+          padding: 0;
+          border: 1px solid #dee2e6 !important;
+          border-radius: 8px !important;
+          cursor: pointer;
+        }
+
+        .color-text {
+          flex: 1;
+          color: #333333 !important;
+        }
+      }
+    }
+
+    .form-actions {
+      margin-top: 2rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid #dee2e6 !important;
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+
+      .btn {
+        padding: 0.75rem 1.5rem;
+        border-radius: 8px !important;
+        font-weight: 500;
+        transition: all 0.3s ease !important;
+
+        &.btn-primary {
+          background: #217e02 !important;
+          border-color: #217e02 !important;
+          color: white !important;
+
+          &:hover {
+            background: #1a6b02 !important;
+            border-color: #1a6b02 !important;
+          }
+        }
+
+        &.btn-outline-secondary {
+          color: #333333 !important;
+          border-color: #dee2e6 !important;
+          background: transparent !important;
+
+          &:hover {
+            background: #dee2e6 !important;
+            color: #333333 !important;
+          }
+        }
+      }
+    }
+  }
+
+  // Предпросмотр макета
+  .layout-preview {
+    .preview-page {
+      background: #ffffff !important;
+      border-radius: 8px !important;
+      overflow: hidden;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1) !important;
+
+      .preview-header {
+        background: #217e02 !important;
+        color: white !important;
+        padding: 1rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        h3 {
+          margin: 0;
+          font-size: 1.1rem;
+          color: white !important;
+        }
+
+        .preview-nav {
+          display: flex;
+          gap: 1rem;
+
+          .nav-item {
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s ease !important;
+            color: white !important;
+
+            &.active {
+              background: rgba(255, 255, 255, 0.2) !important;
+            }
+
+            &:hover {
+              background: rgba(255, 255, 255, 0.1) !important;
+            }
+          }
+        }
+      }
+
+      .preview-content {
+        padding: 1.5rem;
+        background: #ffffff !important;
+
+        .preview-hero {
+          text-align: center;
+          margin-bottom: 2rem;
+          padding: 2rem 0;
+          background: linear-gradient(135deg, #217e02, #28a745) !important;
+          border-radius: 8px !important;
+          color: white !important;
+
+          h1 {
+            font-size: var(--heading-size);
+            margin-bottom: 0.5rem;
+            color: white !important;
+          }
+
+          p {
+            font-size: 1.1rem;
+            margin-bottom: 1rem;
+            opacity: 0.9;
+            color: white !important;
+          }
+
+          .preview-btn {
+            background: white;
+            color: var(--primary-color);
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: var(--border-radius);
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--hover-transition);
+
+            &:hover {
+              transform: translateY(-2px);
+              box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            }
+          }
+        }
+
+        .preview-cars-grid {
+          h2 {
+            font-size: 1.25rem;
+            color: #333333 !important;
+            margin-bottom: 1rem;
+            font-weight: 600;
+          }
+
+          .cars-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+
+            .preview-car-card {
+              background: #ffffff !important;
+              border: 1px solid #dee2e6 !important;
+              border-radius: 8px !important;
+              overflow: hidden;
+              transition: all 0.3s ease !important;
+
+              &:hover {
+                transform: translateY(-4px);
+                box-shadow: 0 4px 8px rgba(0,0,0,0.2) !important;
+              }
+
+              .preview-car-image {
+                height: 120px;
+                background: #f8f9fa !important;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                position: relative;
+                overflow: hidden;
+
+                .image-placeholder {
+                  color: #333333 !important;
+                  font-weight: 600;
+                  font-size: 1.1rem;
+                  z-index: 1;
+                }
+
+                &::before {
+                  content: '';
+                  position: absolute;
+                  top: 0;
+                  left: 0;
+                  right: 0;
+                  bottom: 0;
+                  background: linear-gradient(45deg, #217e02, #28a745) !important;
+                  opacity: 0.1;
+                }
+              }
+
+              .preview-car-info {
+                padding: 20px;
+
+                h4 {
+                  font-size: 1rem;
+                  color: #333333 !important;
+                  margin-bottom: 0.5rem;
+                  font-weight: 600;
+                }
+
+                .preview-specs {
+                  display: flex;
+                  flex-wrap: wrap;
+                  gap: 0.5rem;
+                  margin-bottom: 0.75rem;
+
+                  span {
+                    font-size: 0.8rem;
+                    color: #666666 !important;
+                    display: flex;
+                    align-items: center;
+                    gap: 0.25rem;
+
+                    i {
+                      color: #217e02 !important;
+                    }
+                  }
+                }
+
+                .preview-price {
+                  font-size: 1.1rem;
+                  font-weight: 600;
+                  color: #217e02 !important;
+                  margin-bottom: 0.75rem;
+                }
+
+                .preview-btn-small {
+                  background: #217e02 !important;
+                  color: white !important;
+                  border: none;
+                  padding: 0.5rem 1rem;
+                  border-radius: 8px !important;
+                  font-size: 0.9rem;
+                  cursor: pointer;
+                  transition: all 0.3s ease !important;
+                  width: 100%;
+
+                  &:hover {
+                    background: #1a6b02 !important;
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+// Анимации
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+    box-shadow: 0 2px 4px rgba(255, 107, 107, 0.3);
+  }
+  50% {
+    transform: scale(1.05);
+    box-shadow: 0 4px 8px rgba(255, 107, 107, 0.5);
+  }
+  100% {
+    transform: scale(1);
+    box-shadow: 0 2px 4px rgba(255, 107, 107, 0.3);
+  }
+}
+
+// Адаптивность
+@media (max-width: 768px) {
+  .admin-page {
+    .customization-tabs {
+      .tab-button {
+        font-size: 0.8rem;
+        padding: 0.4rem 0.8rem;
+      }
+    }
+
+    .layout-preview {
+      .preview-page {
+        .preview-content {
+          .preview-cars-grid {
+            .cars-grid {
+              grid-template-columns: repeat(2, 1fr);
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: 576px) {
+  .admin-page {
+    .layout-preview {
+      .preview-page {
+        .preview-content {
+          .preview-cars-grid {
+            .cars-grid {
+              grid-template-columns: 1fr;
+            }
+          }
+        }
+      }
+    }
+
+    .form-actions {
+      flex-direction: column;
+
+      .btn {
+        width: 100%;
+      }
+    }
+  }
+}

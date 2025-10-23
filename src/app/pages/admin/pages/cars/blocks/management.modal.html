@@ -1,0 +1,449 @@
+@if (form && BRANDS_AND_MODELS) {
+  <div class="admin py-3">
+    <div class="container">
+      <div class="row">
+        <div class="col-12">
+          <!-- Кнопка закрытия -->
+          <div class="d-flex justify-content-end mb-2">
+            <button type="button" class="btn-close" (click)="closeModal()" aria-label="Close"></button>
+          </div>
+          <form [formGroup]="form">
+            <!-- Умная кнопка автозаполнения -->
+            @if (canAutoFill()) {
+              <div class="mb-3 d-flex justify-content-center">
+                <button
+                  class="btn btn-secondary btn-lg"
+                  (click)="autoFillForm()"
+                  type="button"
+                >
+                  <i class="fas fa-magic me-2"></i>Автозаполнение для {{ getSelectedCarInfo() }}
+                </button>
+              </div>
+            }
+
+            <div class="form-control">
+              <div class="form-group required-field">
+                <label class="form-label">Марка</label>
+                <ng-select
+                  [items]="brands"
+                  bindLabel="title"
+                  bindValue="title"
+                  placeholder="Выберите марку"
+                  [searchable]="true"
+                  formControlName="brand"
+                >
+                </ng-select>
+              </div>
+
+              <div class="mt-3 form-group required-field">
+                <label class="form-label">Модель</label>
+
+                <ng-select
+                  [items]="models"
+                  bindLabel="title"
+                  bindValue="title"
+                  placeholder="Выберите модель"
+                  [searchable]="true"
+                  formControlName="model"
+                >
+                </ng-select>
+              </div>
+
+              <div class="mt-3 form-group required-field">
+                <label class="form-label">Год</label>
+
+                <ng-select
+                  [items]="years"
+                  placeholder="Выберите год"
+                  formControlName="year"
+                >
+                </ng-select>
+              </div>
+
+              <div class="mt-3 form-group required-field">
+                <label class="form-label">Пробег</label>
+
+                <input
+                  class="form-control"
+                  type="number"
+                  placeholder="Введите пробег"
+                  formControlName="mileage"
+                />
+              </div>
+
+              <div class="mt-3 form-group">
+                <label class="form-label">VIN</label>
+
+                <input
+                  class="form-control"
+                  placeholder="Введите VIN"
+                  formControlName="vin"
+                />
+              </div>
+
+              <div class="mt-3 form-group required-field">
+                <label class="form-label">Коробка передач</label>
+
+                <ng-select
+                  [items]="gearboxes"
+                  placeholder="Выберете коробку передач"
+                  formControlName="gearbox"
+                >
+                </ng-select>
+              </div>
+
+              <div class="mt-3 form-group required-field">
+                <label class="form-label">Топливо</label>
+
+                <ng-select
+                  [items]="fuels"
+                  placeholder="Выберете тип топлива"
+                  formControlName="fuel"
+                >
+                </ng-select>
+              </div>
+
+              <div class="mt-3 form-group required-field">
+                <label class="form-label">Мощность двигателя</label>
+
+                <input
+                  class="form-control"
+                  placeholder="Введите мощность двигателя"
+                  formControlName="powerValue"
+                />
+              </div>
+
+              <div class="mt-3 form-group required-field">
+                <label class="form-label">Тип мощности двигателя</label>
+
+                <ng-select
+                  [items]="powerTypes"
+                  placeholder="Выберете тип мощности двигателя"
+                  formControlName="powerType"
+                >
+                </ng-select>
+              </div>
+
+              <div class="mt-3 form-group required-field">
+                <label class="form-label">Объем двигателя</label>
+
+                <input
+                  class="form-control"
+                  type="number"
+                  placeholder="Введите объем двигателя"
+                  formControlName="engine"
+                />
+              </div>
+
+              <div class="mt-3 form-group required-field">
+                <label class="form-label">Привод</label>
+
+                <ng-select
+                  [items]="drives"
+                  placeholder="Выберете привод"
+                  formControlName="drive"
+                >
+                </ng-select>
+              </div>
+
+              <div class="mt-3 form-group required-field">
+                <label class="form-label">Цена</label>
+
+                <input
+                  class="form-control"
+                  type="number"
+                  placeholder="Выберете цену"
+                  formControlName="price"
+                />
+              </div>
+
+<!--              <div class="mt-3 form-group">-->
+<!--                <label class="form-label">Описание</label>-->
+<!--                <textarea-->
+<!--                  class="form-control"-->
+<!--                  rows="4"-->
+<!--                  placeholder="Введите описание автомобиля"-->
+<!--                  formControlName="description"-->
+<!--                ></textarea>-->
+<!--              </div>-->
+
+              <div class="mt-3 form-group required-field" formArrayName="files">
+                <label class="form-label">Изображения (минимум 8)</label>
+                
+                <!-- Пакетная загрузка изображений -->
+                <div class="mb-3">
+                  <input
+                    type="file"
+                    class="form-control"
+                    accept="image/*"
+                    multiple
+                    (change)="onMultipleFilesSelected($event)"
+                    id="bulkUpload"
+                  />
+                  <small class="form-text text-muted">
+                    Выберите несколько изображений сразу (Ctrl/Cmd + клик)
+                  </small>
+                </div>
+
+                <div class="d-flex flex-wrap gap-3 mt-2 justify-content-around">
+                  @for (
+                    control of files.controls;
+                    track control;
+                    let i = $index
+                  ) {
+                    <div
+                      class="file-upload-area position-relative d-flex align-items-center justify-content-center"
+                      style="width: 150px; height: 150px"
+                    >
+                      @if (!previews[i]) {
+                        <input
+                          type="file"
+                          class="form-control position-absolute w-100 h-100 opacity-0"
+                          accept="image/*"
+                          (change)="onFileSelected($event, i)"
+                        />
+                        <span class="upload-text">Загрузить</span>
+                      }
+
+                      @if (previews[i]) {
+                        <img
+                          [src]="previews[i]!"
+                          alt="preview"
+                          class="w-100 h-100 rounded"
+                          style="object-fit: cover"
+                        />
+                        <button
+                          type="button"
+                          class="remove-btn position-absolute top-0 end-0 m-1"
+                          (click)="removeFile(i, control.value)"
+                          aria-label="Удалить файл"
+                        >
+                          ✕
+                        </button>
+                      }
+                    </div>
+                  }
+                </div>
+              </div>
+
+              @for (group of options; track group) {
+                <div class="form-group mt-3">
+                  <label>{{ group.title }}</label>
+
+                  <ng-select
+                    [items]="group.values"
+                    formControlName="{{ group.controlName }}"
+                    placeholder="Выберите"
+                  >
+                  </ng-select>
+                </div>
+              }
+
+              <accordion class="mt-3">
+                <accordion-group heading="Салон и комфорт" [isOpen]="true">
+                  @for (item of group1; track item) {
+                    <div class="mb-2 form-check">
+                      <label class="form-check-label">
+                        <input
+                          class="form-check-input"
+                          type="checkbox"
+                          [value]="item"
+                          [checked]="
+                            (form.get('group1')?.value || []).includes(item)
+                          "
+                          (change)="onCheckboxChange($event, 'group1')"
+                        />
+                        {{ item }}
+                      </label>
+                    </div>
+                  }
+                </accordion-group>
+
+                <accordion-group
+                  class="mt-3"
+                  heading="Система помощи при парковке"
+                >
+                  @for (item of group2; track item) {
+                    <div class="mb-2 form-check">
+                      <label class="form-check-label">
+                        <input
+                          class="form-check-input"
+                          type="checkbox"
+                          [value]="item"
+                          [checked]="
+                            (form.get('group2')?.value || []).includes(item)
+                          "
+                          (change)="onCheckboxChange($event, 'group2')"
+                        />
+                        {{ item }}
+                      </label>
+                    </div>
+                  }
+                </accordion-group>
+
+                <accordion-group class="mt-3" heading="Мультимедиа">
+                  @for (item of group3; track item) {
+                    <div class="mb-2 form-check">
+                      <label class="form-check-label">
+                        <input
+                          class="form-check-input"
+                          type="checkbox"
+                          [value]="item"
+                          [checked]="
+                            (form.get('group3')?.value || []).includes(item)
+                          "
+                          (change)="onCheckboxChange($event, 'group3')"
+                        />
+                        {{ item }}
+                      </label>
+                    </div>
+                  }
+                </accordion-group>
+
+                <accordion-group class="mt-3" heading="Оптика">
+                  @for (item of group4; track item) {
+                    <div class="mb-2 form-check">
+                      <label class="form-check-label">
+                        <input
+                          class="form-check-input"
+                          type="checkbox"
+                          [value]="item"
+                          [checked]="
+                            (form.get('group4')?.value || []).includes(item)
+                          "
+                          (change)="onCheckboxChange($event, 'group4')"
+                        />
+                        {{ item }}
+                      </label>
+                    </div>
+                  }
+                </accordion-group>
+
+                <accordion-group class="mt-3" heading="Безопасность">
+                  @for (item of group5; track item) {
+                    <div class="mb-2 form-check">
+                      <label class="form-check-label">
+                        <input
+                          class="form-check-input"
+                          type="checkbox"
+                          [value]="item"
+                          [checked]="
+                            (form.get('group5')?.value || []).includes(item)
+                          "
+                          (change)="onCheckboxChange($event, 'group5')"
+                        />
+                        {{ item }}
+                      </label>
+                    </div>
+                  }
+                </accordion-group>
+
+                <accordion-group class="mt-3" heading="Состояние">
+                  @for (item of group6; track item) {
+                    <div class="mb-2 form-check">
+                      <label class="form-check-label">
+                        <input
+                          class="form-check-input"
+                          type="checkbox"
+                          [value]="item"
+                          [checked]="
+                            (form.get('group6')?.value || []).includes(item)
+                          "
+                          (change)="onCheckboxChange($event, 'group6')"
+                        />
+                        {{ item }}
+                      </label>
+                    </div>
+                  }
+                </accordion-group>
+
+                <accordion-group class="mt-3" heading="Кузов">
+                  @for (item of group7; track item) {
+                    <div class="mb-2 form-check">
+                      <label class="form-check-label">
+                        <input
+                          class="form-check-input"
+                          type="checkbox"
+                          [value]="item"
+                          [checked]="
+                            (form.get('group7')?.value || []).includes(item)
+                          "
+                          (change)="onCheckboxChange($event, 'group7')"
+                        />
+                        {{ item }}
+                      </label>
+                    </div>
+                  }
+                </accordion-group>
+
+                <accordion-group class="mt-3" heading="Подушки безопасности">
+                  @for (item of group8; track item) {
+                    <div class="mb-2 form-check">
+                      <label class="form-check-label">
+                        <input
+                          class="form-check-input"
+                          type="checkbox"
+                          [value]="item"
+                          [checked]="
+                            (form.get('group8')?.value || []).includes(item)
+                          "
+                          (change)="onCheckboxChange($event, 'group8')"
+                        />
+                        {{ item }}
+                      </label>
+                    </div>
+                  }
+                </accordion-group>
+
+                <accordion-group
+                  class="mt-3"
+                  heading="Дополнительное оборудование"
+                >
+                  @for (item of group9; track item) {
+                    <div class="mb-2 form-check">
+                      <label class="form-check-label">
+                        <input
+                          class="form-check-input"
+                          type="checkbox"
+                          [value]="item"
+                          [checked]="
+                            (form.get('group9')?.value || []).includes(item)
+                          "
+                          (change)="onCheckboxChange($event, 'group9')"
+                        />
+                        {{ item }}
+                      </label>
+                    </div>
+                  }
+                </accordion-group>
+              </accordion>
+            </div>
+
+            <div class="mt-3 d-flex justify-content-center gap-3">
+              <button
+                class="btn btn-secondary btn-lg"
+                (click)="closeModal()"
+                type="button"
+              >
+                Отменить
+              </button>
+              <button
+                class="btn btn-primary btn-lg"
+                (click)="onSubmit()"
+                [disabled]="form.invalid || previews.length < 8 || isSubmitting"
+                [title]="previews.length < 8 ? 'Загрузите минимум 8 изображений' : ''"
+              >
+                @if (isSubmitting) {
+                  <span class="spinner-border spinner-border-sm me-2" role="status"></span>
+                  Сохранение...
+                } @else {
+                  {{ car ? "Обновить" : "Добавить" }} ({{ previews.length }}/8)
+                }
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+}

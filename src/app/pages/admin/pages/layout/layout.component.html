@@ -1,0 +1,85 @@
+@if(admin) {
+<div class="admin-layout">
+  <div class="container">
+    <header class="admin-header d-flex justify-content-between align-items-center py-3">
+      <div class="admin-user-info">
+        <span class="text-muted">Добро пожаловать, {{ admin.name || admin.email }}</span>
+      </div>
+      
+      <ul class="nav nav-pills">
+        @if(admin.isSuper) {
+        <li class="nav-item">
+          <a
+            class="nav-link"
+            [routerLink]="['/admin', 'admins']"
+            routerLinkActive="active"
+          >
+            Менеджеры
+          </a>
+        </li>
+        }
+
+        <li class="nav-item">
+          <a
+            class="nav-link"
+            [routerLink]="['/admin', 'cars']"
+            routerLinkActive="active"
+          >
+            Автомобили
+          </a>
+        </li>
+
+        <li class="nav-item">
+          <a
+            class="nav-link"
+            [routerLink]="['/admin', 'problematic-cars']"
+            routerLinkActive="active"
+          >
+            <i class="fas fa-exclamation-triangle me-1"></i>
+            Проблемные машины
+          </a>
+        </li>
+
+        <li class="nav-item">
+          <a
+            class="nav-link"
+            [routerLink]="['/admin', 'database']"
+            routerLinkActive="active"
+          >
+            <i class="fas fa-database me-1"></i>
+            База данных
+          </a>
+        </li>
+
+                 @if (admin.isSuper) {
+                 <li class="nav-item">
+                   <a
+                     class="nav-link"
+                     [routerLink]="['/admin', 'theme-settings']"
+                     routerLinkActive="active"
+                   >
+                     <i class="fas fa-palette me-1"></i>
+                     Дизайн (Beta)
+                   </a>
+                 </li>
+                 }
+      </ul>
+      
+      <div class="admin-actions">
+        <button 
+          class="btn btn-outline-danger btn-sm" 
+          (click)="logout()"
+          title="Выйти из системы"
+        >
+          <i class="fas fa-sign-out-alt me-1"></i>
+          Выйти
+        </button>
+      </div>
+    </header>
+  </div>
+  
+  <div class="admin-content">
+    <router-outlet></router-outlet>
+  </div>
+</div>
+}

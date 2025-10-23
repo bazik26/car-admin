@@ -1,0 +1,72 @@
+@if (admins) {
+  <div class="admin">
+    <div class="container">
+      <div class="row">
+        <div class="mt-3 col-12">
+          <div class="d-flex justify-content-between align-items-center">
+            <div>Менеджеров: {{ admins.length }}</div>
+
+            <button class="btn btn-primary" (click)="openModal()">
+              Добавить
+            </button>
+          </div>
+        </div>
+
+        <table
+          class="mt-3 table table-bordered table-hover align-middle text-center"
+        >
+          <thead class="table-light">
+            <tr>
+              <th>Почта</th>
+              <th>Статус</th>
+              <th>Роль</th>
+              <th>Действие</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (admin of admins; track admin) {
+              <tr [class.table-danger]="admin.deletedAt">
+                <td>{{ admin.email }}</td>
+                <td>
+                  @if (admin.deletedAt) {
+                    <span class="badge bg-danger">Удален</span>
+                  } @else {
+                    <span class="badge bg-success">Активен</span>
+                  }
+                </td>
+                <td>
+                  @if (admin.isSuper) {
+                    {{ "Супер" }}
+                  } @else {
+                    {{ "Бомж" }}
+                  }
+                </td>
+                <td>
+                  @if (!admin.deletedAt) {
+                    <button
+                      class="btn btn-sm btn-danger"
+                      (click)="deleteAdmin(admin)"
+                    >
+                      Удалить
+                    </button>
+                  } @else {
+                    <button
+                      class="btn btn-sm btn-warning"
+                      (click)="restoreAdmin(admin)"
+                    >
+                      Восстановить
+                    </button>
+                  }
+                </td>
+              </tr>
+            } @empty {
+              <tr>
+                <td colspan="6" class="text-center">Нет менеджеров</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+}

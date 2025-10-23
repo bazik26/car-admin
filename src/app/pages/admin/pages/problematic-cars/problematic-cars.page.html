@@ -1,0 +1,175 @@
+@if (admin && admin.isSuper) {
+  <div class="admin-page">
+    <div class="container">
+      <div class="row">
+        <div class="col-12">
+          <div class="page-header">
+            <h2 class="page-title">
+              <i class="fas fa-exclamation-triangle me-2 text-warning"></i>
+              Проблемные машины
+            </h2>
+            <div class="d-flex align-items-center gap-3">
+              <span class="cars-count">
+                Найдено проблем: {{ problematicCars.length }}
+              </span>
+              <button 
+                class="btn btn-outline-primary" 
+                (click)="loadProblematicCars()"
+                [disabled]="loading"
+              >
+                <i class="fas fa-sync-alt me-2" [class.fa-spin]="loading"></i>
+                Обновить
+              </button>
+            </div>
+          </div>
+
+          @if (loading) {
+            <div class="text-center py-5">
+              <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">Загрузка...</span>
+              </div>
+              <p class="mt-3 text-muted">Поиск проблемных автомобилей...</p>
+            </div>
+          } @else if (problematicCars.length === 0) {
+            <div class="text-center py-5">
+              <i class="fas fa-check-circle text-success" style="font-size: 4rem;"></i>
+              <h4 class="mt-3 text-success">Отлично!</h4>
+              <p class="text-muted">Проблемных автомобилей не найдено</p>
+            </div>
+          } @else {
+            <div class="table-responsive">
+              <table class="table table-bordered table-hover align-middle">
+                <thead class="table-light">
+                  <tr>
+                    <th>Автомобиль</th>
+                    <th>Фото</th>
+                    <th>Проблемы</th>
+                    <th>Статус</th>
+                    <th>Действия</th>
+                    <th>Автор</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  @for (car of problematicCars; track car.id; let index = $index) {
+                    <tr [class.table-warning]="car.problems.length > 5">
+                      <td>
+                        <div class="car-info">
+                          <strong>{{ car.brand }} {{ car.model }}</strong>
+                          <br>
+                          <small class="text-muted">
+                            {{ car.year }} • {{ car.mileage ? (car.mileage | number) + ' км' : 'Нет пробега' }}
+                          </small>
+                        </div>
+                      </td>
+                      <td>
+                        @if (car.files?.length > 0) {
+                          <img
+                            [ngSrc]="appService.getFileUrl(car.files[0])"
+                            alt="car"
+                            height="60"
+                            width="80"
+                            class="img-thumbnail"
+                            [priority]="index < 10"
+                          />
+                        } @else {
+                          <div class="no-image-placeholder">
+                            <i class="fas fa-image text-muted"></i>
+                            <small class="d-block text-muted">Нет фото</small>
+                          </div>
+                        }
+                      </td>
+                      <td>
+                        <div class="problems-list">
+                          @for (problem of car.problems; track problem) {
+                            <span class="badge bg-danger me-1 mb-1">{{ problem }}</span>
+                          }
+                        </div>
+                      </td>
+                      <td>
+                        @if (car.deletedAt) {
+                          <span class="badge bg-danger">Удалена</span>
+                        } @else if (car.isSold) {
+                          <span class="badge bg-warning">Продан</span>
+                        } @else {
+                          <span class="badge bg-success">Активна</span>
+                        }
+                      </td>
+                      <td>
+                        <div class="action-buttons">
+                          @if (!car.deletedAt) {
+                            <button
+                              class="btn btn-sm btn-primary me-2"
+                              (click)="openModal(car)"
+                              title="Редактировать"
+                            >
+                              <i class="fas fa-edit"></i>
+                            </button>
+                            <button
+                              class="btn btn-sm btn-danger"
+                              (click)="deleteCar(car)"
+                              title="Удалить"
+                            >
+                              <i class="fas fa-trash"></i>
+                            </button>
+                          }
+                        </div>
+                      </td>
+                      <td>
+                        @if (car.admin) {
+                          <small class="text-muted">{{ car.admin.email }}</small>
+                        } @else {
+                          <small class="text-muted">Не указан</small>
+                        }
+                      </td>
+                    </tr>
+                  }
+                </tbody>
+              </table>
+            </div>
+
+            <!-- Статистика -->
+            <div class="mt-4 row">
+              <div class="col-md-4">
+                <div class="card bg-light">
+                  <div class="card-body text-center">
+                    <h5 class="card-title text-danger">{{ problematicCars.length }}</h5>
+                    <p class="card-text">Проблемных автомобилей</p>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="card bg-light">
+                  <div class="card-body text-center">
+                    <h5 class="card-title text-warning">{{ getTotalProblems() }}</h5>
+                    <p class="card-text">Всего проблем</p>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="card bg-light">
+                  <div class="card-body text-center">
+                    <h5 class="card-title text-info">{{ getAverageProblems() }}</h5>
+                    <p class="card-text">Среднее проблем на авто</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+} @else {
+  <div class="admin-page">
+    <div class="container">
+      <div class="row">
+        <div class="col-12">
+          <div class="alert alert-danger text-center">
+            <i class="fas fa-lock me-2"></i>
+            Доступ запрещен. Эта страница доступна только для супер-администраторов.
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+}

@@ -1,0 +1,229 @@
+@if (admin && admin.isSuper) {
+  <div class="admin-page">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-12">
+          <div class="page-header">
+            <h2 class="page-title">
+              <i class="fas fa-database me-2 text-primary"></i>
+              База данных автомобилей
+            </h2>
+            <div class="d-flex align-items-center gap-3">
+              <span class="cars-count">Записей: {{ cars.length }}</span>
+              <button 
+                class="btn btn-outline-primary" 
+                (click)="loadCars()"
+                [disabled]="loading"
+              >
+                <i class="fas fa-sync-alt me-2" [class.fa-spin]="loading"></i>
+                Обновить
+              </button>
+              <button 
+                class="btn btn-outline-success" 
+                (click)="exportToCSV()"
+                [disabled]="loading || cars.length === 0"
+              >
+                <i class="fas fa-download me-2"></i>
+                Экспорт CSV
+              </button>
+              <button class="btn btn-primary" (click)="openModal()">
+                <i class="fas fa-plus me-2"></i>Добавить автомобиль
+              </button>
+            </div>
+          </div>
+
+          @if (loading) {
+            <div class="text-center py-5">
+              <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">Загрузка...</span>
+              </div>
+              <p class="mt-3 text-muted">Загрузка базы данных...</p>
+            </div>
+          } @else if (cars.length === 0) {
+            <div class="text-center py-5">
+              <i class="fas fa-database text-muted" style="font-size: 4rem;"></i>
+              <h4 class="mt-3 text-muted">База данных пуста</h4>
+              <p class="text-muted">Добавьте первый автомобиль</p>
+            </div>
+          } @else {
+            <div class="table-responsive">
+              <table class="table table-bordered table-hover table-sm">
+                <thead class="table-dark sticky-top">
+                  <tr>
+                    @for (field of tableFields; track field.key) {
+                      <th class="text-center" [class.editable-column]="field.editable">
+                        {{ field.label }}
+                        @if (field.editable) {
+                          <i class="fas fa-edit ms-1 text-muted" style="font-size: 0.7rem;"></i>
+                        }
+                      </th>
+                    }
+                    <th class="text-center">Действия</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  @for (car of cars; track car.id; let i = $index) {
+                    <tr [class.table-danger]="car.deletedAt" [class.table-warning]="car.isSold && !car.deletedAt">
+                      @for (field of tableFields; track field.key) {
+                        <td class="text-center" [class.editable-cell]="field.editable">
+                          @if (editingCell?.row === i && editingCell?.field === field.key) {
+                            <!-- Режим редактирования -->
+                            <div class="edit-cell">
+                              @if (field.type === 'boolean') {
+                                <select 
+                                  class="form-select form-select-sm" 
+                                  [formControl]="valueControl"
+                                >
+                                  <option [value]="true">Да</option>
+                                  <option [value]="false">Нет</option>
+                                </select>
+                              } @else if (field.type === 'number') {
+                                <input 
+                                  type="number" 
+                                  class="form-control form-control-sm" 
+                                  [formControl]="valueControl"
+                                />
+                              } @else {
+                                <input 
+                                  type="text" 
+                                  class="form-control form-control-sm" 
+                                  [formControl]="valueControl"
+                                />
+                              }
+                              <div class="edit-actions mt-1">
+                                <button 
+                                  class="btn btn-success btn-sm me-1" 
+                                  (click)="saveEdit()"
+                                  title="Сохранить"
+                                >
+                                  <i class="fas fa-check"></i>
+                                </button>
+                                <button 
+                                  class="btn btn-secondary btn-sm" 
+                                  (click)="cancelEdit()"
+                                  title="Отменить"
+                                >
+                                  <i class="fas fa-times"></i>
+                                </button>
+                              </div>
+                            </div>
+                          } @else {
+                            <!-- Обычный режим отображения -->
+                            <span 
+                              class="cell-content"
+                              [class.editable]="field.editable"
+                              (click)="field.editable ? startEdit(i, field.key, car[field.key]) : null"
+                              [title]="field.editable ? 'Кликните для редактирования' : ''"
+                            >
+                              {{ formatValue(car[field.key], field.type) }}
+                            </span>
+                          }
+                        </td>
+                      }
+                      <td>
+                        <div class="action-buttons">
+                          @if (!car.deletedAt) {
+                            <button
+                              class="btn btn-sm btn-primary me-1"
+                              (click)="openModal(car)"
+                              title="Редактировать"
+                            >
+                              <i class="fas fa-edit"></i>
+                            </button>
+                            
+                            @if (!car.isSold) {
+                              <button
+                                class="btn btn-sm btn-warning me-1"
+                                (click)="markAsSold(car)"
+                                title="Отметить как проданную"
+                              >
+                                <i class="fas fa-check"></i>
+                              </button>
+                            } @else {
+                              <button
+                                class="btn btn-sm btn-success me-1"
+                                (click)="markAsAvailable(car)"
+                                title="Вернуть в продажу"
+                              >
+                                <i class="fas fa-undo"></i>
+                              </button>
+                            }
+
+                            <button
+                              class="btn btn-sm btn-danger"
+                              (click)="deleteCar(car)"
+                              title="Удалить"
+                            >
+                              <i class="fas fa-trash"></i>
+                            </button>
+                          } @else {
+                            <button
+                              class="btn btn-sm btn-warning"
+                              (click)="restoreCar(car)"
+                              title="Восстановить"
+                            >
+                              <i class="fas fa-undo"></i>
+                            </button>
+                          }
+                        </div>
+                      </td>
+                    </tr>
+                  }
+                </tbody>
+              </table>
+            </div>
+
+            <!-- Статистика -->
+            <div class="mt-4 row">
+              <div class="col-md-3">
+                <div class="card bg-light">
+                  <div class="card-body text-center">
+                    <h5 class="card-title text-primary">{{ cars.length }}</h5>
+                    <p class="card-text">Всего автомобилей</p>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-3">
+                <div class="card bg-light">
+                  <div class="card-body text-center">
+                    <h5 class="card-title text-success">{{ getActiveCars() }}</h5>
+                    <p class="card-text">Активных</p>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-3">
+                <div class="card bg-light">
+                  <div class="card-body text-center">
+                    <h5 class="card-title text-warning">{{ getSoldCars() }}</h5>
+                    <p class="card-text">Проданных</p>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-3">
+                <div class="card bg-light">
+                  <div class="card-body text-center">
+                    <h5 class="card-title text-danger">{{ getDeletedCars() }}</h5>
+                    <p class="card-text">Удаленных</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+} @else {
+  <div class="admin-page">
+    <div class="container">
+      <div class="row">
+        <div class="col-12">
+          <div class="alert alert-danger text-center">
+            <i class="fas fa-lock me-2"></i>
+            Доступ запрещен. Эта страница доступна только для супер-администраторов.
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+}
