@@ -231,6 +231,28 @@
   height: 100% !important;
 }
 
+.chart-placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  min-height: 200px;
+  color: rgba(255, 255, 255, 0.6);
+  text-align: center;
+}
+
+.chart-placeholder i {
+  font-size: 3rem;
+  color: rgba(234, 164, 48, 0.5);
+}
+
+.chart-placeholder p {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 500;
+}
+
 .ranking-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));

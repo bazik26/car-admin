@@ -90,12 +90,19 @@
           </div>
         </header>
         <div class="chart-body">
-          <canvas
-            baseChart
-            [data]="productivityChartData"
-            [options]="productivityChartOptions"
-            type="bar"
-          ></canvas>
+          @if (topProductiveAdmins.length > 0) {
+            <canvas
+              baseChart
+              [data]="productivityChartData"
+              [options]="productivityChartOptions"
+              type="bar"
+            ></canvas>
+          } @else {
+            <div class="chart-placeholder">
+              <i class="fas fa-chart-bar"></i>
+              <p>Нет данных для отображения</p>
+            </div>
+          }
         </div>
       </article>
 
@@ -107,12 +114,19 @@
           </div>
         </header>
         <div class="chart-body">
-          <canvas
-            baseChart
-            [data]="errorsChartData"
-            [options]="errorsChartOptions"
-            type="doughnut"
-          ></canvas>
+          @if (topProblematicAdmins.length > 0) {
+            <canvas
+              baseChart
+              [data]="errorsChartData"
+              [options]="errorsChartOptions"
+              type="doughnut"
+            ></canvas>
+          } @else {
+            <div class="chart-placeholder">
+              <i class="fas fa-bug"></i>
+              <p>Нет данных для отображения</p>
+            </div>
+          }
         </div>
       </article>
 
@@ -124,12 +138,19 @@
           </div>
         </header>
         <div class="chart-body">
-          <canvas
-            baseChart
-            [data]="carsAddedChartData"
-            [options]="carsAddedChartOptions"
-            type="line"
-          ></canvas>
+          @if (carsAddedChartData.labels && carsAddedChartData.labels.length > 0) {
+            <canvas
+              baseChart
+              [data]="carsAddedChartData"
+              [options]="carsAddedChartOptions"
+              type="line"
+            ></canvas>
+          } @else {
+            <div class="chart-placeholder">
+              <i class="fas fa-wave-square"></i>
+              <p>Нет данных для отображения</p>
+            </div>
+          }
         </div>
       </article>
     </div>

@@ -283,7 +283,24 @@
 
 .data-table td,
 .data-table th {
-  color: rgba(255, 255, 255, 0.9);
+  color: rgba(255, 255, 255, 0.9) !important;
+}
+
+/* Force dark text on light backgrounds */
+.data-table tbody tr {
+  background: rgba(12, 22, 42, 0.8) !important;
+}
+
+.data-table tbody tr:hover {
+  background: rgba(18, 32, 60, 0.88) !important;
+}
+
+/* Ensure text is always visible */
+.car-name strong,
+.car-vin,
+.car-author,
+.author-missing {
+  color: rgba(255, 255, 255, 0.9) !important;
 }
 
 .author-missing {

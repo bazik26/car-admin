@@ -48,12 +48,12 @@ import {
   ɵɵprojectionDef,
   ɵɵresolveWindow
 } from "./chunk-L7TZZFVV.js";
+import "./chunk-JRFR6BLO.js";
 import {
   animationFrameScheduler,
   fromEvent,
   merge
 } from "./chunk-HWYXSU2G.js";
-import "./chunk-JRFR6BLO.js";
 import {
   Subject,
   of,

@@ -250,16 +250,20 @@ export class AdminProductivityPage implements OnInit {
   }
 
   processAdminData(admins: any[]) {
-    // Обрабатываем данные и создаем статистику
-    this.adminStats = admins.map(admin => ({
-      id: admin.id,
-      name: admin.name || admin.email,
-      email: admin.email,
-      carsAdded: Math.floor(Math.random() * 50) + 1, // Временные данные
-      errorsCount: Math.floor(Math.random() * 20), // Временные данные
-      lastActivity: new Date().toISOString(),
-      productivityScore: Math.floor(Math.random() * 100) + 1
-    }));
+    // Обрабатываем данные и создаем стабильную статистику
+    this.adminStats = admins.map((admin, index) => {
+      // Используем индекс для стабильных значений вместо Math.random()
+      const baseValue = (index + 1) * 7; // Базовое значение на основе индекса
+      return {
+        id: admin.id,
+        name: admin.name || admin.email,
+        email: admin.email,
+        carsAdded: Math.min(baseValue % 50 + 5, 50), // Стабильные значения от 5 до 50
+        errorsCount: Math.min(baseValue % 15, 15), // Стабильные значения от 0 до 15
+        lastActivity: new Date(Date.now() - (index * 24 * 60 * 60 * 1000)).toISOString(), // Разные даты
+        productivityScore: Math.min(60 + (baseValue % 40), 100) // Стабильные значения от 60 до 100
+      };
+    });
 
     // Сортируем по продуктивности
     this.topProductiveAdmins = [...this.adminStats]
@@ -316,12 +320,15 @@ export class AdminProductivityPage implements OnInit {
       return date.toLocaleDateString('ru-RU', { month: 'short', day: 'numeric' });
     });
 
+    // Стабильные данные для графика (на основе дня недели)
+    const stableData = [12, 18, 15, 22, 19, 25, 16]; // Стабильные значения
+
     this.carsAddedChartData = {
       labels: last7Days,
       datasets: [
         {
           label: 'Автомобили добавлено',
-          data: Array.from({ length: 7 }, () => Math.floor(Math.random() * 20) + 1),
+          data: stableData,
           borderColor: '#D4AF37',
           backgroundColor: 'rgba(212, 175, 55, 0.1)',
           borderWidth: 3,
