@@ -1,0 +1,110 @@
+<section class="xml-export-page animate-fade-in">
+  <header class="page-header-glass animate-slide-in-top">
+    <div class="page-header-text">
+      <span class="eyebrow-label">
+        <i class="fas fa-download"></i>
+        Экспорт данных
+      </span>
+      <h2 class="page-title">Экспорт активных автомобилей</h2>
+      <p class="page-subtitle">
+        Экспорт списка всех активных автомобилей в формате XML для рекламных интеграций.
+      </p>
+    </div>
+    <div class="page-header-actions">
+      <div class="stats-chip">
+        <i class="fas fa-car"></i>
+        <span>{{ cars.length }}</span>
+        <small>активных автомобилей</small>
+      </div>
+      <button class="btn btn-lion" type="button" (click)="refreshData()" [disabled]="loading">
+        <i class="fas fa-sync-alt" [class.fa-spin]="loading"></i>
+        <span>{{ loading ? 'Обновляем...' : 'Обновить данные' }}</span>
+      </button>
+    </div>
+  </header>
+
+  @if (loading) {
+    <div class="loading-state glass-card animate-fade-in">
+      <div class="loading-spinner-large">
+        <i class="fas fa-download fa-spin"></i>
+      </div>
+      <p class="loading-text">Загружаем данные автомобилей...</p>
+    </div>
+  } @else if (error) {
+    <div class="alert alert-danger animate-slide-in-top">
+      <i class="fas fa-exclamation-triangle me-2"></i>
+      {{ error }}
+    </div>
+  } @else {
+    <div class="export-content animate-scale-in">
+      <div class="export-stats glass-card">
+        <div class="stat-item">
+          <div class="stat-icon">
+            <i class="fas fa-car"></i>
+          </div>
+          <div class="stat-info">
+            <span class="stat-label">Всего автомобилей</span>
+            <strong class="stat-value">{{ cars.length }}</strong>
+          </div>
+        </div>
+        
+        <div class="stat-item">
+          <div class="stat-icon">
+            <i class="fas fa-calendar"></i>
+          </div>
+          <div class="stat-info">
+            <span class="stat-label">Дата экспорта</span>
+            <strong class="stat-value">{{ new Date().toLocaleDateString('ru-RU') }}</strong>
+          </div>
+        </div>
+      </div>
+
+      <div class="export-actions glass-card">
+        <div class="action-buttons">
+          <button 
+            class="btn btn-primary" 
+            (click)="copyToClipboard()"
+            [disabled]="!xmlContent"
+          >
+            <i class="fas fa-copy"></i>
+            <span>Копировать XML</span>
+          </button>
+          
+          <button 
+            class="btn btn-success" 
+            (click)="downloadXml()"
+            [disabled]="!xmlContent"
+          >
+            <i class="fas fa-download"></i>
+            <span>Скачать XML</span>
+          </button>
+          
+          <button 
+            class="btn btn-info" 
+            (click)="toggleXmlView()"
+            [disabled]="!xmlContent"
+          >
+            <i class="fas fa-eye"></i>
+            <span>{{ showXml ? 'Скрыть XML' : 'Показать XML' }}</span>
+          </button>
+        </div>
+      </div>
+
+      @if (showXml && xmlContent) {
+        <div class="xml-preview glass-card animate-slide-in-bottom">
+          <div class="xml-header">
+            <h3>
+              <i class="fas fa-code"></i>
+              Предварительный просмотр XML
+            </h3>
+            <button class="btn btn-sm btn-outline" (click)="copyToClipboard()">
+              <i class="fas fa-copy"></i>
+              Копировать
+            </button>
+          </div>
+          <pre class="xml-content">{{ xmlContent }}</pre>
+        </div>
+      }
+    </div>
+  }
+</section>

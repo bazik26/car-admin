@@ -6,6 +6,7 @@ import { AdminAdminsPage } from './pages/admin/pages/admins/admins.page';
 import { AdminCarsPage } from './pages/admin/pages/cars/cars.page';
 import { AdminProblematicCarsPage } from './pages/admin/pages/problematic-cars/problematic-cars.page';
 import { AdminProductivityPage } from './pages/admin/pages/productivity/productivity.page';
+import { XmlExportPage } from './pages/admin/pages/xml-export/xml-export.page';
 
 export const routes: Routes = [
   {
@@ -44,6 +45,11 @@ export const routes: Routes = [
             path: 'productivity',
             component: AdminProductivityPage,
             title: 'Продуктивность администраторов',
+          },
+          {
+            path: 'xml-export',
+            component: XmlExportPage,
+            title: 'Экспорт XML',
           },
         ],
       },
