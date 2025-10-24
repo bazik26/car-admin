@@ -28,7 +28,7 @@
               (click)="toggleHeader()"
               title="Скрыть/показать хедер"
             >
-              <i class="fas" [class.fa-chevron-up]="!headerCollapsed" [class.fa-chevron-down]="headerCollapsed"></i>
+              <i class="fas" [class.fa-chevron-up]="headerCollapsed" [class.fa-chevron-down]="!headerCollapsed"></i>
               <span>{{ headerCollapsed ? 'Показать' : 'Скрыть' }}</span>
             </button>
             
@@ -101,10 +101,10 @@
                 class="nav-link"
                 [routerLink]="['/admin', 'xml-export']"
                 routerLinkActive="active"
-                title="Экспорт XML"
+                title="Экспорт YML"
               >
                 <i class="fas fa-download"></i>
-                <span>Экспорт XML</span>
+                <span>Экспорт YML</span>
               </a>
             </li>
           </ul>
@@ -112,7 +112,7 @@
       </div>
     </header>
 
-    <main class="admin-content">
+    <main class="admin-content" [class.content-expanded]="headerCollapsed" [style.transform]="headerCollapsed ? 'translateY(-' + headerHeight + 'px)' : 'translateY(0)'">
       <div class="page-shell admin-content-shell animate-fade-in">
         <router-outlet></router-outlet>
       </div>

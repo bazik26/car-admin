@@ -17,15 +17,18 @@
   -webkit-backdrop-filter: blur(22px);
   border-bottom: 1px solid rgba(255, 255, 255, 0.08);
   box-shadow: 0 18px 45px rgba(3, 6, 14, 0.55);
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   transform: translateY(0);
   opacity: 1;
+  animation: slideDownHeader 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards;
 }
 
 .admin-header.header-hidden {
-  transform: translateY(-100%);
-  opacity: 0;
-  pointer-events: none;
+  transform: translateY(-100%) !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+  visibility: hidden !important;
+  animation: slideUpHeader 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards;
 }
 
 .admin-header::before {
@@ -381,6 +384,165 @@
 }
 
 /* ==========================================================================
+   Content Animation
+   ========================================================================== */
+
+.admin-content {
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  transform: translateY(0);
+}
+
+.admin-content.content-expanded {
+  transform: translateY(-200px);
+  animation: slideUpContent 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+/* Дополнительное смещение для мобильных устройств */
+@media (max-width: 768px) {
+  .admin-content.content-expanded {
+    transform: translateY(-350px) !important;
+  }
+  
+  @keyframes slideUpContent {
+    0% {
+      transform: translateY(0);
+    }
+    100% {
+      transform: translateY(-350px);
+    }
+  }
+  
+  @keyframes slideDownContent {
+    0% {
+      transform: translateY(-350px);
+    }
+    100% {
+      transform: translateY(0);
+    }
+  }
+}
+
+/* Еще больше смещение для очень маленьких экранов */
+@media (max-width: 480px) {
+  .admin-content.content-expanded {
+    transform: translateY(-400px) !important;
+  }
+  
+  @keyframes slideUpContent {
+    0% {
+      transform: translateY(0);
+    }
+    100% {
+      transform: translateY(-400px);
+    }
+  }
+  
+  @keyframes slideDownContent {
+    0% {
+      transform: translateY(-400px);
+    }
+    100% {
+      transform: translateY(0);
+    }
+  }
+}
+
+/* Максимальное смещение для очень маленьких экранов */
+@media (max-width: 360px) {
+  .admin-content.content-expanded {
+    transform: translateY(-450px) !important;
+  }
+  
+  @keyframes slideUpContent {
+    0% {
+      transform: translateY(0);
+    }
+    100% {
+      transform: translateY(-450px);
+    }
+  }
+  
+  @keyframes slideDownContent {
+    0% {
+      transform: translateY(-450px);
+    }
+    100% {
+      transform: translateY(0);
+    }
+  }
+}
+
+/* Экстремальное смещение для очень маленьких экранов */
+@media (max-width: 320px) {
+  .admin-content.content-expanded {
+    transform: translateY(-500px) !important;
+  }
+  
+  @keyframes slideUpContent {
+    0% {
+      transform: translateY(0);
+    }
+    100% {
+      transform: translateY(-500px);
+    }
+  }
+  
+  @keyframes slideDownContent {
+    0% {
+      transform: translateY(-500px);
+    }
+    100% {
+      transform: translateY(0);
+    }
+  }
+}
+
+/* Анимация для возврата контента вниз */
+.admin-content:not(.content-expanded) {
+  animation: slideDownContent 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+@keyframes slideUpContent {
+  0% {
+    transform: translateY(0);
+  }
+  100% {
+    transform: translateY(-200px);
+  }
+}
+
+@keyframes slideDownContent {
+  0% {
+    transform: translateY(-200px);
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideUpHeader {
+  0% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+}
+
+@keyframes slideDownHeader {
+  0% {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* ==========================================================================
    Accessibility
    ========================================================================== */
 
@@ -389,7 +551,9 @@
   .status-pulse,
   .nav-elevated .nav-link,
   .btn,
-  .floating-header-toggle {
+  .floating-header-toggle,
+  .admin-header,
+  .admin-content {
     animation: none !important;
     transition: none !important;
   }
