@@ -368,15 +368,23 @@
 .problem-card .btn-action.accent:hover {
   border-color: rgba(59, 130, 246, 0.6) !important;
   box-shadow: 0 14px 24px rgba(59, 130, 246, 0.3) !important;
-  color: #93c5fd !important;
+  color: rgba(255, 255, 255, 0.95) !important;
   background: rgba(59, 130, 246, 0.2) !important;
 }
 
 .problem-card .btn-action.danger:hover {
   border-color: rgba(239, 68, 68, 0.6) !important;
   box-shadow: 0 14px 24px rgba(239, 68, 68, 0.3) !important;
-  color: #fca5a5 !important;
+  color: rgba(255, 255, 255, 0.95) !important;
   background: rgba(239, 68, 68, 0.2) !important;
+}
+
+.problem-card .btn-action.accent:hover i {
+  color: rgba(255, 255, 255, 0.9) !important;
+}
+
+.problem-card .btn-action.danger:hover i {
+  color: rgba(255, 255, 255, 0.9) !important;
 }
 
 .data-empty {
