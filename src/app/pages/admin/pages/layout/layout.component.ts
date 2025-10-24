@@ -22,6 +22,7 @@ export class AdminLayoutComponent implements OnInit {
   public authService = inject(AuthService);
 
   public admin!: any;
+  public headerCollapsed = false;
 
   ngOnInit() {
     this.appService.auth().subscribe({
@@ -39,5 +40,12 @@ export class AdminLayoutComponent implements OnInit {
    */
   logout() {
     this.authService.logout();
+  }
+
+  /**
+   * Переключение состояния хедера
+   */
+  toggleHeader() {
+    this.headerCollapsed = !this.headerCollapsed;
   }
 }

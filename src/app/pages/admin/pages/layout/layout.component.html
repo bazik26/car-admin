@@ -1,6 +1,6 @@
 @if (admin) {
-  <div class="admin-layout">
-    <header class="admin-header animate-slide-in-top">
+  <div class="admin-layout" [class.header-collapsed]="headerCollapsed">
+    <header class="admin-header animate-slide-in-top" [class.header-hidden]="headerCollapsed">
       <div class="page-shell header-shell">
         <div class="header-top">
           <div class="header-profile animate-slide-in-left">
@@ -22,6 +22,16 @@
           </div>
 
           <div class="header-actions animate-slide-in-right">
+            <button
+              class="btn btn-ghost btn-outline"
+              type="button"
+              (click)="toggleHeader()"
+              title="Скрыть/показать хедер"
+            >
+              <i class="fas" [class.fa-chevron-up]="!headerCollapsed" [class.fa-chevron-down]="headerCollapsed"></i>
+              <span>{{ headerCollapsed ? 'Показать' : 'Скрыть' }}</span>
+            </button>
+            
             <button
               class="btn btn-ghost btn-outline"
               type="button"
@@ -107,5 +117,17 @@
         <router-outlet></router-outlet>
       </div>
     </main>
+
+    <!-- Плавающая кнопка для показа хедера -->
+    @if (headerCollapsed) {
+      <button
+        class="floating-header-toggle"
+        type="button"
+        (click)="toggleHeader()"
+        title="Показать хедер"
+      >
+        <i class="fas fa-chevron-up"></i>
+      </button>
+    }
   </div>
 }
