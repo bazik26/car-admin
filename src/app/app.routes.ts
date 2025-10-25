@@ -7,6 +7,7 @@ import { AdminCarsPage } from './pages/admin/pages/cars/cars.page';
 import { AdminProblematicCarsPage } from './pages/admin/pages/problematic-cars/problematic-cars.page';
 import { AdminProductivityPage } from './pages/admin/pages/productivity/productivity.page';
 import { XmlExportPage } from './pages/admin/pages/xml-export/xml-export.page';
+import { ChatPage } from './pages/admin/pages/chat/chat.page';
 
 export const routes: Routes = [
   {
@@ -50,6 +51,11 @@ export const routes: Routes = [
             path: 'xml-export',
             component: XmlExportPage,
             title: 'Экспорт XML',
+          },
+          {
+            path: 'chat',
+            component: ChatPage,
+            title: 'Чат поддержки',
           },
         ],
       },

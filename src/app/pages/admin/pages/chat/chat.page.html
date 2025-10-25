@@ -1,0 +1,140 @@
+<div class="chat-page">
+  <div class="chat-header">
+    <h1>Чат поддержки</h1>
+    <div class="chat-stats">
+      <span class="stat">
+        <i class="fas fa-comments"></i>
+        {{ sessions().length }} сессий
+      </span>
+      <span class="stat">
+        <i class="fas fa-clock"></i>
+        {{ sessions().filter(s => s.isActive).length }} активных
+      </span>
+    </div>
+  </div>
+
+  <div class="chat-layout">
+    <!-- Список сессий -->
+    <div class="sessions-panel">
+      <div class="sessions-header">
+        <h3>Сессии чата</h3>
+        <button class="btn-refresh" (click)="loadSessions()" [disabled]="isLoading()">
+          <i class="fas fa-sync-alt" [class.fa-spin]="isLoading()"></i>
+        </button>
+      </div>
+      
+      <div class="sessions-list">
+        <div 
+          class="session-item" 
+          *ngFor="let session of sessions()"
+          [class.active]="currentSession()?.sessionId === session.sessionId"
+          [class.unread]="session.unreadCount && session.unreadCount > 0"
+          (click)="selectSession(session)">
+          
+          <div class="session-info">
+            <div class="session-client">
+              <strong>{{ session.clientName || 'Аноним' }}</strong>
+              <span class="session-project">{{ session.projectSource }}</span>
+            </div>
+            <div class="session-meta">
+              <span class="session-time">{{ formatTime(session.lastMessageAt) }}</span>
+              <span class="session-date">{{ formatDate(session.lastMessageAt) }}</span>
+            </div>
+          </div>
+          
+          <div class="session-actions">
+            <span class="unread-badge" *ngIf="session.unreadCount && session.unreadCount > 0">
+              {{ session.unreadCount }}
+            </span>
+            <button 
+              class="btn-assign" 
+              (click)="assignToMe(session); $event.stopPropagation()"
+              *ngIf="!session.assignedAdminId">
+              <i class="fas fa-user-plus"></i>
+            </button>
+            <button 
+              class="btn-close" 
+              (click)="closeSession(session); $event.stopPropagation()"
+              *ngIf="session.isActive">
+              <i class="fas fa-times"></i>
+            </button>
+          </div>
+        </div>
+        
+        <div class="no-sessions" *ngIf="sessions().length === 0 && !isLoading()">
+          <i class="fas fa-comments"></i>
+          <p>Нет активных сессий чата</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Панель сообщений -->
+    <div class="messages-panel" *ngIf="currentSession(); else noSession">
+      <div class="messages-header">
+        <div class="session-details">
+          <h3>{{ currentSession()?.clientName || 'Аноним' }}</h3>
+          <span class="session-source">{{ currentSession()?.projectSource }}</span>
+        </div>
+        <div class="session-contact">
+          <span *ngIf="currentSession()?.clientEmail">
+            <i class="fas fa-envelope"></i>
+            {{ currentSession()?.clientEmail }}
+          </span>
+          <span *ngIf="currentSession()?.clientPhone">
+            <i class="fas fa-phone"></i>
+            {{ currentSession()?.clientPhone }}
+          </span>
+        </div>
+      </div>
+
+      <div class="messages-list">
+        <div 
+          class="message" 
+          *ngFor="let message of messages()"
+          [class.client]="message.senderType === 'client'"
+          [class.admin]="message.senderType === 'admin'">
+          
+          <div class="message-content">
+            <div class="message-text">{{ message.message }}</div>
+            <div class="message-meta">
+              <span class="message-time">{{ formatTime(message.createdAt) }}</span>
+              <span class="message-status" *ngIf="message.senderType === 'admin'">
+                <i class="fas fa-check" [class.read]="message.isRead"></i>
+              </span>
+            </div>
+          </div>
+        </div>
+        
+        <div class="no-messages" *ngIf="messages().length === 0">
+          <i class="fas fa-comment"></i>
+          <p>Начните диалог с клиентом</p>
+        </div>
+      </div>
+
+      <div class="message-input">
+        <div class="input-group">
+          <input 
+            type="text" 
+            [(ngModel)]="newMessage"
+            (keyup.enter)="sendMessage()"
+            placeholder="Введите сообщение..."
+            class="message-field">
+          <button 
+            class="btn-send" 
+            (click)="sendMessage()"
+            [disabled]="!newMessage.trim()">
+            <i class="fas fa-paper-plane"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <ng-template #noSession>
+      <div class="no-session">
+        <i class="fas fa-comments"></i>
+        <h3>Выберите сессию</h3>
+        <p>Выберите сессию чата из списка слева для начала диалога</p>
+      </div>
+    </ng-template>
+  </div>
+</div>
