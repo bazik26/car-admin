@@ -95,7 +95,7 @@
           [class.admin]="message.senderType === 'admin'">
           
           <div class="message-content">
-            <div class="message-text">{{ message.message }}</div>
+            <div class="message-text" style="color: #000 !important; font-size: 16px !important; font-weight: bold !important;">{{ message.message }}</div>
             <div class="message-meta">
               <span class="message-time">{{ formatTime(message.createdAt) }}</span>
               <span class="message-status" *ngIf="message.senderType === 'admin'">

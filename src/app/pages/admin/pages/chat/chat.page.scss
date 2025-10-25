@@ -298,6 +298,11 @@
               border: 1px solid #d1d5db;
               border-radius: 12px 12px 12px 4px;
               color: #374151;
+              
+              .message-text {
+                color: #374151;
+                font-weight: 500;
+              }
             }
           }
 
@@ -308,6 +313,11 @@
               background: #4f8cff;
               color: white;
               border-radius: 12px 12px 4px 12px;
+              
+              .message-text {
+                color: white;
+                font-weight: 500;
+              }
             }
           }
 
@@ -320,6 +330,8 @@
               font-size: 14px;
               line-height: 1.4;
               margin-bottom: 4px;
+              color: inherit;
+              font-weight: 500;
             }
 
             .message-meta {
