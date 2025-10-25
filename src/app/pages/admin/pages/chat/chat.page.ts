@@ -4,7 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { take } from 'rxjs';
 import { io, Socket } from 'socket.io-client';
-import { SoundService } from '../../../services/sound.service';
+import { SoundService } from '../../../../services/sound.service';
 
 interface ChatMessage {
   id?: number;

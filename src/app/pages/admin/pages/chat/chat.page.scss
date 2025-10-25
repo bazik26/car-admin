@@ -64,12 +64,13 @@
         .stat {
           display: flex;
           align-items: center;
-        gap: 6px;
-        color: #6b7280;
-        font-size: 14px;
+          gap: 6px;
+          color: #6b7280;
+          font-size: 14px;
 
-        i {
-          color: #4f8cff;
+          i {
+            color: #4f8cff;
+          }
         }
       }
     }
