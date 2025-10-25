@@ -4,11 +4,11 @@
     <div class="chat-stats">
       <span class="stat">
         <i class="fas fa-comments"></i>
-        {{ sessions().length }} сессий
+        {{ (sessions() || []).length }} сессий
       </span>
       <span class="stat">
         <i class="fas fa-clock"></i>
-        {{ sessions().filter(s => s.isActive === true).length }} активных
+        {{ (sessions() || []).filter(s => s.isActive === true).length }} активных
       </span>
     </div>
   </div>
@@ -26,7 +26,7 @@
       <div class="sessions-list">
         <div 
           class="session-item" 
-          *ngFor="let session of sessions()"
+          *ngFor="let session of (sessions() || [])"
           [class.active]="currentSession()?.sessionId === session.sessionId"
           [class.unread]="session.unreadCount && session.unreadCount > 0"
           (click)="selectSession(session)">
@@ -61,7 +61,7 @@
           </div>
         </div>
         
-        <div class="no-sessions" *ngIf="sessions().length === 0 && !isLoading()">
+        <div class="no-sessions" *ngIf="(sessions() || []).length === 0 && !isLoading()">
           <i class="fas fa-comments"></i>
           <p>Нет активных сессий чата</p>
         </div>
