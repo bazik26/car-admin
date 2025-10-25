@@ -52,7 +52,7 @@ export class ChatPage implements OnInit, OnDestroy {
   newMessage = '';
   currentAdminId = 1; // В реальном приложении получать из AuthService
   
-  private readonly API_URL = 'http://localhost:3001'; // Замените на ваш API URL
+  private readonly API_URL = 'https://car-api-production.up.railway.app'; // Railway API URL
   
   ngOnInit() {
     this.loadSessions();
