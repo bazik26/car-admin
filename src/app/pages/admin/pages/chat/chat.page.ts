@@ -96,7 +96,7 @@ export class ChatPage implements OnInit, OnDestroy {
         next: (messages) => {
           console.log('Messages loaded successfully:', messages);
           this.messages.set(messages);
-          this.markMessagesAsRead(sessionId);
+          this.markAsRead(sessionId);
         },
         error: (error) => {
           console.error('Error loading messages:', error);
