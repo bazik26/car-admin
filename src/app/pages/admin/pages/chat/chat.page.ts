@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { take } from 'rxjs';
+import { io, Socket } from 'socket.io-client';
 
 interface ChatMessage {
   id?: number;
@@ -53,13 +54,19 @@ export class ChatPage implements OnInit, OnDestroy {
   currentAdminId = 1; // В реальном приложении получать из AuthService
   
   private readonly API_URL = 'https://car-api-production.up.railway.app'; // Railway API URL
+  private socket: Socket | null = null;
+  private pollingInterval: any = null;
   
   ngOnInit() {
     this.loadSessions();
+    this.connectToWebSocket();
   }
   
   ngOnDestroy() {
-    // Cleanup если нужно
+    if (this.socket) {
+      this.socket.disconnect();
+    }
+    this.stopMessagePolling();
   }
   
   loadSessions() {
@@ -87,6 +94,7 @@ export class ChatPage implements OnInit, OnDestroy {
     this.currentSession.set(session);
     console.log('Current session set:', this.currentSession());
     this.loadMessages(session.sessionId);
+    this.startMessagePolling(session.sessionId);
   }
   
   loadMessages(sessionId: string) {
@@ -205,5 +213,45 @@ export class ChatPage implements OnInit, OnDestroy {
 
   get messagesList(): ChatMessage[] {
     return this.messages() || [];
+  }
+
+  private connectToWebSocket() {
+    console.log('Connecting to WebSocket...');
+    this.socket = io(this.API_URL, { transports: ['websocket', 'polling'] });
+    
+    this.socket.on('connect', () => {
+      console.log('Connected to chat server');
+    });
+    
+    this.socket.on('disconnect', () => {
+      console.log('Disconnected from chat server');
+    });
+    
+    this.socket.on('new-message', (message: ChatMessage) => {
+      console.log('Received new message:', message);
+      this.messages.update(messages => [...messages, message]);
+    });
+    
+    this.socket.on('error', (error: any) => {
+      console.error('Chat error:', error);
+    });
+  }
+
+  private startMessagePolling(sessionId: string) {
+    if (this.pollingInterval) {
+      clearInterval(this.pollingInterval);
+    }
+    
+    this.pollingInterval = setInterval(() => {
+      console.log('Polling for new messages...');
+      this.loadMessages(sessionId);
+    }, 3000);
+  }
+
+  private stopMessagePolling() {
+    if (this.pollingInterval) {
+      clearInterval(this.pollingInterval);
+      this.pollingInterval = null;
+    }
   }
 }
