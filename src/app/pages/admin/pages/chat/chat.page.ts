@@ -118,7 +118,7 @@ export class ChatPage implements OnInit, OnDestroy {
       sessionId: session.sessionId,
       message: this.newMessage.trim(),
       senderType: 'admin',
-      adminId: this.currentAdminId,
+      // adminId: this.currentAdminId, // Временно убираем adminId
       projectSource: 'car-admin'
     };
     
