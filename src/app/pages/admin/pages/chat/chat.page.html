@@ -88,14 +88,31 @@
       </div>
 
       <div class="messages-list">
+        <!-- Отладочная информация -->
+        <div style="background: yellow; padding: 10px; margin: 10px; border: 2px solid red;">
+          <strong>DEBUG:</strong> Messages count: {{ messagesList.length }}<br>
+          <strong>Messages:</strong> {{ messagesList | json }}
+        </div>
+        
         <div 
           class="message" 
           *ngFor="let message of messagesList"
           [class.client]="message.senderType === 'client'"
-          [class.admin]="message.senderType === 'admin'">
+          [class.admin]="message.senderType === 'admin'"
+          style="border: 2px solid blue; margin: 5px; padding: 5px;">
           
           <div class="message-content">
-            <div class="message-text" style="color: #000 !important; font-size: 16px !important; font-weight: bold !important;">{{ message.message }}</div>
+            <!-- Имя отправителя -->
+            <div class="message-sender" style="color: #666 !important; font-size: 12px !important; margin-bottom: 4px !important;">
+              {{ message.senderType === 'client' ? (message.clientName || 'Клиент') : 'Администратор' }}
+            </div>
+            
+            <!-- Текст сообщения -->
+            <div class="message-text" style="color: #000 !important; font-size: 16px !important; font-weight: bold !important;">
+              {{ message.message }}
+            </div>
+            
+            <!-- Метаданные -->
             <div class="message-meta">
               <span class="message-time">{{ formatTime(message.createdAt) }}</span>
               <span class="message-status" *ngIf="message.senderType === 'admin'">
