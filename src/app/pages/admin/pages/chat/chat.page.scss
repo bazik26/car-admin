@@ -20,13 +20,50 @@
       margin: 0;
     }
 
-    .chat-stats {
+    .chat-controls {
       display: flex;
+      align-items: center;
       gap: 16px;
 
-      .stat {
+      .sound-toggle {
+        background: rgba(79, 140, 255, 0.1);
+        border: 2px solid rgba(79, 140, 255, 0.3);
+        color: #4f8cff;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
         display: flex;
         align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        font-size: 16px;
+
+        &:hover {
+          background: rgba(79, 140, 255, 0.2);
+          transform: scale(1.1);
+        }
+
+        &.enabled {
+          background: rgba(76, 175, 80, 0.1);
+          border-color: rgba(76, 175, 80, 0.5);
+          color: #4caf50;
+        }
+
+        &:not(.enabled) {
+          background: rgba(244, 67, 54, 0.1);
+          border-color: rgba(244, 67, 54, 0.5);
+          color: #f44336;
+        }
+      }
+
+      .chat-stats {
+        display: flex;
+        gap: 16px;
+
+        .stat {
+          display: flex;
+          align-items: center;
         gap: 6px;
         color: #6b7280;
         font-size: 14px;

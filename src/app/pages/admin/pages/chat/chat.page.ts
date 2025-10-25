@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { take } from 'rxjs';
 import { io, Socket } from 'socket.io-client';
+import { SoundService } from '../../../services/sound.service';
 
 interface ChatMessage {
   id?: number;
@@ -56,10 +57,13 @@ export class ChatPage implements OnInit, OnDestroy {
   private readonly API_URL = 'https://car-api-production.up.railway.app'; // Railway API URL
   private socket: Socket | null = null;
   private pollingInterval: any = null;
+  private soundService = inject(SoundService);
+  soundEnabled = signal(true);
   
   ngOnInit() {
     this.loadSessions();
     this.connectToWebSocket();
+    this.checkSoundSettings();
   }
   
   ngOnDestroy() {
@@ -129,6 +133,9 @@ export class ChatPage implements OnInit, OnDestroy {
       // adminId: this.currentAdminId, // Временно убираем adminId
       projectSource: 'car-admin'
     };
+    
+    // Воспроизводим звук отправки
+    this.soundService.playSendSound();
     
     this.http.post(`${this.API_URL}/chat/message`, messageData)
       .pipe(take(1))
@@ -230,6 +237,11 @@ export class ChatPage implements OnInit, OnDestroy {
     this.socket.on('new-message', (message: ChatMessage) => {
       console.log('Received new message:', message);
       this.messages.update(messages => [...messages, message]);
+      
+      // Воспроизводим звук только для сообщений от клиента
+      if (message.senderType === 'client') {
+        this.soundService.playNewMessageSound();
+      }
     });
     
     this.socket.on('error', (error: any) => {
@@ -253,5 +265,16 @@ export class ChatPage implements OnInit, OnDestroy {
       clearInterval(this.pollingInterval);
       this.pollingInterval = null;
     }
+  }
+
+  // Управление звуком
+  toggleSound() {
+    const newState = this.soundService.toggleSound();
+    this.soundEnabled.set(newState);
+  }
+
+  // Проверить настройки звука при инициализации
+  private checkSoundSettings() {
+    this.soundEnabled.set(this.soundService.isSoundEnabled());
   }
 }
