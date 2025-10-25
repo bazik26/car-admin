@@ -64,15 +64,19 @@ export class ChatPage implements OnInit, OnDestroy {
   
   loadSessions() {
     this.isLoading.set(true);
+    console.log('Loading sessions from:', `${this.API_URL}/chat/sessions`);
+    
     this.http.get<ChatSession[]>(`${this.API_URL}/chat/sessions`)
       .pipe(take(1))
       .subscribe({
         next: (sessions) => {
+          console.log('Sessions loaded successfully:', sessions);
           this.sessions.set(sessions);
           this.isLoading.set(false);
         },
         error: (error) => {
           console.error('Error loading sessions:', error);
+          console.error('Error details:', error.status, error.message);
           this.isLoading.set(false);
         }
       });
