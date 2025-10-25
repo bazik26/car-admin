@@ -14,6 +14,7 @@ interface ChatMessage {
   clientPhone?: string;
   adminId?: number;
   isRead?: boolean;
+  projectSource?: string;
   createdAt?: Date;
 }
 
