@@ -178,4 +178,17 @@ export class ChatPage implements OnInit, OnDestroy {
     const d = new Date(date);
     return d.toLocaleDateString('ru-RU');
   }
+
+  // Геттеры для упрощения шаблона
+  get totalSessions(): number {
+    return (this.sessions() || []).length;
+  }
+
+  get activeSessions(): number {
+    return (this.sessions() || []).filter(s => s.isActive === true).length;
+  }
+
+  get sessionsList(): ChatSession[] {
+    return this.sessions() || [];
+  }
 }
