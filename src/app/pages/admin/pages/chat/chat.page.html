@@ -88,21 +88,11 @@
       </div>
 
       <div class="messages-list">
-        <!-- Debug info -->
-        <div style="background: yellow; padding: 10px; margin: 10px; border: 2px solid red;">
-          <strong>DEBUG:</strong> Messages count: {{ messagesList.length }}<br>
-          <strong>Messages:</strong> {{ messagesList | json }}
-        </div>
-        
         <div 
           class="message" 
-          *ngFor="let message of messagesList; let i = index"
+          *ngFor="let message of messagesList"
           [class.client]="message.senderType === 'client'"
-          [class.admin]="message.senderType === 'admin'"
-          [style.background]="'lightblue'"
-          [style.border]="'2px solid green'"
-          [style.padding]="'10px'"
-          [style.margin]="'5px'">
+          [class.admin]="message.senderType === 'admin'">
           
           <div class="message-content">
             <div class="message-text">{{ message.message }}</div>
