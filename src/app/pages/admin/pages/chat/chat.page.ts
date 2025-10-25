@@ -85,6 +85,7 @@ export class ChatPage implements OnInit, OnDestroy {
   selectSession(session: ChatSession) {
     console.log('Selecting session:', session);
     this.currentSession.set(session);
+    console.log('Current session set:', this.currentSession());
     this.loadMessages(session.sessionId);
   }
   
@@ -95,7 +96,9 @@ export class ChatPage implements OnInit, OnDestroy {
       .subscribe({
         next: (messages) => {
           console.log('Messages loaded successfully:', messages);
+          console.log('Messages count:', messages.length);
           this.messages.set(messages);
+          console.log('Messages signal updated:', this.messages());
           this.markAsRead(sessionId);
         },
         error: (error) => {
@@ -198,5 +201,9 @@ export class ChatPage implements OnInit, OnDestroy {
 
   get sessionsList(): ChatSession[] {
     return this.sessions() || [];
+  }
+
+  get messagesList(): ChatMessage[] {
+    return this.messages() || [];
   }
 }
