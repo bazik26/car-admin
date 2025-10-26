@@ -53,6 +53,7 @@ export class ChatPage implements OnInit, OnDestroy {
   // Форма
   newMessage = '';
   currentAdminId = 1; // В реальном приложении получать из AuthService
+  adminName = ''; // Имя админа для отображения клиенту
   
   private readonly API_URL = 'https://car-api-production.up.railway.app'; // Railway API URL
   private socket: Socket | null = null;
@@ -64,6 +65,7 @@ export class ChatPage implements OnInit, OnDestroy {
     this.loadSessions();
     this.connectToWebSocket();
     this.checkSoundSettings();
+    this.loadAdminName();
   }
   
   ngOnDestroy() {
@@ -109,6 +111,19 @@ export class ChatPage implements OnInit, OnDestroy {
         next: (messages) => {
           console.log('Messages loaded successfully:', messages);
           console.log('Messages count:', messages.length);
+          
+          // Проверяем, есть ли новые сообщения от клиента
+          const currentMessages = this.messages();
+          const newClientMessages = messages.filter(msg => 
+            msg.senderType === 'client' && 
+            !currentMessages.some(current => current.id === msg.id)
+          );
+          
+          // Воспроизводим звук для новых сообщений от клиента
+          if (newClientMessages.length > 0) {
+            this.soundService.playNewMessageSound();
+          }
+          
           this.messages.set(messages);
           console.log('Messages signal updated:', this.messages());
           this.markAsRead(sessionId);
@@ -130,6 +145,7 @@ export class ChatPage implements OnInit, OnDestroy {
       sessionId: session.sessionId,
       message: this.newMessage.trim(),
       senderType: 'admin',
+      clientName: this.adminName || 'Администратор', // Используем имя админа
       // adminId: this.currentAdminId, // Временно убираем adminId
       projectSource: 'car-admin'
     };
@@ -276,5 +292,21 @@ export class ChatPage implements OnInit, OnDestroy {
   // Проверить настройки звука при инициализации
   private checkSoundSettings() {
     this.soundEnabled.set(this.soundService.isSoundEnabled());
+  }
+
+  // Загрузить имя админа
+  private loadAdminName() {
+    const savedName = localStorage.getItem('admin_name');
+    if (savedName) {
+      this.adminName = savedName;
+    }
+  }
+
+  // Сохранить имя админа
+  saveAdminName() {
+    if (this.adminName.trim()) {
+      localStorage.setItem('admin_name', this.adminName.trim());
+      console.log('Admin name saved:', this.adminName);
+    }
   }
 }

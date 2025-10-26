@@ -2,6 +2,14 @@
   <div class="chat-header">
     <h1>Чат поддержки</h1>
     <div class="chat-controls">
+      <div class="admin-name-input">
+        <input 
+          type="text" 
+          [(ngModel)]="adminName" 
+          (blur)="saveAdminName()"
+          placeholder="Ваше имя для клиентов"
+          class="admin-name-field">
+      </div>
       <button 
         class="sound-toggle" 
         (click)="toggleSound()"
@@ -97,27 +105,20 @@
       </div>
 
       <div class="messages-list">
-        <!-- Отладочная информация -->
-        <div style="background: yellow; padding: 10px; margin: 10px; border: 2px solid red;">
-          <strong>DEBUG:</strong> Messages count: {{ messagesList.length }}<br>
-          <strong>Messages:</strong> {{ messagesList | json }}
-        </div>
-        
         <div 
           class="message" 
           *ngFor="let message of messagesList"
           [class.client]="message.senderType === 'client'"
-          [class.admin]="message.senderType === 'admin'"
-          style="border: 2px solid blue; margin: 5px; padding: 5px;">
+          [class.admin]="message.senderType === 'admin'">
           
           <div class="message-content">
             <!-- Имя отправителя -->
-            <div class="message-sender" style="color: #666 !important; font-size: 12px !important; margin-bottom: 4px !important;">
+            <div class="message-sender">
               {{ message.senderType === 'client' ? (message.clientName || 'Клиент') : 'Администратор' }}
             </div>
             
             <!-- Текст сообщения -->
-            <div class="message-text" style="color: #000 !important; font-size: 16px !important; font-weight: bold !important;">
+            <div class="message-text">
               {{ message.message }}
             </div>
             
