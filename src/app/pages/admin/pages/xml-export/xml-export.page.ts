@@ -43,10 +43,12 @@ export class XmlExportPage implements OnInit {
   xmlContent = '';
   showXml = false;
   currentDate = new Date().toLocaleDateString('ru-RU');
+  ymlFeedUrl = '';
 
   constructor(private appService: AppService) {}
 
   ngOnInit() {
+    this.ymlFeedUrl = `${this.appService.API_URL}/cars/yml-export`;
     this.loadCars();
   }
 
@@ -216,5 +218,15 @@ export class XmlExportPage implements OnInit {
 
   refreshData() {
     this.loadCars();
+  }
+
+  copyUrl(inputElement: HTMLInputElement) {
+    inputElement.select();
+    inputElement.setSelectionRange(0, 99999); // Для мобильных устройств
+    navigator.clipboard.writeText(this.ymlFeedUrl).then(() => {
+      console.log('Ссылка на YML-фид скопирована в буфер обмена');
+    }).catch(err => {
+      console.error('Ошибка копирования:', err);
+    });
   }
 }

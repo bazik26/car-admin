@@ -167,6 +167,71 @@
   color: var(--white);
 }
 
+.export-link {
+  padding: 1.5rem;
+}
+
+.link-header {
+  margin-bottom: 1rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.link-header h3 {
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--white);
+  font-size: 1.1rem;
+}
+
+.link-header h3 i {
+  color: var(--lion-gold);
+}
+
+.link-content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+}
+
+.url-input-group {
+  display: flex;
+  gap: var(--spacing-sm);
+  align-items: stretch;
+}
+
+.url-input {
+  flex: 1;
+  padding: 0.75rem 1rem;
+  border-radius: var(--radius-lg);
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: var(--white);
+  font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+  font-size: 0.9rem;
+  transition: all var(--transition-fast);
+}
+
+.url-input:focus {
+  outline: none;
+  border-color: var(--lion-gold);
+  box-shadow: 0 0 0 3px rgba(234, 164, 48, 0.1);
+}
+
+.url-input-group .btn {
+  padding: 0.75rem 1.5rem;
+  white-space: nowrap;
+}
+
+.url-hint {
+  margin: 0;
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.6);
+  line-height: 1.5;
+}
+
 .export-actions {
   padding: 1.5rem;
 }
