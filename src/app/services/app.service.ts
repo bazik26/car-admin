@@ -292,4 +292,123 @@ export class AppService {
       .get(`${this.API_URL}/chat/messages/${sessionId}`)
       .pipe(map((response) => response));
   }
+
+  // ==================== ACTIVITY LOG ====================
+  getLeadActivities(leadId: number): Observable<any> {
+    return this.http
+      .get(`${this.API_URL}/leads/${leadId}/activities`)
+      .pipe(map((response) => response));
+  }
+
+  // ==================== TASKS ====================
+  createLeadTask(leadId: number, task: { adminId: number; title: string; description?: string; dueDate?: string }): Observable<any> {
+    return this.http
+      .post(`${this.API_URL}/leads/${leadId}/tasks`, task)
+      .pipe(map((response) => response));
+  }
+
+  getLeadTasks(leadId: number): Observable<any> {
+    return this.http
+      .get(`${this.API_URL}/leads/${leadId}/tasks`)
+      .pipe(map((response) => response));
+  }
+
+  updateLeadTask(taskId: number, task: { title?: string; description?: string; dueDate?: string; completed?: boolean }): Observable<any> {
+    return this.http
+      .put(`${this.API_URL}/leads/tasks/${taskId}`, task)
+      .pipe(map((response) => response));
+  }
+
+  deleteLeadTask(taskId: number): Observable<any> {
+    return this.http
+      .delete(`${this.API_URL}/leads/tasks/${taskId}`)
+      .pipe(map((response) => response));
+  }
+
+  // ==================== TAGS ====================
+  getAllTags(): Observable<any> {
+    return this.http
+      .get(`${this.API_URL}/leads/tags/all`)
+      .pipe(map((response) => response));
+  }
+
+  createTag(name: string, color?: string): Observable<any> {
+    return this.http
+      .post(`${this.API_URL}/leads/tags`, { name, color })
+      .pipe(map((response) => response));
+  }
+
+  addTagToLead(leadId: number, tagId: number): Observable<any> {
+    return this.http
+      .post(`${this.API_URL}/leads/${leadId}/tags/${tagId}`, {})
+      .pipe(map((response) => response));
+  }
+
+  removeTagFromLead(leadId: number, tagId: number): Observable<any> {
+    return this.http
+      .delete(`${this.API_URL}/leads/${leadId}/tags/${tagId}`)
+      .pipe(map((response) => response));
+  }
+
+  // ==================== ATTACHMENTS ====================
+  createLeadAttachment(leadId: number, file: File, description?: string): Observable<any> {
+    const formData = new FormData();
+    formData.append('file', file);
+    if (description) {
+      formData.append('description', description);
+    }
+    return this.http
+      .post(`${this.API_URL}/leads/${leadId}/attachments`, formData)
+      .pipe(map((response) => response));
+  }
+
+  getLeadAttachments(leadId: number): Observable<any> {
+    return this.http
+      .get(`${this.API_URL}/leads/${leadId}/attachments`)
+      .pipe(map((response) => response));
+  }
+
+  deleteLeadAttachment(attachmentId: number): Observable<any> {
+    return this.http
+      .delete(`${this.API_URL}/leads/attachments/${attachmentId}`)
+      .pipe(map((response) => response));
+  }
+
+  // ==================== MEETINGS ====================
+  createLeadMeeting(leadId: number, meeting: { adminId: number; title: string; description?: string; meetingDate: string; location?: string; meetingType?: string }): Observable<any> {
+    return this.http
+      .post(`${this.API_URL}/leads/${leadId}/meetings`, meeting)
+      .pipe(map((response) => response));
+  }
+
+  getLeadMeetings(leadId: number): Observable<any> {
+    return this.http
+      .get(`${this.API_URL}/leads/${leadId}/meetings`)
+      .pipe(map((response) => response));
+  }
+
+  updateLeadMeeting(meetingId: number, meeting: { title?: string; description?: string; meetingDate?: string; location?: string; meetingType?: string; completed?: boolean }): Observable<any> {
+    return this.http
+      .put(`${this.API_URL}/leads/meetings/${meetingId}`, meeting)
+      .pipe(map((response) => response));
+  }
+
+  deleteLeadMeeting(meetingId: number): Observable<any> {
+    return this.http
+      .delete(`${this.API_URL}/leads/meetings/${meetingId}`)
+      .pipe(map((response) => response));
+  }
+
+  // ==================== LEAD SCORING ====================
+  calculateLeadScore(leadId: number): Observable<any> {
+    return this.http
+      .post(`${this.API_URL}/leads/${leadId}/calculate-score`, {})
+      .pipe(map((response) => response));
+  }
+
+  convertLeadToClient(leadId: number): Observable<any> {
+    return this.http
+      .post(`${this.API_URL}/leads/${leadId}/convert-to-client`, {})
+      .pipe(map((response) => response));
+  }
 }

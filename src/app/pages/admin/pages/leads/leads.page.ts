@@ -22,8 +22,70 @@ interface Lead {
   assignedAdmin?: any;
   description?: string;
   comments?: LeadComment[];
+  tags?: LeadTag[];
+  score?: number;
+  convertedToClient?: boolean;
   createdAt: Date;
   updatedAt: Date;
+}
+
+interface LeadTag {
+  id: number;
+  name: string;
+  color: string;
+}
+
+interface LeadTask {
+  id: number;
+  leadId: number;
+  adminId: number;
+  admin?: any;
+  title: string;
+  description?: string;
+  dueDate?: Date;
+  completed: boolean;
+  completedAt?: Date;
+  createdAt: Date;
+}
+
+interface LeadAttachment {
+  id: number;
+  leadId: number;
+  adminId?: number;
+  admin?: any;
+  fileName: string;
+  filePath: string;
+  fileSize?: number;
+  mimeType?: string;
+  description?: string;
+  createdAt: Date;
+}
+
+interface LeadMeeting {
+  id: number;
+  leadId: number;
+  adminId: number;
+  admin?: any;
+  title: string;
+  description?: string;
+  meetingDate: Date;
+  location?: string;
+  meetingType: 'call' | 'email' | 'meeting' | 'visit' | 'other';
+  completed: boolean;
+  createdAt: Date;
+}
+
+interface LeadActivity {
+  id: number;
+  leadId: number;
+  adminId?: number;
+  admin?: any;
+  activityType: string;
+  field?: string;
+  oldValue?: string;
+  newValue?: string;
+  description?: string;
+  createdAt: Date;
 }
 
 interface LeadComment {
@@ -58,7 +120,7 @@ interface ChatMessage {
 })
 export class LeadsPage implements OnInit {
   private readonly http = inject(HttpClient);
-  private readonly appService = inject(AppService);
+  public readonly appService = inject(AppService);
   private readonly modal = inject(BsModalService);
   
   private readonly API_URL = 'https://car-api-production.up.railway.app';
@@ -79,6 +141,31 @@ export class LeadsPage implements OnInit {
   // Комментарии
   newComment = '';
   chatMessages = signal<ChatMessage[]>([]);
+
+  // Табы
+  activeTab = signal<'info' | 'tasks' | 'tags' | 'attachments' | 'meetings' | 'activity'>('info');
+
+  // Задачи
+  leadTasks = signal<LeadTask[]>([]);
+  showTaskForm = signal(false);
+  newTask = { title: '', description: '', dueDate: '' };
+
+  // Теги
+  allTags = signal<LeadTag[]>([]);
+  showTagForm = signal(false);
+  newTag = { name: '', color: '#4f8cff' };
+
+  // Файлы
+  leadAttachments = signal<LeadAttachment[]>([]);
+  selectedFile: File | null = null;
+
+  // Встречи
+  leadMeetings = signal<LeadMeeting[]>([]);
+  showMeetingForm = signal(false);
+  newMeeting = { title: '', description: '', meetingDate: '', location: '', meetingType: 'call' };
+
+  // История
+  leadActivities = signal<LeadActivity[]>([]);
 
   ngOnInit() {
     this.loadAdmin();
@@ -121,15 +208,30 @@ export class LeadsPage implements OnInit {
   openDetailsModal(lead: Lead) {
     this.selectedLead.set(lead);
     this.showDetailsModal.set(true);
+    this.activeTab.set('info');
+    
+    // Загружаем все данные
     if (lead.chatSessionId) {
       this.loadChatMessages(lead.chatSessionId);
     }
+    this.loadLeadTasks(lead.id);
+    this.loadLeadAttachments(lead.id);
+    this.loadLeadMeetings(lead.id);
+    this.loadLeadActivities(lead.id);
+    this.loadAllTags();
   }
 
   closeDetailsModal() {
     this.showDetailsModal.set(false);
     this.selectedLead.set(null);
     this.chatMessages.set([]);
+    this.leadTasks.set([]);
+    this.leadAttachments.set([]);
+    this.leadMeetings.set([]);
+    this.leadActivities.set([]);
+    this.showTaskForm.set(false);
+    this.showTagForm.set(false);
+    this.showMeetingForm.set(false);
   }
 
   loadChatMessages(sessionId: string) {
@@ -363,6 +465,335 @@ createLeadFromChat(sessionId: string) {
       },
       error: (error: any) => {
         console.error('Error updating lead priority:', error);
+      }
+    });
+  }
+
+  // ==================== TASKS ====================
+  loadLeadTasks(leadId: number) {
+    this.appService.getLeadTasks(leadId).pipe(take(1)).subscribe({
+      next: (tasks: LeadTask[]) => {
+        this.leadTasks.set(tasks);
+      },
+      error: (error: any) => {
+        console.error('Error loading tasks:', error);
+      }
+    });
+  }
+
+  createTask() {
+    if (!this.newTask.title.trim() || !this.selectedLead() || !this.admin) return;
+
+    const taskData = {
+      adminId: this.admin.id,
+      title: this.newTask.title,
+      description: this.newTask.description || undefined,
+      dueDate: this.newTask.dueDate ? new Date(this.newTask.dueDate).toISOString() : undefined,
+    };
+
+    this.appService.createLeadTask(this.selectedLead()!.id, taskData).pipe(take(1)).subscribe({
+      next: () => {
+        this.newTask = { title: '', description: '', dueDate: '' };
+        this.showTaskForm.set(false);
+        this.loadLeadTasks(this.selectedLead()!.id);
+        this.loadLeads();
+      },
+      error: (error: any) => {
+        console.error('Error creating task:', error);
+        alert('Ошибка при создании задачи');
+      }
+    });
+  }
+
+  toggleTask(task: LeadTask) {
+    this.appService.updateLeadTask(task.id, { completed: !task.completed }).pipe(take(1)).subscribe({
+      next: () => {
+        this.loadLeadTasks(this.selectedLead()!.id);
+        this.loadLeads();
+      },
+      error: (error: any) => {
+        console.error('Error updating task:', error);
+      }
+    });
+  }
+
+  deleteTask(taskId: number) {
+    if (confirm('Удалить задачу?')) {
+      this.appService.deleteLeadTask(taskId).pipe(take(1)).subscribe({
+        next: () => {
+          this.loadLeadTasks(this.selectedLead()!.id);
+          this.loadLeads();
+        },
+        error: (error: any) => {
+          console.error('Error deleting task:', error);
+        }
+      });
+    }
+  }
+
+  isOverdue(dueDate: Date | string | undefined): boolean {
+    if (!dueDate) return false;
+    return new Date(dueDate) < new Date();
+  }
+
+  // ==================== TAGS ====================
+  loadAllTags() {
+    this.appService.getAllTags().pipe(take(1)).subscribe({
+      next: (tags: LeadTag[]) => {
+        this.allTags.set(tags);
+      },
+      error: (error: any) => {
+        console.error('Error loading tags:', error);
+      }
+    });
+  }
+
+  createTag() {
+    if (!this.newTag.name.trim()) return;
+
+    this.appService.createTag(this.newTag.name, this.newTag.color).pipe(take(1)).subscribe({
+      next: () => {
+        this.newTag = { name: '', color: '#4f8cff' };
+        this.showTagForm.set(false);
+        this.loadAllTags();
+        this.loadLeads();
+      },
+      error: (error: any) => {
+        console.error('Error creating tag:', error);
+        alert('Ошибка при создании тега');
+      }
+    });
+  }
+
+  isTagAssigned(tagId: number): boolean {
+    return this.selectedLead()?.tags?.some(t => t.id === tagId) || false;
+  }
+
+  toggleTag(tagId: number) {
+    if (!this.selectedLead()) return;
+
+    if (this.isTagAssigned(tagId)) {
+      this.appService.removeTagFromLead(this.selectedLead()!.id, tagId).pipe(take(1)).subscribe({
+        next: () => {
+          this.loadLeads();
+          this.appService.getLead(this.selectedLead()!.id).pipe(take(1)).subscribe((lead: Lead) => {
+            this.selectedLead.set(lead);
+          });
+        },
+        error: (error: any) => {
+          console.error('Error removing tag:', error);
+        }
+      });
+    } else {
+      this.appService.addTagToLead(this.selectedLead()!.id, tagId).pipe(take(1)).subscribe({
+        next: () => {
+          this.loadLeads();
+          this.appService.getLead(this.selectedLead()!.id).pipe(take(1)).subscribe((lead: Lead) => {
+            this.selectedLead.set(lead);
+          });
+        },
+        error: (error: any) => {
+          console.error('Error adding tag:', error);
+        }
+      });
+    }
+  }
+
+  // ==================== ATTACHMENTS ====================
+  loadLeadAttachments(leadId: number) {
+    this.appService.getLeadAttachments(leadId).pipe(take(1)).subscribe({
+      next: (attachments: LeadAttachment[]) => {
+        this.leadAttachments.set(attachments);
+      },
+      error: (error: any) => {
+        console.error('Error loading attachments:', error);
+      }
+    });
+  }
+
+  onFileSelected(event: any) {
+    const file = event.target.files[0];
+    if (!file || !this.selectedLead()) return;
+
+    this.appService.createLeadAttachment(this.selectedLead()!.id, file).pipe(take(1)).subscribe({
+      next: () => {
+        this.loadLeadAttachments(this.selectedLead()!.id);
+        this.loadLeads();
+      },
+      error: (error: any) => {
+        console.error('Error uploading file:', error);
+        alert('Ошибка при загрузке файла');
+      }
+    });
+  }
+
+  deleteAttachment(attachmentId: number) {
+    if (confirm('Удалить файл?')) {
+      this.appService.deleteLeadAttachment(attachmentId).pipe(take(1)).subscribe({
+        next: () => {
+          this.loadLeadAttachments(this.selectedLead()!.id);
+          this.loadLeads();
+        },
+        error: (error: any) => {
+          console.error('Error deleting attachment:', error);
+        }
+      });
+    }
+  }
+
+  formatFileSize(bytes?: number): string {
+    if (!bytes) return '';
+    if (bytes < 1024) return bytes + ' B';
+    if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB';
+    return (bytes / (1024 * 1024)).toFixed(1) + ' MB';
+  }
+
+  // ==================== MEETINGS ====================
+  loadLeadMeetings(leadId: number) {
+    this.appService.getLeadMeetings(leadId).pipe(take(1)).subscribe({
+      next: (meetings: LeadMeeting[]) => {
+        this.leadMeetings.set(meetings);
+      },
+      error: (error: any) => {
+        console.error('Error loading meetings:', error);
+      }
+    });
+  }
+
+  createMeeting() {
+    if (!this.newMeeting.title.trim() || !this.newMeeting.meetingDate || !this.selectedLead() || !this.admin) return;
+
+    const meetingData = {
+      adminId: this.admin.id,
+      title: this.newMeeting.title,
+      description: this.newMeeting.description || undefined,
+      meetingDate: new Date(this.newMeeting.meetingDate).toISOString(),
+      location: this.newMeeting.location || undefined,
+      meetingType: this.newMeeting.meetingType,
+    };
+
+    this.appService.createLeadMeeting(this.selectedLead()!.id, meetingData).pipe(take(1)).subscribe({
+      next: () => {
+        this.newMeeting = { title: '', description: '', meetingDate: '', location: '', meetingType: 'call' };
+        this.showMeetingForm.set(false);
+        this.loadLeadMeetings(this.selectedLead()!.id);
+        this.loadLeads();
+      },
+      error: (error: any) => {
+        console.error('Error creating meeting:', error);
+        alert('Ошибка при создании встречи');
+      }
+    });
+  }
+
+  toggleMeeting(meeting: LeadMeeting) {
+    this.appService.updateLeadMeeting(meeting.id, { completed: !meeting.completed }).pipe(take(1)).subscribe({
+      next: () => {
+        this.loadLeadMeetings(this.selectedLead()!.id);
+        this.loadLeads();
+      },
+      error: (error: any) => {
+        console.error('Error updating meeting:', error);
+      }
+    });
+  }
+
+  deleteMeeting(meetingId: number) {
+    if (confirm('Удалить встречу?')) {
+      this.appService.deleteLeadMeeting(meetingId).pipe(take(1)).subscribe({
+        next: () => {
+          this.loadLeadMeetings(this.selectedLead()!.id);
+          this.loadLeads();
+        },
+        error: (error: any) => {
+          console.error('Error deleting meeting:', error);
+        }
+      });
+    }
+  }
+
+  getMeetingTypeLabel(type: string): string {
+    const labels: Record<string, string> = {
+      'call': 'Звонок',
+      'email': 'Email',
+      'meeting': 'Встреча',
+      'visit': 'Визит',
+      'other': 'Другое',
+    };
+    return labels[type] || type;
+  }
+
+  // ==================== ACTIVITY LOG ====================
+  loadLeadActivities(leadId: number) {
+    this.appService.getLeadActivities(leadId).pipe(take(1)).subscribe({
+      next: (activities: LeadActivity[]) => {
+        this.leadActivities.set(activities);
+      },
+      error: (error: any) => {
+        console.error('Error loading activities:', error);
+      }
+    });
+  }
+
+  getActivityIcon(activityType: string): string {
+    const icons: Record<string, string> = {
+      'created': 'fa-plus-circle',
+      'updated': 'fa-edit',
+      'status_changed': 'fa-exchange-alt',
+      'priority_changed': 'fa-star',
+      'assigned': 'fa-user-plus',
+      'comment_added': 'fa-comment',
+      'task_created': 'fa-tasks',
+      'task_completed': 'fa-check-circle',
+      'tag_added': 'fa-tag',
+      'tag_removed': 'fa-tag',
+      'file_attached': 'fa-paperclip',
+      'meeting_scheduled': 'fa-calendar',
+      'converted': 'fa-check-double',
+    };
+    return icons[activityType] || 'fa-circle';
+  }
+
+  getActivityDescription(activity: LeadActivity): string {
+    if (activity.description) return activity.description;
+    
+    const fieldLabels: Record<string, string> = {
+      'status': 'Статус',
+      'priority': 'Приоритет',
+      'assignedAdminId': 'Назначение',
+      'name': 'Имя',
+      'email': 'Email',
+      'phone': 'Телефон',
+    };
+
+    if (activity.field && activity.oldValue !== undefined && activity.newValue !== undefined) {
+      const fieldLabel = fieldLabels[activity.field] || activity.field;
+      return `${fieldLabel}: ${activity.oldValue || 'не указано'} → ${activity.newValue || 'не указано'}`;
+    }
+
+    return 'Изменение';
+  }
+
+  // ==================== LEAD SCORING ====================
+  getScoreClass(score: number): string {
+    if (score >= 80) return 'score-high';
+    if (score >= 50) return 'score-medium';
+    return 'score-low';
+  }
+
+  convertToClient() {
+    if (!this.selectedLead() || !confirm('Конвертировать лид в клиента?')) return;
+
+    this.appService.convertLeadToClient(this.selectedLead()!.id).pipe(take(1)).subscribe({
+      next: () => {
+        this.loadLeads();
+        this.appService.getLead(this.selectedLead()!.id).pipe(take(1)).subscribe((lead: Lead) => {
+          this.selectedLead.set(lead);
+        });
+      },
+      error: (error: any) => {
+        console.error('Error converting lead:', error);
+        alert('Ошибка при конвертации лида');
       }
     });
   }
