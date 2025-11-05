@@ -1,4 +1,4 @@
-import { Component, OnInit, signal, inject } from '@angular/core';
+import { Component, OnInit, signal, inject, ViewEncapsulation } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
@@ -51,7 +51,8 @@ interface ChatMessage {
   standalone: true,
   imports: [CommonModule, FormsModule],
   templateUrl: './leads.page.html',
-  styleUrl: './leads.page.scss'
+  styleUrls: ['./leads.page.scss'],
+  encapsulation: ViewEncapsulation.None
 })
 export class LeadsPage implements OnInit {
   private readonly http = inject(HttpClient);
