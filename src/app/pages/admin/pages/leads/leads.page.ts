@@ -65,6 +65,7 @@ export class LeadsPage implements OnInit {
 
   leads = signal<Lead[]>([]);
   selectedLead = signal<Lead | null>(null);
+  showDetailsModal = signal(false);
   isLoading = signal(false);
   admin: any = null;
   admins: any[] = [];
@@ -74,7 +75,6 @@ export class LeadsPage implements OnInit {
   filterSource = signal<string>('');
   filterAdmin = signal<number | null>(null);
   searchQuery = signal<string>('');
-
 
   // Комментарии
   newComment = '';
@@ -118,11 +118,18 @@ export class LeadsPage implements OnInit {
     });
   }
 
-  selectLead(lead: Lead) {
+  openDetailsModal(lead: Lead) {
     this.selectedLead.set(lead);
+    this.showDetailsModal.set(true);
     if (lead.chatSessionId) {
       this.loadChatMessages(lead.chatSessionId);
     }
+  }
+
+  closeDetailsModal() {
+    this.showDetailsModal.set(false);
+    this.selectedLead.set(null);
+    this.chatMessages.set([]);
   }
 
   loadChatMessages(sessionId: string) {
@@ -165,7 +172,7 @@ export class LeadsPage implements OnInit {
         // Обновляем выбранный лид, если он был изменен
         if (this.selectedLead()?.id === lead.id) {
           this.appService.getLead(lead.id).pipe(take(1)).subscribe((updatedLead: Lead) => {
-            this.selectLead(updatedLead);
+            this.selectedLead.set(updatedLead);
           });
         }
       }
@@ -178,7 +185,7 @@ deleteLead(lead: Lead) {
       next: () => {
         this.loadLeads();
         if (this.selectedLead()?.id === lead.id) {
-          this.selectedLead.set(null);
+          this.closeDetailsModal();
         }
       },
       error: (error: any) => {
@@ -202,7 +209,7 @@ addComment() {
       // Обновляем выбранный лид
       const lead = this.leads().find(l => l.id === this.selectedLead()!.id);
       if (lead) {
-        this.selectLead(lead);
+        this.selectedLead.set(lead);
       }
     },
     error: (error: any) => {
@@ -219,7 +226,7 @@ updateLeadStatus(lead: Lead, status: Lead['status']) {
       if (this.selectedLead()?.id === lead.id) {
         const updatedLead = this.leads().find(l => l.id === lead.id);
         if (updatedLead) {
-          this.selectLead(updatedLead);
+          this.selectedLead.set(updatedLead);
         }
       }
     },
@@ -237,7 +244,7 @@ assignLead(lead: Lead, adminId: number | null) {
       if (this.selectedLead()?.id === lead.id) {
         const updatedLead = this.leads().find(l => l.id === lead.id);
         if (updatedLead) {
-          this.selectLead(updatedLead);
+          this.selectedLead.set(updatedLead);
         }
       }
     },
@@ -351,7 +358,7 @@ createLeadFromChat(sessionId: string) {
         this.loadLeads();
         const updatedLead = this.leads().find(l => l.id === this.selectedLead()!.id);
         if (updatedLead) {
-          this.selectLead(updatedLead);
+          this.selectedLead.set(updatedLead);
         }
       },
       error: (error: any) => {

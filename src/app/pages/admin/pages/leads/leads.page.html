@@ -54,206 +54,262 @@
     <button class="btn btn-secondary" (click)="clearFilters()">Сбросить</button>
   </div>
 
-  <!-- Список лидов -->
-  <div class="leads-layout">
-    <div class="leads-list">
-      @if (isLoading()) {
-        <div class="loading">Загрузка...</div>
-      } @else if (leads().length === 0) {
-        <div class="empty-state">
-          <i class="fas fa-inbox"></i>
-          <p>Лиды не найдены</p>
-        </div>
-      } @else {
-        <div 
-          class="lead-item" 
-          *ngFor="let lead of leads()"
-          [class.active]="selectedLead()?.id === lead.id"
-          (click)="selectLead(lead)">
-          <div class="lead-header">
-            <h3>{{ lead.name }}</h3>
-            <span class="status-badge" [class]="getStatusClass(lead.status)">
-              {{ getStatusLabel(lead.status) }}
-            </span>
-          </div>
-          <div class="lead-info">
-            @if (lead.phone) {
-              <span><i class="fas fa-phone"></i> {{ lead.phone }}</span>
-            }
-            @if (lead.email) {
-              <span><i class="fas fa-envelope"></i> {{ lead.email }}</span>
-            }
-            <span><i class="fas fa-tag"></i> {{ getSourceLabel(lead.source) }}</span>
-            @if (lead.hasTelegramContact) {
-              <span class="telegram-badge"><i class="fab fa-telegram"></i> Telegram</span>
-            }
-          </div>
-          <div class="lead-meta">
-            <span class="priority-badge" [class]="getPriorityClass(lead.priority)">
-              {{ getPriorityLabel(lead.priority) }}
-            </span>
-            <span class="date">{{ formatDate(lead.createdAt) }}</span>
-            @if (lead.assignedAdmin) {
-              <span class="assigned">{{ lead.assignedAdmin.email }}</span>
-            }
-          </div>
-        </div>
-      }
+  <!-- Таблица лидов -->
+  @if (isLoading()) {
+    <div class="loading">Загрузка...</div>
+  } @else if (leads().length === 0) {
+    <div class="empty-state">
+      <i class="fas fa-inbox"></i>
+      <p>Лиды не найдены</p>
     </div>
-
-    <!-- Детали лида -->
-    @if (selectedLead(); as lead) {
-      <div class="lead-details">
-        <div class="lead-details-header">
-          <h2>{{ lead.name }}</h2>
-          <div class="lead-actions">
-            <button class="btn btn-sm btn-secondary" (click)="openEditModal(lead)">
-              <i class="fas fa-edit"></i>
-            </button>
-            <button class="btn btn-sm btn-danger" (click)="deleteLead(lead)">
-              <i class="fas fa-trash"></i>
-            </button>
-          </div>
-        </div>
-
-        <div class="lead-details-content">
-          <!-- Контактная информация -->
-          <div class="info-section">
-            <h3>Контактная информация</h3>
-            <div class="info-grid">
-              @if (lead.phone) {
-                <div class="info-item">
-                  <i class="fas fa-phone"></i>
-                  <span>{{ lead.phone }}</span>
+  } @else {
+    <div class="table-card">
+      <table class="table table-hover align-middle data-table">
+        <thead>
+          <tr>
+            <th>Имя</th>
+            <th>Контакты</th>
+            <th>Источник</th>
+            <th>Статус</th>
+            <th>Приоритет</th>
+            <th>Назначен</th>
+            <th>Дата создания</th>
+            <th>Действия</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (lead of leads(); track lead.id) {
+            <tr class="lead-row" (click)="openDetailsModal(lead)">
+              <td data-label="Имя">
+                <div class="lead-name-cell">
+                  <strong>{{ lead.name }}</strong>
+                  @if (lead.hasTelegramContact) {
+                    <span class="telegram-indicator" title="Есть Telegram контакт">
+                      <i class="fab fa-telegram"></i>
+                    </span>
+                  }
                 </div>
-              }
-              @if (lead.email) {
-                <div class="info-item">
-                  <i class="fas fa-envelope"></i>
-                  <span>{{ lead.email }}</span>
-                </div>
-              }
-              <div class="info-item">
-                <i class="fas fa-tag"></i>
-                <span>{{ getSourceLabel(lead.source) }}</span>
-              </div>
-              @if (lead.hasTelegramContact) {
-                <div class="info-item">
-                  <i class="fab fa-telegram"></i>
-                  <span>Telegram: {{ lead.telegramUsername || 'Указан' }}</span>
-                </div>
-              }
-            </div>
-          </div>
-
-          <!-- Статус и приоритет -->
-          <div class="info-section">
-            <h3>Статус и приоритет</h3>
-            <div class="status-controls">
-              <select 
-                [(ngModel)]="lead.status" 
-                (change)="updateLeadStatus(lead, lead.status)"
-                class="status-select">
-                <option value="new">Новый</option>
-                <option value="in_progress">В работе</option>
-                <option value="contacted">Связались</option>
-                <option value="closed">Закрыт</option>
-                <option value="lost">Потерян</option>
-              </select>
-              <select 
-                [(ngModel)]="lead.priority" 
-                (change)="updateLeadPriority()"
-                class="priority-select">
-                <option value="low">Низкий</option>
-                <option value="normal">Обычный</option>
-                <option value="high">Высокий</option>
-                <option value="urgent">Срочный</option>
-              </select>
-            </div>
-          </div>
-
-          <!-- Назначение -->
-          <div class="info-section">
-            <h3>Назначение</h3>
-            <select 
-              [ngModel]="lead.assignedAdminId" 
-              (change)="assignLead(lead, +$any($event.target).value || null)"
-              class="assign-select">
-              <option [value]="null">Не назначен</option>
-              <option *ngFor="let admin of admins" [value]="admin.id">{{ admin.email }}</option>
-            </select>
-          </div>
-
-          <!-- Описание -->
-          @if (lead.description) {
-            <div class="info-section">
-              <h3>Описание</h3>
-              <p>{{ lead.description }}</p>
-            </div>
-          }
-
-          <!-- Переписка из чата -->
-          @if (lead.chatSessionId && chatMessages().length > 0) {
-            <div class="info-section">
-              <h3>Переписка из чата</h3>
-              <div class="chat-messages">
-                @for (msg of chatMessages(); track msg.id || msg.createdAt) {
-                  <div class="chat-message"
-                    [class.message-client]="msg.senderType === 'client'"
-                    [class.message-admin]="msg.senderType === 'admin'">
-                    <div class="message-header">
-                      <span class="message-sender">
-                        {{ msg.senderType === 'client' ? (msg.clientName || 'Клиент') : 'Администратор' }}
-                      </span>
-                      <span class="message-time">{{ formatTime(msg.createdAt) }}</span>
+              </td>
+              <td data-label="Контакты">
+                <div class="contacts-cell">
+                  @if (lead.phone) {
+                    <div class="contact-item">
+                      <i class="fas fa-phone"></i>
+                      <span>{{ lead.phone }}</span>
                     </div>
-                    <div class="message-text">{{ msg.message }}</div>
-                  </div>
-                }
-              </div>
-            </div>
-          }
-
-          <!-- Комментарии -->
-          <div class="info-section">
-            <h3>Комментарии</h3>
-            <div class="comments-list">
-              @if (lead.comments && lead.comments.length > 0) {
-                @for (comment of lead.comments; track comment.id) {
-                  <div class="comment-item">
-                    <div class="comment-header">
-                      <span class="comment-author">{{ comment.admin?.email || 'Админ' }}</span>
-                      <span class="comment-date">{{ formatDate(comment.createdAt) }}</span>
+                  }
+                  @if (lead.email) {
+                    <div class="contact-item">
+                      <i class="fas fa-envelope"></i>
+                      <span>{{ lead.email }}</span>
                     </div>
-                    <div class="comment-text">{{ comment.comment }}</div>
-                  </div>
+                  }
+                </div>
+              </td>
+              <td data-label="Источник">
+                <span class="source-badge">
+                  <i class="fas" 
+                    [ngClass]="{
+                      'fa-comments': lead.source === 'chat',
+                      'fa-paper-plane': lead.source === 'telegram',
+                      'fa-phone': lead.source === 'phone',
+                      'fa-envelope': lead.source === 'email',
+                      'fa-question': lead.source === 'other'
+                    }"></i>
+                  {{ getSourceLabel(lead.source) }}
+                </span>
+              </td>
+              <td data-label="Статус">
+                <span class="status-badge" [class]="getStatusClass(lead.status)">
+                  {{ getStatusLabel(lead.status) }}
+                </span>
+              </td>
+              <td data-label="Приоритет">
+                <span class="priority-badge" [class]="getPriorityClass(lead.priority)">
+                  {{ getPriorityLabel(lead.priority) }}
+                </span>
+              </td>
+              <td data-label="Назначен">
+                @if (lead.assignedAdmin) {
+                  <span class="assigned-admin">
+                    <i class="fas fa-user"></i>
+                    {{ lead.assignedAdmin.email }}
+                  </span>
+                } @else {
+                  <span class="not-assigned">Не назначен</span>
                 }
-              } @else {
-                <p class="no-comments">Комментариев пока нет</p>
-              }
-            </div>
-            <div class="comment-form">
-              <textarea 
-                [(ngModel)]="newComment" 
-                placeholder="Добавить комментарий..."
-                rows="3"></textarea>
-              <button 
-                class="btn btn-primary" 
-                (click)="addComment()"
-                [disabled]="!newComment.trim()">
-                Добавить комментарий
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-    } @else {
-      <div class="no-selection">
-        <i class="fas fa-hand-pointer"></i>
-        <p>Выберите лид для просмотра деталей</p>
-      </div>
-    }
-  </div>
+              </td>
+              <td data-label="Дата создания">
+                <span class="date-cell">{{ formatDate(lead.createdAt) }}</span>
+              </td>
+              <td data-label="Действия" (click)="$event.stopPropagation()">
+                <div class="action-menu">
+                  <button 
+                    class="btn btn-sm btn-secondary" 
+                    (click)="openEditModal(lead)"
+                    title="Редактировать">
+                    <i class="fas fa-edit"></i>
+                  </button>
+                  <button 
+                    class="btn btn-sm btn-danger" 
+                    (click)="deleteLead(lead)"
+                    title="Удалить">
+                    <i class="fas fa-trash"></i>
+                  </button>
+                </div>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
 </div>
 
+<!-- Модальное окно с деталями лида -->
+@if (showDetailsModal() && selectedLead(); as lead) {
+  <div class="modal-overlay" (click)="closeDetailsModal()">
+    <div class="modal-content modal-large" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h2>{{ lead.name }}</h2>
+        <button class="modal-close" (click)="closeDetailsModal()">×</button>
+      </div>
+      
+      <div class="modal-body">
+        <!-- Контактная информация -->
+        <div class="info-section">
+          <h3>Контактная информация</h3>
+          <div class="info-grid">
+            @if (lead.phone) {
+              <div class="info-item">
+                <i class="fas fa-phone"></i>
+                <span>{{ lead.phone }}</span>
+              </div>
+            }
+            @if (lead.email) {
+              <div class="info-item">
+                <i class="fas fa-envelope"></i>
+                <span>{{ lead.email }}</span>
+              </div>
+            }
+            <div class="info-item">
+              <i class="fas fa-tag"></i>
+              <span>{{ getSourceLabel(lead.source) }}</span>
+            </div>
+            @if (lead.hasTelegramContact) {
+              <div class="info-item">
+                <i class="fab fa-telegram"></i>
+                <span>Telegram: {{ lead.telegramUsername || 'Указан' }}</span>
+              </div>
+            }
+          </div>
+        </div>
 
+        <!-- Статус и приоритет -->
+        <div class="info-section">
+          <h3>Статус и приоритет</h3>
+          <div class="status-controls">
+            <select 
+              [(ngModel)]="lead.status" 
+              (change)="updateLeadStatus(lead, lead.status)"
+              class="status-select">
+              <option value="new">Новый</option>
+              <option value="in_progress">В работе</option>
+              <option value="contacted">Связались</option>
+              <option value="closed">Закрыт</option>
+              <option value="lost">Потерян</option>
+            </select>
+            <select 
+              [(ngModel)]="lead.priority" 
+              (change)="updateLeadPriority()"
+              class="priority-select">
+              <option value="low">Низкий</option>
+              <option value="normal">Обычный</option>
+              <option value="high">Высокий</option>
+              <option value="urgent">Срочный</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Назначение -->
+        <div class="info-section">
+          <h3>Назначение</h3>
+          <select 
+            [ngModel]="lead.assignedAdminId" 
+            (change)="assignLead(lead, +$any($event.target).value || null)"
+            class="assign-select">
+            <option [value]="null">Не назначен</option>
+            <option *ngFor="let admin of admins" [value]="admin.id">{{ admin.email }}</option>
+          </select>
+        </div>
+
+        <!-- Описание -->
+        @if (lead.description) {
+          <div class="info-section">
+            <h3>Описание</h3>
+            <p>{{ lead.description }}</p>
+          </div>
+        }
+
+        <!-- Переписка из чата -->
+        @if (lead.chatSessionId && chatMessages().length > 0) {
+          <div class="info-section">
+            <h3>Переписка из чата</h3>
+            <div class="chat-messages">
+              @for (msg of chatMessages(); track msg.id || msg.createdAt) {
+                <div class="chat-message"
+                  [class.message-client]="msg.senderType === 'client'"
+                  [class.message-admin]="msg.senderType === 'admin'">
+                  <div class="message-header">
+                    <span class="message-sender">
+                      {{ msg.senderType === 'client' ? (msg.clientName || 'Клиент') : 'Администратор' }}
+                    </span>
+                    <span class="message-time">{{ formatTime(msg.createdAt) }}</span>
+                  </div>
+                  <div class="message-text">{{ msg.message }}</div>
+                </div>
+              }
+            </div>
+          </div>
+        }
+
+        <!-- Комментарии -->
+        <div class="info-section">
+          <h3>Комментарии</h3>
+          <div class="comments-list">
+            @if (lead.comments && lead.comments.length > 0) {
+              @for (comment of lead.comments; track comment.id) {
+                <div class="comment-item">
+                  <div class="comment-header">
+                    <span class="comment-author">{{ comment.admin?.email || 'Админ' }}</span>
+                    <span class="comment-date">{{ formatDate(comment.createdAt) }}</span>
+                  </div>
+                  <div class="comment-text">{{ comment.comment }}</div>
+                </div>
+              }
+            } @else {
+              <p class="no-comments">Комментариев пока нет</p>
+            }
+          </div>
+          <div class="comment-form">
+            <textarea 
+              [(ngModel)]="newComment" 
+              placeholder="Добавить комментарий..."
+              rows="3"></textarea>
+            <button 
+              class="btn btn-primary" 
+              (click)="addComment()"
+              [disabled]="!newComment.trim()">
+              Добавить комментарий
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn btn-secondary" (click)="closeDetailsModal()">Закрыть</button>
+        <button class="btn btn-primary" (click)="openEditModal(lead)">Редактировать</button>
+      </div>
+    </div>
+  </div>
+}
