@@ -3,7 +3,9 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { take } from 'rxjs';
+import { BsModalService } from 'ngx-bootstrap/modal';
 import { AppService } from '../../../../services/app.service';
+import { LeadManagementModal } from './blocks/management.modal';
 
 interface Lead {
   id: number;
@@ -57,6 +59,7 @@ interface ChatMessage {
 export class LeadsPage implements OnInit {
   private readonly http = inject(HttpClient);
   private readonly appService = inject(AppService);
+  private readonly modal = inject(BsModalService);
   
   private readonly API_URL = 'https://car-api-production.up.railway.app';
 
@@ -72,20 +75,6 @@ export class LeadsPage implements OnInit {
   filterAdmin = signal<number | null>(null);
   searchQuery = signal<string>('');
 
-  // Форма создания/редактирования лида
-  showLeadModal = signal(false);
-  editingLead = signal<Lead | null>(null);
-  leadForm = {
-    name: '',
-    email: '',
-    phone: '',
-    source: 'chat' as Lead['source'],
-    status: 'new' as Lead['status'],
-    priority: 'normal' as Lead['priority'],
-    hasTelegramContact: false,
-    telegramUsername: '',
-    description: ''
-  };
 
   // Комментарии
   newComment = '';
@@ -148,67 +137,40 @@ export class LeadsPage implements OnInit {
   }
 
   openCreateModal() {
-    this.editingLead.set(null);
-    this.leadForm = {
-      name: '',
-      email: '',
-      phone: '',
-      source: 'chat',
-      status: 'new',
-      priority: 'normal',
-      hasTelegramContact: false,
-      telegramUsername: '',
-      description: ''
-    };
-    this.showLeadModal.set(true);
+    const modalRef = this.modal.show(LeadManagementModal, {
+      initialState: {},
+      backdrop: 'static',
+      keyboard: false,
+    });
+
+    modalRef.onHide?.subscribe(() => {
+      if (modalRef.content?.result?.reload) {
+        this.loadLeads();
+      }
+    });
   }
 
   openEditModal(lead: Lead) {
-    this.editingLead.set(lead);
-    this.leadForm = {
-      name: lead.name,
-      email: lead.email || '',
-      phone: lead.phone || '',
-      source: lead.source,
-      status: lead.status,
-      priority: lead.priority,
-      hasTelegramContact: lead.hasTelegramContact,
-      telegramUsername: lead.telegramUsername || '',
-      description: lead.description || ''
-    };
-    this.showLeadModal.set(true);
-  }
-
-  saveLead() {
-    const leadData = { ...this.leadForm };
-    
-    if (this.editingLead()) {
-      this.appService.updateLead(this.editingLead()!.id, leadData).pipe(take(1)).subscribe({
-        next: () => {
-          this.showLeadModal.set(false);
-          this.loadLeads();
-          if (this.selectedLead()?.id === this.editingLead()?.id) {
-            this.loadLeads(); // Перезагружаем для обновления выбранного лида
-          }
-        },
-      error: (error: any) => {
-        console.error('Error updating lead:', error);
-        alert('Ошибка при обновлении лида');
-      }
-    });
-  } else {
-    this.appService.createLead(leadData).pipe(take(1)).subscribe({
-      next: () => {
-        this.showLeadModal.set(false);
-        this.loadLeads();
+    const modalRef = this.modal.show(LeadManagementModal, {
+      initialState: {
+        lead
       },
-      error: (error: any) => {
-        console.error('Error creating lead:', error);
-        alert('Ошибка при создании лида');
+      backdrop: 'static',
+      keyboard: false,
+    });
+
+    modalRef.onHide?.subscribe(() => {
+      if (modalRef.content?.result?.reload) {
+        this.loadLeads();
+        // Обновляем выбранный лид, если он был изменен
+        if (this.selectedLead()?.id === lead.id) {
+          this.appService.getLead(lead.id).pipe(take(1)).subscribe((updatedLead: Lead) => {
+            this.selectLead(updatedLead);
+          });
+        }
       }
     });
   }
-}
 
 deleteLead(lead: Lead) {
   if (confirm(`Удалить лид "${lead.name}"?`)) {

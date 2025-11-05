@@ -1,0 +1,149 @@
+@if (leadForm) {
+  <div class="admin py-3">
+    <div class="container">
+      <div class="row">
+        <div class="col-12">
+          <form>
+            <div class="form-control">
+              <div class="form-group">
+                <label class="form-label required">Имя</label>
+                <input
+                  class="form-control"
+                  type="text"
+                  [(ngModel)]="leadForm.name"
+                  name="name"
+                  placeholder="Введите имя"
+                  required
+                />
+              </div>
+
+              <div class="mt-3 form-group">
+                <label class="form-label">Email</label>
+                <input
+                  class="form-control"
+                  type="email"
+                  [(ngModel)]="leadForm.email"
+                  name="email"
+                  placeholder="Введите email"
+                />
+              </div>
+
+              <div class="mt-3 form-group">
+                <label class="form-label">Телефон</label>
+                <input
+                  class="form-control"
+                  type="tel"
+                  [(ngModel)]="leadForm.phone"
+                  name="phone"
+                  placeholder="Введите телефон"
+                />
+              </div>
+
+              <div class="mt-3 form-group">
+                <label class="form-label">Источник</label>
+                <select
+                  class="form-control"
+                  [(ngModel)]="leadForm.source"
+                  name="source"
+                >
+                  <option value="chat">Чат</option>
+                  <option value="telegram">Telegram</option>
+                  <option value="phone">Телефон</option>
+                  <option value="email">Email</option>
+                  <option value="other">Другое</option>
+                </select>
+              </div>
+
+              <div class="mt-3 form-group">
+                <label class="form-label">Статус</label>
+                <select
+                  class="form-control"
+                  [(ngModel)]="leadForm.status"
+                  name="status"
+                >
+                  <option value="new">Новый</option>
+                  <option value="in_progress">В работе</option>
+                  <option value="contacted">Связались</option>
+                  <option value="closed">Закрыт</option>
+                  <option value="lost">Потерян</option>
+                </select>
+              </div>
+
+              <div class="mt-3 form-group">
+                <label class="form-label">Приоритет</label>
+                <select
+                  class="form-control"
+                  [(ngModel)]="leadForm.priority"
+                  name="priority"
+                >
+                  <option value="low">Низкий</option>
+                  <option value="normal">Обычный</option>
+                  <option value="high">Высокий</option>
+                  <option value="urgent">Срочный</option>
+                </select>
+              </div>
+
+              <div class="mt-3 form-group">
+                <div class="form-check">
+                  <input
+                    id="hasTelegramContact"
+                    class="form-check-input"
+                    type="checkbox"
+                    [(ngModel)]="leadForm.hasTelegramContact"
+                    name="hasTelegramContact"
+                  />
+                  <label class="form-check-label" for="hasTelegramContact">
+                    Есть контакт в Telegram
+                  </label>
+                </div>
+              </div>
+
+              @if (leadForm.hasTelegramContact) {
+                <div class="mt-3 form-group">
+                  <label class="form-label">Telegram Username</label>
+                  <input
+                    class="form-control"
+                    type="text"
+                    [(ngModel)]="leadForm.telegramUsername"
+                    name="telegramUsername"
+                    placeholder="@username"
+                  />
+                </div>
+              }
+
+              <div class="mt-3 form-group">
+                <label class="form-label">Описание</label>
+                <textarea
+                  class="form-control"
+                  [(ngModel)]="leadForm.description"
+                  name="description"
+                  rows="4"
+                  placeholder="Введите описание"
+                ></textarea>
+              </div>
+            </div>
+
+            <div class="mt-3 d-flex justify-content-end gap-2">
+              <button
+                class="btn btn-secondary"
+                type="button"
+                (click)="activeModal.hide()"
+              >
+                Отмена
+              </button>
+              <button
+                class="btn btn-primary"
+                type="button"
+                (click)="onSubmit()"
+                [disabled]="!leadForm.name?.trim()"
+              >
+                {{ lead?.id ? 'Сохранить' : 'Создать' }}
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+}
+
