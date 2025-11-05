@@ -80,7 +80,11 @@
         </thead>
         <tbody>
           @for (lead of leads(); track lead.id) {
-            <tr class="lead-row" (click)="openDetailsModal(lead)">
+            <tr 
+              class="lead-row" 
+              (click)="openDetailsModal(lead)"
+              [attr.data-lead-id]="lead.id"
+              style="cursor: pointer;">
               <td data-label="Имя">
                 <div class="lead-name-cell">
                   <strong>{{ lead.name }}</strong>
@@ -185,9 +189,10 @@
 </div>
 
 <!-- Модальное окно с деталями лида -->
-@if (showDetailsModal() && selectedLead(); as lead) {
-  <div class="modal-overlay" (click)="closeDetailsModal()">
-    <div class="modal-content modal-large modal-fullscreen" (click)="$event.stopPropagation()">
+@if (showDetailsModal()) {
+  @if (selectedLead(); as lead) {
+    <div class="modal-overlay" (click)="closeDetailsModal()" style="position: fixed !important; top: 0 !important; left: 0 !important; right: 0 !important; bottom: 0 !important; z-index: 9999 !important; background: rgba(0, 0, 0, 0.5) !important; display: flex !important; align-items: center !important; justify-content: center !important; padding: 20px !important;">
+      <div class="modal-content modal-large modal-fullscreen" (click)="$event.stopPropagation()" style="z-index: 10000 !important; position: relative !important;">
       <div class="modal-header">
         <div class="modal-header-content">
           <h2>{{ lead.name }}</h2>
@@ -325,12 +330,14 @@
           </div>
 
           <!-- Описание -->
-          @if (lead.description) {
-            <div class="info-section">
-              <h3>Описание</h3>
+          <div class="info-section">
+            <h3>Описание</h3>
+            @if (lead.description) {
               <p>{{ lead.description }}</p>
-            </div>
-          }
+            } @else {
+              <p class="text-muted" style="color: #9ca3af; font-style: italic;">Описание не указано</p>
+            }
+          </div>
 
           <!-- Переписка из чата -->
           @if (lead.chatSessionId && chatMessages().length > 0) {
@@ -687,4 +694,5 @@
       </div>
     </div>
   </div>
+  }
 }

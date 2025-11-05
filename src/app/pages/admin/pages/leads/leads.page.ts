@@ -206,19 +206,39 @@ export class LeadsPage implements OnInit {
   }
 
   openDetailsModal(lead: Lead) {
+    console.log('openDetailsModal called with lead:', lead);
     this.selectedLead.set(lead);
     this.showDetailsModal.set(true);
     this.activeTab.set('info');
     
-    // Загружаем все данные
-    if (lead.chatSessionId) {
-      this.loadChatMessages(lead.chatSessionId);
-    }
-    this.loadLeadTasks(lead.id);
-    this.loadLeadAttachments(lead.id);
-    this.loadLeadMeetings(lead.id);
-    this.loadLeadActivities(lead.id);
-    this.loadAllTags();
+    // Загружаем полные данные лида с сервера
+    this.appService.getLead(lead.id).pipe(take(1)).subscribe({
+      next: (fullLead: Lead) => {
+        this.selectedLead.set(fullLead);
+        
+        // Загружаем все данные
+        if (fullLead.chatSessionId) {
+          this.loadChatMessages(fullLead.chatSessionId);
+        }
+        this.loadLeadTasks(fullLead.id);
+        this.loadLeadAttachments(fullLead.id);
+        this.loadLeadMeetings(fullLead.id);
+        this.loadLeadActivities(fullLead.id);
+        this.loadAllTags();
+      },
+      error: (error: any) => {
+        console.error('Error loading full lead:', error);
+        // Используем данные из списка, если не удалось загрузить
+        if (lead.chatSessionId) {
+          this.loadChatMessages(lead.chatSessionId);
+        }
+        this.loadLeadTasks(lead.id);
+        this.loadLeadAttachments(lead.id);
+        this.loadLeadMeetings(lead.id);
+        this.loadLeadActivities(lead.id);
+        this.loadAllTags();
+      }
+    });
   }
 
   closeDetailsModal() {
