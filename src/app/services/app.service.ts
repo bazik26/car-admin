@@ -215,4 +215,81 @@ export class AppService {
       .get(`${this.API_URL}/stats/errors`)
       .pipe(map((response) => response));
   }
+
+  // Leads API endpoints
+  getLeads(filters?: { status?: string; source?: string; assignedAdminId?: number; search?: string }): Observable<any> {
+    let url = `${this.API_URL}/leads`;
+    if (filters) {
+      const queryParams = new URLSearchParams();
+      if (filters.status) queryParams.append('status', filters.status);
+      if (filters.source) queryParams.append('source', filters.source);
+      if (filters.assignedAdminId) queryParams.append('assignedAdminId', filters.assignedAdminId.toString());
+      if (filters.search) queryParams.append('search', filters.search);
+      if (queryParams.toString()) {
+        url += `?${queryParams.toString()}`;
+      }
+    }
+    return this.http.get(url).pipe(map((response) => response));
+  }
+
+  getLead(leadId: number): Observable<any> {
+    return this.http
+      .get(`${this.API_URL}/leads/${leadId}`)
+      .pipe(map((response) => response));
+  }
+
+  createLead(lead: any): Observable<any> {
+    return this.http
+      .post(`${this.API_URL}/leads`, lead)
+      .pipe(map((response) => response));
+  }
+
+  createLeadFromChat(chatSessionId: string, assignedAdminId?: number): Observable<any> {
+    return this.http
+      .post(`${this.API_URL}/leads/from-chat/${chatSessionId}`, { assignedAdminId })
+      .pipe(map((response) => response));
+  }
+
+  updateLead(leadId: number, lead: any): Observable<any> {
+    return this.http
+      .put(`${this.API_URL}/leads/${leadId}`, lead)
+      .pipe(map((response) => response));
+  }
+
+  deleteLead(leadId: number): Observable<any> {
+    return this.http
+      .delete(`${this.API_URL}/leads/${leadId}`)
+      .pipe(map((response) => response));
+  }
+
+  createLeadComment(leadId: number, comment: { adminId: number; comment: string }): Observable<any> {
+    return this.http
+      .post(`${this.API_URL}/leads/${leadId}/comments`, comment)
+      .pipe(map((response) => response));
+  }
+
+  getLeadComments(leadId: number): Observable<any> {
+    return this.http
+      .get(`${this.API_URL}/leads/${leadId}/comments`)
+      .pipe(map((response) => response));
+  }
+
+  deleteLeadComment(commentId: number): Observable<any> {
+    return this.http
+      .delete(`${this.API_URL}/leads/comments/${commentId}`)
+      .pipe(map((response) => response));
+  }
+
+  getLeadsStats(): Observable<any> {
+    return this.http
+      .get(`${this.API_URL}/leads/stats/summary`)
+      .pipe(map((response) => response));
+  }
+
+  // Chat messages for lead
+  getChatMessages(sessionId: string): Observable<any> {
+    return this.http
+      .get(`${this.API_URL}/chat/messages/${sessionId}`)
+      .pipe(map((response) => response));
+  }
 }
