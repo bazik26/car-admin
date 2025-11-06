@@ -11,7 +11,7 @@ import { FormsModule } from '@angular/forms';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { AppService } from '../../../../../services/app.service';
 import { take } from 'rxjs';
-import { WorkingHoursModalComponent } from '../../../layout/blocks/working-hours.modal';
+import { WorkingHoursModalComponent } from '../../layout/blocks/working-hours.modal';
 
 interface Admin {
   id: number;
