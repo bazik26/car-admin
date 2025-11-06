@@ -43,11 +43,11 @@ export class AdminAdminsManagementModal implements OnInit {
       email: [null, [Validators.required]],
       password: [null, [Validators.required]],
       isSuper: [false],
-      projectId: [null],
+      projectId: ['office_1'], // Дефолтное значение - первый офис
       permissions: this.fb.group({
-        canAddCars: [false],
+        canAddCars: [true], // Дефолтно все разрешения включены
         canViewCars: [true],
-        canManageLeads: [false],
+        canManageLeads: [true],
         canViewLeads: [true],
       }),
     });

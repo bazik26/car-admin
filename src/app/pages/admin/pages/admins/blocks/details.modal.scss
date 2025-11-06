@@ -8,6 +8,7 @@
     max-height: 70vh;
     overflow-y: auto;
     padding: 1.5rem;
+    color: #212529; // Улучшенная читабельность текста
   }
 
   .info-section {
@@ -21,8 +22,21 @@
     h5 {
       font-size: 1.1rem;
       font-weight: 600;
-      color: #333;
+      color: #212529; // Темный цвет для заголовков
       margin-bottom: 1rem;
+    }
+
+    .form-label {
+      color: #495057; // Темный цвет для меток
+      font-weight: 500;
+    }
+
+    .fw-bold {
+      color: #212529; // Темный цвет для текста
+    }
+
+    div:not(.badge):not(.permission-item) {
+      color: #212529; // Темный цвет для обычного текста
     }
   }
 
@@ -36,6 +50,11 @@
       &:last-child {
         margin-bottom: 0;
       }
+
+      span:not(.badge) {
+        color: #212529; // Темный цвет для текста разрешений
+        font-weight: 500;
+      }
     }
   }
 
@@ -47,6 +66,7 @@
     .form-check-label {
       cursor: pointer;
       user-select: none;
+      color: #212529; // Темный цвет для меток чекбоксов
     }
   }
 }
