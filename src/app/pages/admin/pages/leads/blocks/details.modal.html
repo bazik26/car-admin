@@ -1,0 +1,563 @@
+@if (isLoading()) {
+  <div class="modal-body text-center p-5">
+    <div class="spinner-border" role="status">
+      <span class="visually-hidden">Загрузка...</span>
+    </div>
+    <p class="mt-3">Загрузка данных лида...</p>
+  </div>
+} @else if (leadData(); as lead) {
+  <div class="lead-details-modal">
+    <!-- Modal Header -->
+    <div class="modal-header">
+      <div class="d-flex align-items-center justify-content-between w-100">
+        <div class="d-flex align-items-center gap-3">
+          <h4 class="mb-0">{{ lead.name }}</h4>
+          @if (lead.score !== undefined) {
+            <span class="badge" [class]="'bg-' + (getScoreClass(lead.score) === 'score-high' ? 'success' : getScoreClass(lead.score) === 'score-medium' ? 'warning' : 'secondary')">
+              Score: {{ lead.score }}
+            </span>
+          }
+          @if (lead.convertedToClient) {
+            <span class="badge bg-success">
+              <i class="fas fa-check-circle"></i> Конвертирован в клиента
+            </span>
+          }
+        </div>
+        <button type="button" class="btn-close" (click)="closeModal()" aria-label="Close"></button>
+      </div>
+    </div>
+
+    <!-- Modal Body -->
+    <div class="modal-body">
+      <!-- Tabs Navigation -->
+      <ul class="nav nav-tabs mb-4" role="tablist">
+        <li class="nav-item" role="presentation">
+          <button 
+            class="nav-link" 
+            [class.active]="activeTab() === 'info'"
+            (click)="activeTab.set('info')"
+            type="button">
+            <i class="fas fa-info-circle me-2"></i>Информация
+          </button>
+        </li>
+        <li class="nav-item" role="presentation">
+          <button 
+            class="nav-link" 
+            [class.active]="activeTab() === 'tasks'"
+            (click)="activeTab.set('tasks')"
+            type="button">
+            <i class="fas fa-tasks me-2"></i>Задачи
+            @if (leadTasks().length > 0) {
+              <span class="badge bg-primary ms-2">{{ leadTasks().length }}</span>
+            }
+          </button>
+        </li>
+        <li class="nav-item" role="presentation">
+          <button 
+            class="nav-link" 
+            [class.active]="activeTab() === 'tags'"
+            (click)="activeTab.set('tags')"
+            type="button">
+            <i class="fas fa-tags me-2"></i>Теги
+          </button>
+        </li>
+        <li class="nav-item" role="presentation">
+          <button 
+            class="nav-link" 
+            [class.active]="activeTab() === 'attachments'"
+            (click)="activeTab.set('attachments')"
+            type="button">
+            <i class="fas fa-paperclip me-2"></i>Файлы
+            @if (leadAttachments().length > 0) {
+              <span class="badge bg-primary ms-2">{{ leadAttachments().length }}</span>
+            }
+          </button>
+        </li>
+        <li class="nav-item" role="presentation">
+          <button 
+            class="nav-link" 
+            [class.active]="activeTab() === 'meetings'"
+            (click)="activeTab.set('meetings')"
+            type="button">
+            <i class="fas fa-calendar me-2"></i>Встречи
+            @if (leadMeetings().length > 0) {
+              <span class="badge bg-primary ms-2">{{ leadMeetings().length }}</span>
+            }
+          </button>
+        </li>
+        <li class="nav-item" role="presentation">
+          <button 
+            class="nav-link" 
+            [class.active]="activeTab() === 'activity'"
+            (click)="activeTab.set('activity')"
+            type="button">
+            <i class="fas fa-history me-2"></i>История
+          </button>
+        </li>
+      </ul>
+
+      <!-- Tab Content -->
+      <div class="tab-content">
+        <!-- Info Tab -->
+        @if (activeTab() === 'info') {
+          <div class="tab-pane fade show active">
+            <!-- Contact Information -->
+            <div class="mb-4">
+              <h5 class="mb-3">Контактная информация</h5>
+              <div class="row g-3">
+                @if (lead.phone) {
+                  <div class="col-md-6">
+                    <div class="d-flex align-items-center">
+                      <i class="fas fa-phone text-primary me-2"></i>
+                      <span>{{ lead.phone }}</span>
+                    </div>
+                  </div>
+                }
+                @if (lead.email) {
+                  <div class="col-md-6">
+                    <div class="d-flex align-items-center">
+                      <i class="fas fa-envelope text-primary me-2"></i>
+                      <span>{{ lead.email }}</span>
+                    </div>
+                  </div>
+                }
+                <div class="col-md-6">
+                  <div class="d-flex align-items-center">
+                    <i class="fas fa-tag text-primary me-2"></i>
+                    <span>{{ getSourceLabel(lead.source) }}</span>
+                  </div>
+                </div>
+                @if (lead.hasTelegramContact) {
+                  <div class="col-md-6">
+                    <div class="d-flex align-items-center">
+                      <i class="fab fa-telegram text-primary me-2"></i>
+                      <span>Telegram: {{ lead.telegramUsername || 'Указан' }}</span>
+                    </div>
+                  </div>
+                }
+              </div>
+            </div>
+
+            <!-- Status and Priority -->
+            <div class="mb-4">
+              <h5 class="mb-3">Статус и приоритет</h5>
+              <div class="row g-3">
+                <div class="col-md-6">
+                  <label class="form-label">Статус</label>
+                  <select 
+                    class="form-select"
+                    [value]="lead.status"
+                    (change)="updateLeadStatus($any($event.target).value)">
+                    <option value="new">Новый</option>
+                    <option value="in_progress">В работе</option>
+                    <option value="contacted">Связались</option>
+                    <option value="closed">Закрыт</option>
+                    <option value="lost">Потерян</option>
+                  </select>
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label">Приоритет</label>
+                  <select 
+                    class="form-select"
+                    [value]="lead.priority"
+                    (change)="updateLeadPriority($any($event.target).value)">
+                    <option value="low">Низкий</option>
+                    <option value="normal">Обычный</option>
+                    <option value="high">Высокий</option>
+                    <option value="urgent">Срочный</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <!-- Assignment -->
+            <div class="mb-4">
+              <h5 class="mb-3">Назначение</h5>
+              <select 
+                class="form-select"
+                [value]="lead.assignedAdminId || null"
+                (change)="assignLead(+$any($event.target).value || null)">
+                <option [value]="null">Не назначен</option>
+                @for (admin of admins; track admin.id) {
+                  <option [value]="admin.id">{{ admin.email }}</option>
+                }
+              </select>
+            </div>
+
+            <!-- Description -->
+            <div class="mb-4">
+              <h5 class="mb-3">Описание</h5>
+              @if (lead.description) {
+                <p>{{ lead.description }}</p>
+              } @else {
+                <p class="text-muted fst-italic">Описание не указано</p>
+              }
+            </div>
+
+            <!-- Chat Messages -->
+            @if (lead.chatSessionId && chatMessages().length > 0) {
+              <div class="mb-4">
+                <h5 class="mb-3">Переписка из чата</h5>
+                <div class="chat-messages">
+                  @for (msg of chatMessages(); track msg.id || msg.createdAt) {
+                    <div class="card mb-2" [class.bg-light]="msg.senderType === 'client'">
+                      <div class="card-body p-2">
+                        <div class="d-flex justify-content-between align-items-center mb-1">
+                          <small class="fw-bold">
+                            {{ msg.senderType === 'client' ? (msg.clientName || 'Клиент') : 'Администратор' }}
+                          </small>
+                          <small class="text-muted">{{ formatTime(msg.createdAt) }}</small>
+                        </div>
+                        <p class="mb-0">{{ msg.message }}</p>
+                      </div>
+                    </div>
+                  }
+                </div>
+              </div>
+            }
+
+            <!-- Comments -->
+            <div class="mb-4">
+              <h5 class="mb-3">Комментарии</h5>
+              <div class="comments-list mb-3">
+                @if (lead.comments && lead.comments.length > 0) {
+                  @for (comment of lead.comments; track comment.id) {
+                    <div class="card mb-2">
+                      <div class="card-body p-2">
+                        <div class="d-flex justify-content-between align-items-center mb-1">
+                          <small class="fw-bold">{{ comment.admin?.email || 'Админ' }}</small>
+                          <small class="text-muted">{{ formatDate(comment.createdAt) }}</small>
+                        </div>
+                        <p class="mb-0">{{ comment.comment }}</p>
+                      </div>
+                    </div>
+                  }
+                } @else {
+                  <p class="text-muted">Комментариев пока нет</p>
+                }
+              </div>
+              <div class="comment-form">
+                <textarea 
+                  class="form-control mb-2"
+                  [(ngModel)]="newComment" 
+                  placeholder="Добавить комментарий..."
+                  rows="3"></textarea>
+                <button 
+                  class="btn btn-primary btn-sm" 
+                  (click)="addComment()"
+                  [disabled]="!newComment.trim()">
+                  Добавить комментарий
+                </button>
+              </div>
+            </div>
+          </div>
+        }
+
+        <!-- Tasks Tab -->
+        @if (activeTab() === 'tasks') {
+          <div class="tab-pane fade show active">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+              <h5 class="mb-0">Задачи</h5>
+              <button class="btn btn-primary btn-sm" (click)="showTaskForm.set(!showTaskForm())">
+                <i class="fas fa-plus me-1"></i>Добавить задачу
+              </button>
+            </div>
+
+            @if (showTaskForm()) {
+              <div class="card mb-3">
+                <div class="card-body">
+                  <input 
+                    type="text" 
+                    class="form-control mb-2"
+                    [(ngModel)]="newTask.title" 
+                    placeholder="Название задачи">
+                  <textarea 
+                    class="form-control mb-2"
+                    [(ngModel)]="newTask.description" 
+                    placeholder="Описание (необязательно)"
+                    rows="2"></textarea>
+                  <input 
+                    type="datetime-local" 
+                    class="form-control mb-2"
+                    [(ngModel)]="newTask.dueDate">
+                  <div class="d-flex gap-2">
+                    <button class="btn btn-primary btn-sm" (click)="createTask()">Создать</button>
+                    <button class="btn btn-secondary btn-sm" (click)="showTaskForm.set(false)">Отмена</button>
+                  </div>
+                </div>
+              </div>
+            }
+
+            @if (leadTasks().length > 0) {
+              @for (task of leadTasks(); track task.id) {
+                <div class="card mb-2" [class.bg-light]="task.completed">
+                  <div class="card-body p-2">
+                    <div class="d-flex align-items-start">
+                      <input 
+                        type="checkbox" 
+                        class="form-check-input mt-1 me-2"
+                        [checked]="task.completed"
+                        (change)="toggleTask(task)">
+                      <div class="flex-grow-1">
+                        <div class="fw-bold" [class.text-decoration-line-through]="task.completed">
+                          {{ task.title }}
+                        </div>
+                        @if (task.description) {
+                          <div class="text-muted small">{{ task.description }}</div>
+                        }
+                        <div class="d-flex gap-3 mt-1">
+                          @if (task.dueDate) {
+                            <small [class.text-danger]="isOverdue(task.dueDate)">
+                              <i class="fas fa-clock me-1"></i>{{ formatDate(task.dueDate) }}
+                            </small>
+                          }
+                          <small class="text-muted">{{ task.admin?.email || 'Админ' }}</small>
+                        </div>
+                      </div>
+                      <button class="btn btn-danger btn-sm" (click)="deleteTask(task.id)">
+                        <i class="fas fa-trash"></i>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              }
+            } @else {
+              <p class="text-muted">Задач пока нет</p>
+            }
+          </div>
+        }
+
+        <!-- Tags Tab -->
+        @if (activeTab() === 'tags') {
+          <div class="tab-pane fade show active">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+              <h5 class="mb-0">Теги</h5>
+              <button class="btn btn-primary btn-sm" (click)="showTagForm.set(!showTagForm())">
+                <i class="fas fa-plus me-1"></i>Создать тег
+              </button>
+            </div>
+
+            @if (showTagForm()) {
+              <div class="card mb-3">
+                <div class="card-body">
+                  <input 
+                    type="text" 
+                    class="form-control mb-2"
+                    [(ngModel)]="newTag.name" 
+                    placeholder="Название тега">
+                  <input 
+                    type="color" 
+                    class="form-control form-control-color mb-2"
+                    [(ngModel)]="newTag.color">
+                  <div class="d-flex gap-2">
+                    <button class="btn btn-primary btn-sm" (click)="createTag()">Создать</button>
+                    <button class="btn btn-secondary btn-sm" (click)="showTagForm.set(false)">Отмена</button>
+                  </div>
+                </div>
+              </div>
+            }
+
+            <div class="d-flex flex-wrap gap-2">
+              @for (tag of allTags(); track tag.id) {
+                <span 
+                  class="badge" 
+                  [class.bg-primary]="isTagAssigned(tag.id)"
+                  [class.bg-secondary]="!isTagAssigned(tag.id)"
+                  [style.background-color]="isTagAssigned(tag.id) ? tag.color : undefined"
+                  style="cursor: pointer; font-size: 0.9rem; padding: 0.5rem 1rem;"
+                  (click)="toggleTag(tag.id)">
+                  {{ tag.name }}
+                </span>
+              }
+            </div>
+          </div>
+        }
+
+        <!-- Attachments Tab -->
+        @if (activeTab() === 'attachments') {
+          <div class="tab-pane fade show active">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+              <h5 class="mb-0">Файлы и вложения</h5>
+              <label class="btn btn-primary btn-sm mb-0">
+                <i class="fas fa-upload me-1"></i>Загрузить файл
+                <input 
+                  type="file" 
+                  (change)="onFileSelected($event)"
+                  style="display: none;">
+              </label>
+            </div>
+
+            @if (leadAttachments().length > 0) {
+              @for (attachment of leadAttachments(); track attachment.id) {
+                <div class="card mb-2">
+                  <div class="card-body p-2">
+                    <div class="d-flex align-items-center justify-content-between">
+                      <div class="d-flex align-items-center">
+                        <i class="fas fa-file text-primary me-2"></i>
+                        <div>
+                          <div class="fw-bold">{{ attachment.fileName }}</div>
+                          <div class="small text-muted">
+                            @if (attachment.fileSize) {
+                              <span>{{ formatFileSize(attachment.fileSize) }}</span>
+                            }
+                            <span class="ms-2">{{ formatDate(attachment.createdAt) }}</span>
+                            @if (attachment.admin) {
+                              <span class="ms-2">{{ attachment.admin.email }}</span>
+                            }
+                          </div>
+                        </div>
+                      </div>
+                      <div class="d-flex gap-2">
+                        <a 
+                          [href]="appService.API_URL + attachment.filePath" 
+                          target="_blank"
+                          class="btn btn-secondary btn-sm">
+                          <i class="fas fa-download"></i>
+                        </a>
+                        <button class="btn btn-danger btn-sm" (click)="deleteAttachment(attachment.id)">
+                          <i class="fas fa-trash"></i>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              }
+            } @else {
+              <p class="text-muted">Файлов пока нет</p>
+            }
+          </div>
+        }
+
+        <!-- Meetings Tab -->
+        @if (activeTab() === 'meetings') {
+          <div class="tab-pane fade show active">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+              <h5 class="mb-0">Встречи и календарь</h5>
+              <button class="btn btn-primary btn-sm" (click)="showMeetingForm.set(!showMeetingForm())">
+                <i class="fas fa-plus me-1"></i>Создать встречу
+              </button>
+            </div>
+
+            @if (showMeetingForm()) {
+              <div class="card mb-3">
+                <div class="card-body">
+                  <input 
+                    type="text" 
+                    class="form-control mb-2"
+                    [(ngModel)]="newMeeting.title" 
+                    placeholder="Название встречи">
+                  <textarea 
+                    class="form-control mb-2"
+                    [(ngModel)]="newMeeting.description" 
+                    placeholder="Описание (необязательно)"
+                    rows="2"></textarea>
+                  <input 
+                    type="datetime-local" 
+                    class="form-control mb-2"
+                    [(ngModel)]="newMeeting.meetingDate">
+                  <input 
+                    type="text" 
+                    class="form-control mb-2"
+                    [(ngModel)]="newMeeting.location" 
+                    placeholder="Место встречи">
+                  <select class="form-select mb-2" [(ngModel)]="newMeeting.meetingType">
+                    <option value="call">Звонок</option>
+                    <option value="email">Email</option>
+                    <option value="meeting">Встреча</option>
+                    <option value="visit">Визит</option>
+                    <option value="other">Другое</option>
+                  </select>
+                  <div class="d-flex gap-2">
+                    <button class="btn btn-primary btn-sm" (click)="createMeeting()">Создать</button>
+                    <button class="btn btn-secondary btn-sm" (click)="showMeetingForm.set(false)">Отмена</button>
+                  </div>
+                </div>
+              </div>
+            }
+
+            @if (leadMeetings().length > 0) {
+              @for (meeting of leadMeetings(); track meeting.id) {
+                <div class="card mb-2" [class.bg-light]="meeting.completed">
+                  <div class="card-body p-2">
+                    <div class="d-flex align-items-start">
+                      <input 
+                        type="checkbox" 
+                        class="form-check-input mt-1 me-2"
+                        [checked]="meeting.completed"
+                        (change)="toggleMeeting(meeting)">
+                      <div class="flex-grow-1">
+                        <div class="fw-bold" [class.text-decoration-line-through]="meeting.completed">
+                          {{ meeting.title }}
+                        </div>
+                        @if (meeting.description) {
+                          <div class="text-muted small">{{ meeting.description }}</div>
+                        }
+                        <div class="d-flex flex-wrap gap-3 mt-1">
+                          <small><i class="fas fa-calendar me-1"></i>{{ formatDate(meeting.meetingDate) }}</small>
+                          @if (meeting.location) {
+                            <small><i class="fas fa-map-marker-alt me-1"></i>{{ meeting.location }}</small>
+                          }
+                          <small>{{ getMeetingTypeLabel(meeting.meetingType) }}</small>
+                          <small class="text-muted">{{ meeting.admin?.email || 'Админ' }}</small>
+                        </div>
+                      </div>
+                      <button class="btn btn-danger btn-sm" (click)="deleteMeeting(meeting.id)">
+                        <i class="fas fa-trash"></i>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              }
+            } @else {
+              <p class="text-muted">Встреч пока нет</p>
+            }
+          </div>
+        }
+
+        <!-- Activity Tab -->
+        @if (activeTab() === 'activity') {
+          <div class="tab-pane fade show active">
+            <h5 class="mb-3">История изменений</h5>
+            @if (leadActivities().length > 0) {
+              @for (activity of leadActivities(); track activity.id) {
+                <div class="card mb-2">
+                  <div class="card-body p-2">
+                    <div class="d-flex align-items-start">
+                      <i class="fas me-2 mt-1" [ngClass]="getActivityIcon(activity.activityType)"></i>
+                      <div class="flex-grow-1">
+                        <div>
+                          @if (activity.description) {
+                            {{ activity.description }}
+                          } @else {
+                            {{ getActivityDescription(activity) }}
+                          }
+                        </div>
+                        <div class="small text-muted mt-1">
+                          <span>{{ activity.admin?.email || 'Система' }}</span>
+                          <span class="ms-2">{{ formatDate(activity.createdAt) }}</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              }
+            } @else {
+              <p class="text-muted">История пуста</p>
+            }
+          </div>
+        }
+      </div>
+    </div>
+
+    <!-- Modal Footer -->
+    <div class="modal-footer">
+      <button type="button" class="btn btn-secondary" (click)="closeModal()">Закрыть</button>
+      @if (!lead.convertedToClient) {
+        <button type="button" class="btn btn-success" (click)="convertToClient()">
+          <i class="fas fa-check-circle me-1"></i>Конвертировать в клиента
+        </button>
+      }
+    </div>
+  </div>
+}
+
