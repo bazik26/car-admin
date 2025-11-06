@@ -63,6 +63,7 @@ export class AdminLayoutComponent implements OnInit, OnDestroy {
     
     if (canManageLeads) {
       // Проверяем, заполнены ли рабочие часы
+      // Проверяем, что есть хотя бы один включенный день
       const hasWorkingHours = admin?.workingDays && 
         Array.isArray(admin.workingDays) && 
         admin.workingDays.length > 0 &&
@@ -77,7 +78,7 @@ export class AdminLayoutComponent implements OnInit, OnDestroy {
             keyboard: false,
             class: 'modal-lg'
           });
-        }, 500); // Небольшая задержка для лучшего UX
+        }, 1000); // Задержка для лучшего UX после загрузки страницы
       }
     }
   }

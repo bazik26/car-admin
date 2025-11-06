@@ -119,6 +119,35 @@
             </div>
           </div>
         </div>
+
+        @if (admin.permissions?.canManageLeads || admin.isSuper) {
+          <div class="info-section mb-4">
+            <h5 class="mb-3">Рабочие часы</h5>
+            <div class="d-flex align-items-center justify-content-between">
+              <div>
+                @if (hasWorkingHours()) {
+                  <span class="badge bg-success">
+                    <i class="fas fa-check me-1"></i>Настроены
+                  </span>
+                  <p class="text-muted mb-0 mt-2 small">
+                    Рабочие часы настроены. Нажмите кнопку ниже для редактирования.
+                  </p>
+                } @else {
+                  <span class="badge bg-warning text-dark">
+                    <i class="fas fa-exclamation-triangle me-1"></i>Не настроены
+                  </span>
+                  <p class="text-muted mb-0 mt-2 small">
+                    Рабочие часы не настроены. Настройте их для автоматического назначения задач.
+                  </p>
+                }
+              </div>
+              <button type="button" class="btn btn-primary btn-sm" (click)="openWorkingHoursModal()">
+                <i class="fas fa-clock me-1"></i>
+                {{ hasWorkingHours() ? 'Изменить' : 'Настроить' }} рабочие часы
+              </button>
+            </div>
+          </div>
+        }
       } @else {
         <!-- Режим редактирования -->
         <div class="info-section mb-4">

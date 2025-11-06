@@ -8,9 +8,10 @@ import {
   signal,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { BsModalRef } from 'ngx-bootstrap/modal';
+import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { AppService } from '../../../../../services/app.service';
 import { take } from 'rxjs';
+import { WorkingHoursModalComponent } from '../../../layout/blocks/working-hours.modal';
 
 interface Admin {
   id: number;
@@ -23,6 +24,12 @@ interface Admin {
     canManageLeads: boolean;
     canViewLeads: boolean;
   };
+  workingDays?: Array<{
+    day: number;
+    startTime: string;
+    endTime: string;
+    enabled: boolean;
+  }>;
   createdAt: Date;
   updatedAt: Date;
   deletedAt?: Date;
@@ -39,6 +46,7 @@ interface Admin {
 export class AdminDetailsModal implements OnInit {
   public readonly activeModal = inject(BsModalRef);
   public readonly appService = inject(AppService);
+  public readonly modalService = inject(BsModalService);
 
   @Input()
   admin!: Admin;
@@ -159,6 +167,30 @@ export class AdminDetailsModal implements OnInit {
       };
     }
     this.isEditing.set(false);
+  }
+
+  openWorkingHoursModal() {
+    const admin = this.adminData();
+    if (!admin) return;
+
+    // Закрываем текущее модальное окно
+    this.activeModal.hide();
+
+    // Открываем модальное окно рабочих часов
+    setTimeout(() => {
+      const modalRef = this.modalService.show(WorkingHoursModalComponent, {
+        initialState: { admin },
+        backdrop: true,
+        keyboard: true,
+        class: 'modal-lg'
+      });
+    }, 300);
+  }
+
+  hasWorkingHours(): boolean {
+    const admin = this.adminData();
+    if (!admin || !admin.workingDays) return false;
+    return admin.workingDays.some(day => day.enabled === true);
   }
 }
 
