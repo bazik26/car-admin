@@ -191,8 +191,8 @@
 <!-- Модальное окно с деталями лида -->
 @if (showDetailsModal()) {
   @if (selectedLead(); as lead) {
-    <div class="modal-overlay" (click)="closeDetailsModal()" style="position: fixed !important; top: 0 !important; left: 0 !important; right: 0 !important; bottom: 0 !important; z-index: 9999 !important; background: rgba(0, 0, 0, 0.5) !important; display: flex !important; align-items: center !important; justify-content: center !important; padding: 20px !important;">
-      <div class="modal-content modal-large modal-fullscreen" (click)="$event.stopPropagation()" style="z-index: 10000 !important; position: relative !important;">
+    <div class="modal-overlay" (click)="closeDetailsModal()">
+      <div class="modal-content modal-large modal-fullscreen" (click)="$event.stopPropagation()">
       <div class="modal-header">
         <div class="modal-header-content">
           <h2>{{ lead.name }}</h2>
