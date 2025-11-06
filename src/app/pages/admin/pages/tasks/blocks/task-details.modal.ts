@@ -47,7 +47,7 @@ export class TaskDetailsModalComponent implements OnInit {
   ngOnInit() {
     this.taskForm = {
       status: this.task.status || 'pending',
-      taskData: { ...this.task.taskData } || {},
+      taskData: this.task.taskData ? { ...this.task.taskData } : {},
     };
 
     // Преобразуем массивы в строки для редактирования
