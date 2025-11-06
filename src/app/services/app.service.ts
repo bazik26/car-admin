@@ -312,7 +312,6 @@ export class AppService {
       .pipe(map((response) => response));
   }
 
-  // ==================== TASKS ====================
   // ==================== LEAD TASKS ====================
   getAdminTasks(status?: string, completed?: boolean): Observable<any> {
     let url = `${this.API_URL}/leads/tasks/my`;
