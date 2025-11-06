@@ -30,11 +30,11 @@
           <h5 class="mb-3">Основная информация</h5>
           <div class="row g-3">
             <div class="col-md-6">
-              <label class="form-label text-muted">Email</label>
+              <label class="form-label">Email</label>
               <div class="fw-bold">{{ admin.email }}</div>
             </div>
             <div class="col-md-6">
-              <label class="form-label text-muted">Статус</label>
+              <label class="form-label">Статус</label>
               <div>
                 <span class="badge" [class.bg-success]="!admin.deletedAt" [class.bg-danger]="admin.deletedAt">
                   {{ admin.deletedAt ? 'Удален' : 'Активен' }}
@@ -42,7 +42,7 @@
               </div>
             </div>
             <div class="col-md-6">
-              <label class="form-label text-muted">Роль</label>
+              <label class="form-label">Роль</label>
               <div>
                 <span class="badge" [class.bg-warning]="admin.isSuper" [class.bg-secondary]="!admin.isSuper">
                   {{ admin.isSuper ? 'Супер-администратор' : 'Менеджер' }}
@@ -50,7 +50,7 @@
               </div>
             </div>
             <div class="col-md-6">
-              <label class="form-label text-muted">Дата создания</label>
+              <label class="form-label">Дата создания</label>
               <div>{{ formatDate(admin.createdAt) }}</div>
             </div>
           </div>
@@ -60,7 +60,7 @@
           <h5 class="mb-3">Принадлежность к проекту</h5>
           <div class="row g-3">
             <div class="col-md-12">
-              <label class="form-label text-muted">Проект</label>
+              <label class="form-label">Проект</label>
               <div>
                 <span class="badge bg-info">
                   {{ getProjectLabel(admin.projectId) }}
