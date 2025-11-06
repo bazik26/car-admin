@@ -59,5 +59,12 @@
       background-color: #6c757d !important;
     }
   }
+
+  // Исправление читаемости текста на темном/синем фоне
+  .tab-pane {
+    .text-muted {
+      color: rgba(255, 255, 255, 0.9) !important;
+    }
+  }
 }
 
