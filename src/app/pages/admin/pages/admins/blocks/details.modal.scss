@@ -1,10 +1,25 @@
 .admin-details-modal {
   .modal-header {
+    background-color: #ffffff !important; // Белый фон для заголовка
     border-bottom: 1px solid #dee2e6;
     padding: 1rem 1.5rem;
     
     h4 {
+      color: #212529 !important; // Темный цвет для заголовка на белом фоне
+      font-weight: 600;
+    }
+
+    .badge {
       color: #212529 !important;
+    }
+
+    .btn-close {
+      filter: invert(0) !important; // Темная кнопка закрытия
+      opacity: 0.75;
+      
+      &:hover {
+        opacity: 1;
+      }
     }
   }
 
@@ -111,6 +126,19 @@
       > div:not(.badge) {
         color: #212529 !important;
         font-weight: 500;
+      }
+    }
+  }
+}
+
+// Глобальное переопределение для модального окна админа
+::ng-deep .modal.show .modal-dialog .modal-content {
+  .admin-details-modal {
+    .modal-header {
+      background-color: #ffffff !important;
+      
+      h4, h5, span, div {
+        color: #212529 !important;
       }
     }
   }

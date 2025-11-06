@@ -68,6 +68,9 @@ export class AdminDetailsModal implements OnInit {
     this.isLoading.set(true);
     this.appService.getAdmin(this.admin.id).pipe(take(1)).subscribe({
       next: (adminData: Admin) => {
+        console.log('Admin data loaded:', adminData);
+        console.log('ProjectId:', adminData.projectId);
+        console.log('Permissions:', adminData.permissions);
         this.adminData.set(adminData);
         this.editForm.projectId = adminData.projectId || '';
         this.editForm.permissions = adminData.permissions || {
@@ -80,7 +83,15 @@ export class AdminDetailsModal implements OnInit {
       },
       error: (error: any) => {
         console.error('Error loading admin:', error);
+        // Используем данные из входного параметра как fallback
         this.adminData.set(this.admin);
+        this.editForm.projectId = this.admin.projectId || '';
+        this.editForm.permissions = this.admin.permissions || {
+          canAddCars: false,
+          canViewCars: false,
+          canManageLeads: false,
+          canViewLeads: false,
+        };
         this.isLoading.set(false);
       }
     });
