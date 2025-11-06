@@ -1,8 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, FormArray, Validators } from '@angular/forms';
 import { BsModalRef } from 'ngx-bootstrap/modal';
-import { AppService } from '../../../../../../services/app.service';
+import { AppService } from '../../../../../services/app.service';
 import { take } from 'rxjs/operators';
 
 interface WorkingDay {
@@ -33,10 +33,11 @@ export class WorkingHoursModalComponent implements OnInit {
     { day: 6, dayName: 'Суббота', startTime: '09:00', endTime: '18:00', enabled: false },
   ];
 
+  private readonly appService = inject(AppService);
+  private readonly fb = inject(FormBuilder);
+
   constructor(
-    public bsModalRef: BsModalRef,
-    private fb: FormBuilder,
-    private appService: AppService
+    public bsModalRef: BsModalRef
   ) {
     this.workingDaysForm = this.fb.group({
       days: this.fb.array([])
@@ -99,7 +100,7 @@ export class WorkingHoursModalComponent implements OnInit {
           // Обновляем данные админа
           this.appService.auth().pipe(take(1)).subscribe();
         },
-        error: (error) => {
+        error: (error: any) => {
           console.error('Ошибка сохранения рабочих часов:', error);
           alert('Ошибка сохранения рабочих часов');
         }
