@@ -82,7 +82,7 @@
           @for (lead of leads(); track lead.id) {
             <tr 
               class="lead-row" 
-              (click)="openDetailsModal(lead)"
+              (click)="openDetailsModal(lead, $event)"
               [attr.data-lead-id]="lead.id"
               style="cursor: pointer;">
               <td data-label="Имя">
@@ -189,7 +189,7 @@
 </div>
 
 <!-- Модальное окно с деталями лида -->
-@if (showDetailsModal()) {
+@if (showDetailsModal() && selectedLead()) {
   @if (selectedLead(); as lead) {
     <div class="modal-overlay" (click)="closeDetailsModal()">
       <div class="modal-content modal-large modal-fullscreen" (click)="$event.stopPropagation()">

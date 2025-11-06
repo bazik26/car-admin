@@ -205,12 +205,36 @@ export class LeadsPage implements OnInit {
     });
   }
 
-  openDetailsModal(lead: Lead) {
+  openDetailsModal(lead: Lead, event?: Event) {
     console.log('openDetailsModal called with lead:', lead);
+    if (!lead) {
+      console.error('Lead is null or undefined');
+      return;
+    }
+    
+    // Останавливаем распространение события, если оно есть
+    if (event) {
+      event.stopPropagation();
+      event.preventDefault();
+    }
+    
     // Сначала показываем модальное окно с базовыми данными
     this.selectedLead.set(lead);
     this.showDetailsModal.set(true);
     this.activeTab.set('info');
+    
+    console.log('Modal state:', { 
+      showDetailsModal: this.showDetailsModal(), 
+      selectedLead: this.selectedLead() 
+    });
+    
+    // Принудительно обновляем представление
+    setTimeout(() => {
+      console.log('Modal state after timeout:', { 
+        showDetailsModal: this.showDetailsModal(), 
+        selectedLead: this.selectedLead() 
+      });
+    }, 100);
     
     // Предотвращаем скролл body при открытом модальном окне
     if (typeof document !== 'undefined') {
