@@ -43,6 +43,13 @@ export class AdminAdminsManagementModal implements OnInit {
       email: [null, [Validators.required]],
       password: [null, [Validators.required]],
       isSuper: [false],
+      projectId: [null],
+      permissions: this.fb.group({
+        canAddCars: [false],
+        canViewCars: [true],
+        canManageLeads: [false],
+        canViewLeads: [true],
+      }),
     });
   }
 

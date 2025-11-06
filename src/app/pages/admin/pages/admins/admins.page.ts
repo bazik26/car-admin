@@ -8,6 +8,7 @@ import { BsModalService } from 'ngx-bootstrap/modal';
 import { AppService } from '../../../../services/app.service';
 
 import { AdminAdminsManagementModal } from './blocks/management.modal';
+import { AdminDetailsModal } from './blocks/details.modal';
 
 @Component({
   selector: 'app-admin-admins',
@@ -35,6 +36,21 @@ export class AdminAdminsPage implements OnInit {
       if (modalRef.content?.result?.reload) {
         this.getAdminsAll();
       }
+    });
+  }
+
+  openDetailsModal(admin: any) {
+    const modalRef = this.modal.show(AdminDetailsModal, {
+      initialState: {
+        admin: admin,
+      },
+      class: 'modal-lg',
+      backdrop: true,
+      keyboard: true,
+    });
+
+    modalRef.onHide?.subscribe(() => {
+      this.getAdminsAll();
     });
   }
 

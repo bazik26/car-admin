@@ -146,9 +146,21 @@ export class AppService {
       .pipe(map((response) => response));
   }
 
+  getAdmin(adminId: number): Observable<any> {
+    return this.http
+      .get(`${this.API_URL}/admins/admin/${adminId}`)
+      .pipe(map((response) => response));
+  }
+
   createAdmin(admin: any): Observable<any> {
     return this.http
       .post(`${this.API_URL}/admins/admin`, admin)
+      .pipe(map((response) => response));
+  }
+
+  updateAdmin(adminId: number, admin: any): Observable<any> {
+    return this.http
+      .put(`${this.API_URL}/admins/admin/${adminId}`, admin)
       .pipe(map((response) => response));
   }
 

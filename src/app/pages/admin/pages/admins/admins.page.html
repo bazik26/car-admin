@@ -66,6 +66,7 @@
           <thead>
             <tr>
               <th>Почта</th>
+              <th>Проект</th>
               <th>Статус</th>
               <th>Роль</th>
               <th class="text-center">Действие</th>
@@ -73,12 +74,25 @@
           </thead>
           <tbody>
             @for (admin of admins; track admin) {
-              <tr [class.table-danger]="admin.deletedAt" class="animate-fade-in">
+              <tr 
+                [class.table-danger]="admin.deletedAt" 
+                class="animate-fade-in admin-row"
+                style="cursor: pointer;"
+                (click)="openDetailsModal(admin)">
                 <td data-label="Почта">
                   <div class="cell-primary">
                     <i class="fas fa-envelope"></i>
                     <span>{{ admin.email }}</span>
                   </div>
+                </td>
+                <td data-label="Проект">
+                  @if (admin.projectId) {
+                    <span class="badge bg-info">
+                      {{ admin.projectId === 'office_1' ? 'Офис 1' : 'Офис 2' }}
+                    </span>
+                  } @else {
+                    <span class="text-muted">Не назначен</span>
+                  }
                 </td>
                 <td data-label="Статус">
                   <span class="status-pill" [ngClass]="admin.deletedAt ? 'danger' : 'success'">
@@ -92,7 +106,7 @@
                     {{ admin.isSuper ? 'Супер' : 'Менеджер' }}
                   </span>
                 </td>
-                <td data-label="Действие">
+                <td data-label="Действие" (click)="$event.stopPropagation()">
                   <div class="action-menu">
                     @if (!admin.deletedAt) {
                       <button

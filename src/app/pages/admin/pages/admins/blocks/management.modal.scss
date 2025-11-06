@@ -1,0 +1,19 @@
+.permissions-form {
+  background: #f8f9fa;
+  padding: 1rem;
+  border-radius: 8px;
+  margin-top: 0.5rem;
+
+  .form-check {
+    margin-bottom: 0.5rem;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+
+    label {
+      cursor: pointer;
+      user-select: none;
+    }
+  }
+}
