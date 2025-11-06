@@ -50,7 +50,8 @@ export class TasksPageComponent implements OnInit {
   loadTasks() {
     this.isLoading.set(true);
     const status = this.filterStatus() === 'all' ? undefined : this.filterStatus();
-    const completed = this.filterCompleted() === null ? undefined : this.filterCompleted();
+    const completedValue = this.filterCompleted();
+    const completed: boolean | undefined = completedValue === null ? undefined : completedValue;
     
     this.appService.getAdminTasks(status, completed).subscribe({
       next: (tasks: Task[]) => {
