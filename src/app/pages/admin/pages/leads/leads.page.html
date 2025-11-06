@@ -188,7 +188,7 @@
   }
 </div>
 
-<!-- Модальное окно с деталями лида -->
+<!-- Модальное окно с деталями лида - вне контейнера leads-page -->
 @if (showDetailsModal() && selectedLead()) {
   @if (selectedLead(); as lead) {
     <div class="modal-overlay" (click)="closeDetailsModal()">
