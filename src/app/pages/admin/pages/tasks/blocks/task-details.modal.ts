@@ -49,6 +49,14 @@ export class TaskDetailsModalComponent implements OnInit {
       status: this.task.status || 'pending',
       taskData: { ...this.task.taskData } || {},
     };
+
+    // Преобразуем массивы в строки для редактирования
+    if (this.taskForm.taskData.preferredBrands && Array.isArray(this.taskForm.taskData.preferredBrands)) {
+      this.taskForm.taskData.preferredBrands = this.taskForm.taskData.preferredBrands.join(', ');
+    }
+    if (this.taskForm.taskData.preferredModels && Array.isArray(this.taskForm.taskData.preferredModels)) {
+      this.taskForm.taskData.preferredModels = this.taskForm.taskData.preferredModels.join(', ');
+    }
   }
 
   save() {
@@ -56,8 +64,16 @@ export class TaskDetailsModalComponent implements OnInit {
     
     const updateData: any = {
       status: this.taskForm.status,
-      taskData: this.taskForm.taskData,
+      taskData: { ...this.taskForm.taskData },
     };
+
+    // Преобразуем строки обратно в массивы
+    if (updateData.taskData.preferredBrands && typeof updateData.taskData.preferredBrands === 'string') {
+      updateData.taskData.preferredBrands = updateData.taskData.preferredBrands.split(',').map((b: string) => b.trim()).filter((b: string) => b.length > 0);
+    }
+    if (updateData.taskData.preferredModels && typeof updateData.taskData.preferredModels === 'string') {
+      updateData.taskData.preferredModels = updateData.taskData.preferredModels.split(',').map((m: string) => m.trim()).filter((m: string) => m.length > 0);
+    }
 
     if (this.taskForm.status === 'completed') {
       updateData.completed = true;
