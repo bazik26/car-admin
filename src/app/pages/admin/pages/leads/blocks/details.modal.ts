@@ -45,8 +45,12 @@ interface LeadTask {
   id: number;
   title: string;
   description?: string;
+  taskType?: string;
+  status?: string;
   dueDate?: string;
   completed: boolean;
+  completedAt?: string;
+  taskData?: any;
   admin?: any;
 }
 
