@@ -10,6 +10,7 @@ import { XmlExportPage } from './pages/admin/pages/xml-export/xml-export.page';
 import { ChatPage } from './pages/admin/pages/chat/chat.page';
 import { LeadsPage } from './pages/admin/pages/leads/leads.page';
 import { AdminStatsPage } from './pages/admin/pages/admin-stats/admin-stats.page';
+import { TasksPageComponent } from './pages/admin/pages/tasks/tasks.page';
 
 export const routes: Routes = [
   {
@@ -63,6 +64,11 @@ export const routes: Routes = [
             path: 'leads',
             component: LeadsPage,
             title: 'Управление лидами',
+          },
+          {
+            path: 'tasks',
+            component: TasksPageComponent,
+            title: 'Мои задачи',
           },
           {
             path: 'my-stats',

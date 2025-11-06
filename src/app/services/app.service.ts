@@ -313,7 +313,19 @@ export class AppService {
   }
 
   // ==================== TASKS ====================
-  createLeadTask(leadId: number, task: { adminId: number; title: string; description?: string; dueDate?: string }): Observable<any> {
+  // ==================== LEAD TASKS ====================
+  getAdminTasks(status?: string, completed?: boolean): Observable<any> {
+    let url = `${this.API_URL}/leads/tasks/my`;
+    const queryParams = new URLSearchParams();
+    if (status) queryParams.append('status', status);
+    if (completed !== undefined) queryParams.append('completed', completed.toString());
+    if (queryParams.toString()) {
+      url += `?${queryParams.toString()}`;
+    }
+    return this.http.get(url).pipe(map((response) => response));
+  }
+
+  createLeadTask(leadId: number, task: { adminId: number; title: string; description?: string; taskType?: string; status?: string; dueDate?: string; taskData?: any }): Observable<any> {
     return this.http
       .post(`${this.API_URL}/leads/${leadId}/tasks`, task)
       .pipe(map((response) => response));
@@ -325,7 +337,7 @@ export class AppService {
       .pipe(map((response) => response));
   }
 
-  updateLeadTask(taskId: number, task: { title?: string; description?: string; dueDate?: string; completed?: boolean }): Observable<any> {
+  updateLeadTask(taskId: number, task: { title?: string; description?: string; taskType?: string; status?: string; dueDate?: string; completed?: boolean; taskData?: any }): Observable<any> {
     return this.http
       .put(`${this.API_URL}/leads/tasks/${taskId}`, task)
       .pipe(map((response) => response));

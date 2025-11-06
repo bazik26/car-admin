@@ -143,6 +143,19 @@
                 <span>Лиды</span>
               </a>
             </li>
+            @if (admin.permissions?.canManageLeads || admin.isSuper) {
+              <li class="nav-item">
+                <a
+                  class="nav-link"
+                  [routerLink]="['/admin', 'tasks']"
+                  routerLinkActive="active"
+                  title="Мои задачи"
+                >
+                  <i class="fas fa-tasks"></i>
+                  <span>Задачи</span>
+                </a>
+              </li>
+            }
             <li class="nav-item">
               <a
                 class="nav-link"

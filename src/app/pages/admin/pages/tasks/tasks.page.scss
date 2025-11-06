@@ -1,0 +1,93 @@
+.tasks-page {
+  padding: 2rem;
+
+  .page-header {
+    .page-title {
+      color: #212529;
+      font-size: 2rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+  }
+
+  .filters-section {
+    background: #f8f9fa;
+    padding: 1.5rem;
+    border-radius: 0.5rem;
+    border: 1px solid #dee2e6;
+
+    .form-label {
+      color: #495057;
+      font-weight: 500;
+      margin-bottom: 0.5rem;
+    }
+  }
+
+  .tasks-list {
+    .task-card {
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s;
+
+      &:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      }
+
+      &.task-overdue {
+        border-left: 4px solid #dc3545;
+      }
+
+      .card {
+        border: 1px solid #dee2e6;
+        border-radius: 0.5rem;
+        transition: all 0.2s;
+
+        &:hover {
+          border-color: #217e02;
+          box-shadow: 0 2px 8px rgba(33, 126, 2, 0.1);
+        }
+      }
+
+      .task-icon {
+        font-size: 1.5rem;
+        margin-top: 0.25rem;
+      }
+
+      .task-title {
+        color: #212529;
+        font-size: 1.1rem;
+        font-weight: 600;
+      }
+
+      .task-description {
+        color: #6c757d;
+        font-size: 0.9rem;
+      }
+
+      .task-meta {
+        margin-top: 0.5rem;
+        font-size: 0.85rem;
+      }
+
+      .task-dates {
+        font-size: 0.9rem;
+
+        .due-date {
+          color: #495057;
+        }
+      }
+    }
+  }
+
+  .empty-state {
+    background: #f8f9fa;
+    border-radius: 0.5rem;
+    padding: 3rem;
+
+    h3 {
+      color: #212529;
+      margin-bottom: 1rem;
+    }
+  }
+}
+

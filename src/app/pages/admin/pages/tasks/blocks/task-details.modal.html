@@ -1,0 +1,186 @@
+<div class="task-details-modal">
+  <div class="modal-header">
+    <h5 class="modal-title">{{ task.title }}</h5>
+    <button type="button" class="btn-close" (click)="cancel()"></button>
+  </div>
+  
+  <div class="modal-body">
+    <!-- Информация о задаче -->
+    <div class="task-info-section mb-4">
+      <div class="row mb-3">
+        <div class="col-md-6">
+          <label class="form-label">Статус</label>
+          <select class="form-select" [(ngModel)]="taskForm.status">
+            <option value="pending">Ожидает</option>
+            <option value="in_progress">В работе</option>
+            <option value="completed">Выполнена</option>
+          </select>
+        </div>
+        <div class="col-md-6">
+          <label class="form-label">Срок выполнения</label>
+          <div class="form-control-plaintext">
+            {{ formatDate(task.dueDate) || 'Не указан' }}
+          </div>
+        </div>
+      </div>
+
+      @if (task.lead) {
+        <div class="alert alert-info">
+          <strong>Лид:</strong> {{ task.lead.name }}
+          @if (task.lead.phone) {
+            <br><strong>Телефон:</strong> {{ task.lead.phone }}
+          }
+          @if (task.lead.email) {
+            <br><strong>Email:</strong> {{ task.lead.email }}
+          }
+          <button class="btn btn-sm btn-link p-0 ms-2" (click)="goToLead()">
+            Перейти к лиду <i class="fas fa-arrow-right"></i>
+          </button>
+        </div>
+      }
+
+      @if (task.description) {
+        <div class="mb-3">
+          <label class="form-label">Описание</label>
+          <p class="form-control-plaintext">{{ task.description }}</p>
+        </div>
+      }
+    </div>
+
+    <!-- Форма в зависимости от типа задачи -->
+    <div class="task-form-section">
+      @if (task.taskType === 'contact') {
+        <div class="task-form">
+          <h6>Данные контакта</h6>
+          <div class="row mb-3">
+            <div class="col-md-6">
+              <label class="form-label">Способ связи</label>
+              <select class="form-select" [(ngModel)]="taskForm.taskData.contactMethod">
+                <option value="">Не выбрано</option>
+                <option value="phone">Телефон</option>
+                <option value="email">Email</option>
+                <option value="telegram">Telegram</option>
+              </select>
+            </div>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Результат контакта</label>
+            <textarea class="form-control" rows="3" [(ngModel)]="taskForm.taskData.contactResult" 
+                      placeholder="Опишите результат контакта с клиентом"></textarea>
+          </div>
+        </div>
+      }
+
+      @if (task.taskType === 'car_preferences') {
+        <div class="task-form">
+          <h6>Предпочтения по автомобилям</h6>
+          <div class="row mb-3">
+            <div class="col-md-6">
+              <label class="form-label">Марки (через запятую)</label>
+              <input type="text" class="form-control" 
+                     [(ngModel)]="taskForm.taskData.preferredBrands" 
+                     placeholder="Например: BMW, Mercedes, Audi">
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Модели (через запятую)</label>
+              <input type="text" class="form-control" 
+                     [(ngModel)]="taskForm.taskData.preferredModels" 
+                     placeholder="Например: X5, GLE, Q7">
+            </div>
+          </div>
+          <div class="row mb-3">
+            <div class="col-md-4">
+              <label class="form-label">Год от</label>
+              <input type="number" class="form-control" 
+                     [(ngModel)]="taskForm.taskData.preferredYearFrom" 
+                     placeholder="2010">
+            </div>
+            <div class="col-md-4">
+              <label class="form-label">Год до</label>
+              <input type="number" class="form-control" 
+                     [(ngModel)]="taskForm.taskData.preferredYearTo" 
+                     placeholder="2024">
+            </div>
+            <div class="col-md-4">
+              <label class="form-label">Пробег до (км)</label>
+              <input type="number" class="form-control" 
+                     [(ngModel)]="taskForm.taskData.preferredMileageMax" 
+                     placeholder="100000">
+            </div>
+          </div>
+        </div>
+      }
+
+      @if (task.taskType === 'region') {
+        <div class="task-form">
+          <h6>Регион и город</h6>
+          <div class="row mb-3">
+            <div class="col-md-6">
+              <label class="form-label">Регион</label>
+              <input type="text" class="form-control" 
+                     [(ngModel)]="taskForm.taskData.region" 
+                     placeholder="Например: Московская область">
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Город</label>
+              <input type="text" class="form-control" 
+                     [(ngModel)]="taskForm.taskData.city" 
+                     placeholder="Например: Москва">
+            </div>
+          </div>
+        </div>
+      }
+
+      @if (task.taskType === 'budget') {
+        <div class="task-form">
+          <h6>Бюджет</h6>
+          <div class="row mb-3">
+            <div class="col-md-4">
+              <label class="form-label">От</label>
+              <input type="number" class="form-control" 
+                     [(ngModel)]="taskForm.taskData.budgetMin" 
+                     placeholder="1000000">
+            </div>
+            <div class="col-md-4">
+              <label class="form-label">До</label>
+              <input type="number" class="form-control" 
+                     [(ngModel)]="taskForm.taskData.budgetMax" 
+                     placeholder="5000000">
+            </div>
+            <div class="col-md-4">
+              <label class="form-label">Валюта</label>
+              <select class="form-select" [(ngModel)]="taskForm.taskData.currency">
+                <option value="RUB">RUB</option>
+                <option value="USD">USD</option>
+                <option value="EUR">EUR</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      }
+
+      @if (task.taskType === 'register_lead' || task.taskType === 'additional_info') {
+        <div class="task-form">
+          <h6>Дополнительная информация</h6>
+          <div class="mb-3">
+            <label class="form-label">Заметки</label>
+            <textarea class="form-control" rows="4" 
+                      [(ngModel)]="taskForm.taskData.additionalNotes" 
+                      placeholder="Введите дополнительную информацию"></textarea>
+          </div>
+        </div>
+      }
+    </div>
+  </div>
+  
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" (click)="cancel()">Отмена</button>
+    <button type="button" class="btn btn-primary" (click)="save()" [disabled]="isSaving()">
+      @if (isSaving()) {
+        <span class="spinner-border spinner-border-sm me-2"></span>
+      }
+      Сохранить
+    </button>
+  </div>
+</div>
+
