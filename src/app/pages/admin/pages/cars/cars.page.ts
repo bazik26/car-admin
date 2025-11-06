@@ -52,12 +52,8 @@ export class AdminCarsPage implements OnInit {
   }
 
   getCarsAll() {
-    // Для обычного админа показываем только его автомобили
-    if (this.admin && !this.admin.isSuper) {
-      this.appService.getCarsByAdmin(this.admin.id).subscribe((cars) => (this.cars = cars));
-    } else {
-      this.appService.getCarsAll().subscribe((cars) => (this.cars = cars));
-    }
+    // Метод getCarsAll() на бэкенде уже фильтрует по projectId админа
+    this.appService.getCarsAll().subscribe((cars) => (this.cars = cars));
   }
 
   deleteCar(car: any) {
