@@ -9,9 +9,11 @@ import { CommonModule } from '@angular/common';
 import { interval, Subscription } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { of } from 'rxjs';
+import { BsModalService } from 'ngx-bootstrap/modal';
 
 import { AppService } from '../../../../services/app.service';
 import { AuthService } from '../../../../services/auth.service';
+import { WorkingHoursModalComponent } from './blocks/working-hours.modal';
 
 @Component({
   selector: 'app-admin-layout',
@@ -24,6 +26,7 @@ export class AdminLayoutComponent implements OnInit, OnDestroy {
   public router = inject(Router);
   public appService = inject(AppService);
   public authService = inject(AuthService);
+  public modalService = inject(BsModalService);
 
   public admin!: any;
   public headerCollapsed = false;
@@ -39,6 +42,9 @@ export class AdminLayoutComponent implements OnInit, OnDestroy {
         // Рассчитываем высоту хедера после загрузки
         setTimeout(() => this.calculateHeaderHeight(), 100);
         
+        // Проверяем рабочие часы для админов с доступом к редактированию лидов
+        this.checkWorkingHours(admin);
+        
         // Начинаем проверку необработанных лидов
         this.checkUnprocessedLeads();
         this.leadsCheckSubscription = interval(30000).subscribe(() => {
@@ -49,6 +55,31 @@ export class AdminLayoutComponent implements OnInit, OnDestroy {
         this.authService.handleTokenExpiry();
       }
     });
+  }
+
+  private checkWorkingHours(admin: any): void {
+    // Проверяем, есть ли у админа доступ к редактированию лидов
+    const canManageLeads = admin?.permissions?.canManageLeads || admin?.isSuper;
+    
+    if (canManageLeads) {
+      // Проверяем, заполнены ли рабочие часы
+      const hasWorkingHours = admin?.workingDays && 
+        Array.isArray(admin.workingDays) && 
+        admin.workingDays.length > 0 &&
+        admin.workingDays.some((day: any) => day.enabled === true);
+      
+      if (!hasWorkingHours) {
+        // Показываем модальное окно для выбора рабочих часов
+        setTimeout(() => {
+          const modalRef = this.modalService.show(WorkingHoursModalComponent, {
+            initialState: { admin },
+            backdrop: 'static',
+            keyboard: false,
+            class: 'modal-lg'
+          });
+        }, 500); // Небольшая задержка для лучшего UX
+      }
+    }
   }
 
   private checkUnprocessedLeads(): void {

@@ -1,0 +1,63 @@
+<div class="working-hours-modal">
+  <div class="modal-header">
+    <h5 class="modal-title">Выберите рабочие дни и часы</h5>
+    <button type="button" class="btn-close" (click)="cancel()"></button>
+  </div>
+  
+  <div class="modal-body">
+    <p class="mb-4 text-muted">
+      Укажите ваши рабочие дни и часы. Это поможет системе автоматически назначать задачи на подходящее время.
+    </p>
+    
+    <form [formGroup]="workingDaysForm">
+      <div formArrayName="days">
+        <div *ngFor="let day of days; let i = index" [formGroupName]="i" class="day-row mb-3">
+          <div class="row align-items-center">
+            <div class="col-md-3">
+              <div class="form-check">
+                <input 
+                  class="form-check-input" 
+                  type="checkbox" 
+                  formControlName="enabled"
+                  [id]="'day-' + i">
+                <label class="form-check-label" [for]="'day-' + i">
+                  <strong>{{ day.dayName }}</strong>
+                </label>
+              </div>
+            </div>
+            
+            <div class="col-md-4">
+              <label class="form-label small">Время начала</label>
+              <input 
+                type="time" 
+                class="form-control form-control-sm" 
+                formControlName="startTime"
+                [disabled]="!getDayFormGroup(i).get('enabled')?.value">
+            </div>
+            
+            <div class="col-md-4">
+              <label class="form-label small">Время окончания</label>
+              <input 
+                type="time" 
+                class="form-control form-control-sm" 
+                formControlName="endTime"
+                [disabled]="!getDayFormGroup(i).get('enabled')?.value">
+            </div>
+            
+            <div class="col-md-1 text-end">
+              <span *ngIf="getDayFormGroup(i).get('enabled')?.value" class="badge bg-success">Активен</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+  
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" (click)="cancel()">Отмена</button>
+    <button type="button" class="btn btn-primary" (click)="save()" [disabled]="workingDaysForm.invalid">
+      Сохранить
+    </button>
+  </div>
+</div>
+

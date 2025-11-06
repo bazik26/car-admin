@@ -678,31 +678,56 @@ hr {
 }
 
 .modal-content {
-  background: rgba(13, 23, 45, 0.95);
+  background: #ffffff !important;
   border-radius: var(--radius-lg);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  border: 1px solid #dee2e6 !important;
   box-shadow: var(--shadow-xl);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
+  color: #212529 !important;
 }
 
 .modal-header,
 .modal-footer {
-  border-color: rgba(255, 255, 255, 0.08);
+  border-color: #dee2e6 !important;
 }
 
 .modal-header {
-  background: rgba(18, 32, 58, 0.95);
+  background: #ffffff !important;
+  border-bottom: 1px solid #dee2e6 !important;
 }
 
 .modal-title {
-  color: var(--white);
+  color: #212529 !important;
   font-weight: 700;
   letter-spacing: var(--letter-spacing-tight);
 }
 
 .modal-body {
-  color: rgba(255, 255, 255, 0.88);
+  color: #212529 !important;
+  background: #ffffff !important;
+}
+
+.modal-body .text-muted,
+.modal-body small.text-muted {
+  color: #6c757d !important;
+}
+
+.modal-body h5,
+.modal-body h4,
+.modal-body h3 {
+  color: #212529 !important;
+}
+
+.modal-body p {
+  color: #212529 !important;
+}
+
+.btn-close {
+  filter: invert(0) !important;
+  opacity: 0.5;
+  
+  &:hover {
+    opacity: 1;
+  }
 }
 
 /* ----- NG Select ----- */
