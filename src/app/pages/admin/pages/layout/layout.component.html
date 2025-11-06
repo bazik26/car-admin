@@ -22,6 +22,18 @@
           </div>
 
           <div class="header-actions animate-slide-in-right">
+            @if (admin.permissions?.canManageLeads || admin.isSuper) {
+              <button
+                class="btn btn-ghost btn-outline"
+                type="button"
+                (click)="openWorkingHoursModal()"
+                title="Настроить рабочие часы"
+              >
+                <i class="fas fa-clock"></i>
+                <span>Рабочие часы</span>
+              </button>
+            }
+            
             <button
               class="btn btn-ghost btn-outline"
               type="button"

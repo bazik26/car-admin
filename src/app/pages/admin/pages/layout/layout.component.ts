@@ -104,6 +104,17 @@ export class AdminLayoutComponent implements OnInit, OnDestroy {
     this.showLeadNotification.set(false);
   }
 
+  openWorkingHoursModal(): void {
+    if (!this.admin) return;
+
+    const modalRef = this.modalService.show(WorkingHoursModalComponent, {
+      initialState: { admin: this.admin },
+      backdrop: true,
+      keyboard: true,
+      class: 'modal-lg'
+    });
+  }
+
   /**
    * Выход из системы
    */
