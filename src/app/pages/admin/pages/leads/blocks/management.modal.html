@@ -135,7 +135,7 @@
                 class="btn btn-primary"
                 type="button"
                 (click)="onSubmit()"
-                [disabled]="!leadForm.name?.trim()"
+                [disabled]="!leadForm.name.trim()"
               >
                 {{ lead?.id ? 'Сохранить' : 'Создать' }}
               </button>

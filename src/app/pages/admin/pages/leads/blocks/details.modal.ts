@@ -119,6 +119,7 @@ export class LeadDetailsModal implements OnInit {
   public leadActivities = signal<LeadActivity[]>([]);
   public allTags = signal<LeadTag[]>([]);
   public admins: any[] = [];
+  public currentAdmin: any = null;
 
   // Формы
   public newComment = '';
@@ -135,7 +136,16 @@ export class LeadDetailsModal implements OnInit {
       this.loadFullLeadData();
       this.loadAdmins();
       this.loadAllTags();
+      this.loadCurrentAdmin();
     }
+  }
+
+  loadCurrentAdmin() {
+    this.appService.auth().pipe(take(1)).subscribe({
+      next: (admin: any) => {
+        this.currentAdmin = admin;
+      }
+    });
   }
 
   loadFullLeadData() {
@@ -350,7 +360,7 @@ export class LeadDetailsModal implements OnInit {
     const lead = this.leadData();
     if (!lead) return;
     
-    this.appService.assignLead(lead.id, adminId).pipe(take(1)).subscribe({
+    this.appService.updateLead(lead.id, { assignedAdminId: adminId }).pipe(take(1)).subscribe({
       next: (updatedLead: Lead) => {
         this.leadData.set(updatedLead);
         this.loadLeadActivities(lead.id);
@@ -360,9 +370,9 @@ export class LeadDetailsModal implements OnInit {
 
   addComment() {
     const lead = this.leadData();
-    if (!lead || !this.newComment.trim()) return;
+    if (!lead || !this.newComment.trim() || !this.currentAdmin) return;
     
-    this.appService.addLeadComment(lead.id, this.newComment).pipe(take(1)).subscribe({
+    this.appService.createLeadComment(lead.id, { adminId: this.currentAdmin.id, comment: this.newComment }).pipe(take(1)).subscribe({
       next: () => {
         this.newComment = '';
         this.loadFullLeadData();
@@ -372,9 +382,14 @@ export class LeadDetailsModal implements OnInit {
 
   createTask() {
     const lead = this.leadData();
-    if (!lead || !this.newTask.title.trim()) return;
+    if (!lead || !this.newTask.title.trim() || !this.currentAdmin) return;
     
-    this.appService.createLeadTask(lead.id, this.newTask).pipe(take(1)).subscribe({
+    this.appService.createLeadTask(lead.id, { 
+      adminId: this.currentAdmin.id,
+      title: this.newTask.title,
+      description: this.newTask.description || undefined,
+      dueDate: this.newTask.dueDate || undefined
+    }).pipe(take(1)).subscribe({
       next: () => {
         this.newTask = { title: '', description: '', dueDate: '' };
         this.showTaskForm.set(false);
@@ -413,7 +428,7 @@ export class LeadDetailsModal implements OnInit {
   createTag() {
     if (!this.newTag.name.trim()) return;
     
-    this.appService.createTag(this.newTag).pipe(take(1)).subscribe({
+    this.appService.createTag(this.newTag.name, this.newTag.color).pipe(take(1)).subscribe({
       next: () => {
         this.newTag = { name: '', color: '#4f8cff' };
         this.showTagForm.set(false);
@@ -429,13 +444,13 @@ export class LeadDetailsModal implements OnInit {
     const isAssigned = this.isTagAssigned(tagId);
     
     if (isAssigned) {
-      this.appService.removeLeadTag(lead.id, tagId).pipe(take(1)).subscribe({
+      this.appService.removeTagFromLead(lead.id, tagId).pipe(take(1)).subscribe({
         next: () => {
           this.loadFullLeadData();
         }
       });
     } else {
-      this.appService.assignLeadTag(lead.id, tagId).pipe(take(1)).subscribe({
+      this.appService.addTagToLead(lead.id, tagId).pipe(take(1)).subscribe({
         next: () => {
           this.loadFullLeadData();
         }
@@ -451,10 +466,7 @@ export class LeadDetailsModal implements OnInit {
     const lead = this.leadData();
     if (!lead) return;
     
-    const formData = new FormData();
-    formData.append('file', file);
-    
-    this.appService.uploadLeadAttachment(lead.id, formData).pipe(take(1)).subscribe({
+    this.appService.createLeadAttachment(lead.id, file).pipe(take(1)).subscribe({
       next: () => {
         this.selectedFile = null;
         this.loadLeadAttachments(lead.id);
@@ -479,9 +491,16 @@ export class LeadDetailsModal implements OnInit {
 
   createMeeting() {
     const lead = this.leadData();
-    if (!lead || !this.newMeeting.title.trim()) return;
+    if (!lead || !this.newMeeting.title.trim() || !this.currentAdmin) return;
     
-    this.appService.createLeadMeeting(lead.id, this.newMeeting).pipe(take(1)).subscribe({
+    this.appService.createLeadMeeting(lead.id, { 
+      adminId: this.currentAdmin.id,
+      title: this.newMeeting.title,
+      description: this.newMeeting.description || undefined,
+      meetingDate: this.newMeeting.meetingDate,
+      location: this.newMeeting.location || undefined,
+      meetingType: this.newMeeting.meetingType || undefined
+    }).pipe(take(1)).subscribe({
       next: () => {
         this.newMeeting = { title: '', description: '', meetingDate: '', location: '', meetingType: 'call' };
         this.showMeetingForm.set(false);
