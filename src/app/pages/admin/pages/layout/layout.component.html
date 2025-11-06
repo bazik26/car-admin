@@ -131,6 +131,17 @@
                 <span>Лиды</span>
               </a>
             </li>
+            <li class="nav-item">
+              <a
+                class="nav-link"
+                [routerLink]="['/admin', 'my-stats']"
+                routerLinkActive="active"
+                title="Моя статистика"
+              >
+                <i class="fas fa-chart-bar"></i>
+                <span>Моя статистика</span>
+              </a>
+            </li>
           </ul>
         </nav>
       </div>
@@ -152,6 +163,29 @@
       >
         <i class="fas fa-chevron-up"></i>
       </button>
+    }
+
+    <!-- Уведомление о новых лидах -->
+    @if (showLeadNotification() && unprocessedLeadsCount() > 0) {
+      <div class="lead-notification" [class.lead-notification--visible]="showLeadNotification()">
+        <div class="lead-notification-content">
+          <div class="lead-notification-icon">
+            <i class="fas fa-exclamation-circle"></i>
+          </div>
+          <div class="lead-notification-text">
+            <strong>У вас есть новый лид</strong>
+            <p>Обратите внимание! Необработанных лидов: {{ unprocessedLeadsCount() }}</p>
+          </div>
+          <div class="lead-notification-actions">
+            <button class="btn-notification-action" (click)="navigateToLeads()">
+              <i class="fas fa-arrow-right"></i>
+            </button>
+            <button class="btn-notification-close" (click)="dismissNotification()">
+              <i class="fas fa-times"></i>
+            </button>
+          </div>
+        </div>
+      </div>
     }
   </div>
 }

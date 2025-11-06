@@ -1,10 +1,14 @@
-import { Component, inject, OnInit, OnDestroy, HostListener } from '@angular/core';
+import { Component, inject, OnInit, OnDestroy, HostListener, signal } from '@angular/core';
 import {
   Router,
   RouterLink,
   RouterLinkActive,
   RouterOutlet,
 } from '@angular/router';
+import { CommonModule } from '@angular/common';
+import { interval, Subscription } from 'rxjs';
+import { catchError } from 'rxjs/operators';
+import { of } from 'rxjs';
 
 import { AppService } from '../../../../services/app.service';
 import { AuthService } from '../../../../services/auth.service';
@@ -12,7 +16,7 @@ import { AuthService } from '../../../../services/auth.service';
 @Component({
   selector: 'app-admin-layout',
   standalone: true,
-  imports: [RouterOutlet, RouterLinkActive, RouterLink],
+  imports: [RouterOutlet, RouterLinkActive, RouterLink, CommonModule],
   templateUrl: './layout.component.html',
   styleUrls: ['./layout.component.scss'],
 })
@@ -24,6 +28,9 @@ export class AdminLayoutComponent implements OnInit, OnDestroy {
   public admin!: any;
   public headerCollapsed = false;
   public headerHeight = 200; // Высота хедера в пикселях
+  public unprocessedLeadsCount = signal(0);
+  public showLeadNotification = signal(false);
+  private leadsCheckSubscription?: Subscription;
 
   ngOnInit() {
     this.appService.auth().subscribe({
@@ -31,11 +38,38 @@ export class AdminLayoutComponent implements OnInit, OnDestroy {
         this.admin = admin;
         // Рассчитываем высоту хедера после загрузки
         setTimeout(() => this.calculateHeaderHeight(), 100);
+        
+        // Начинаем проверку необработанных лидов
+        this.checkUnprocessedLeads();
+        this.leadsCheckSubscription = interval(30000).subscribe(() => {
+          this.checkUnprocessedLeads();
+        });
       },
       error: () => {
         this.authService.handleTokenExpiry();
       }
     });
+  }
+
+  private checkUnprocessedLeads(): void {
+    this.appService.getUnprocessedLeadsCount().pipe(
+      catchError(() => of({ count: 0 }))
+    ).subscribe({
+      next: (response: any) => {
+        const count = response.count || 0;
+        this.unprocessedLeadsCount.set(count);
+        this.showLeadNotification.set(count > 0);
+      }
+    });
+  }
+
+  public navigateToLeads(): void {
+    this.router.navigate(['/admin', 'leads']);
+    this.showLeadNotification.set(false);
+  }
+
+  public dismissNotification(): void {
+    this.showLeadNotification.set(false);
   }
 
   /**
@@ -88,6 +122,8 @@ export class AdminLayoutComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    // Очистка ресурсов при уничтожении компонента
+    if (this.leadsCheckSubscription) {
+      this.leadsCheckSubscription.unsubscribe();
+    }
   }
 }

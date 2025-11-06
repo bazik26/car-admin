@@ -411,4 +411,16 @@ export class AppService {
       .post(`${this.API_URL}/leads/${leadId}/convert-to-client`, {})
       .pipe(map((response) => response));
   }
+
+  getUnprocessedLeadsCount(): Observable<any> {
+    return this.http
+      .get(`${this.API_URL}/leads/stats/unprocessed-count`)
+      .pipe(map((response) => response));
+  }
+
+  getAdminStats(adminId: number): Observable<any> {
+    return this.http
+      .get(`${this.API_URL}/stats/admin/${adminId}/productivity`)
+      .pipe(map((response) => response));
+  }
 }

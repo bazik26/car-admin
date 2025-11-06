@@ -207,9 +207,15 @@ export class LeadsPage implements OnInit {
 
   openDetailsModal(lead: Lead) {
     console.log('openDetailsModal called with lead:', lead);
+    // Сначала показываем модальное окно с базовыми данными
     this.selectedLead.set(lead);
     this.showDetailsModal.set(true);
     this.activeTab.set('info');
+    
+    // Предотвращаем скролл body при открытом модальном окне
+    if (typeof document !== 'undefined') {
+      document.body.style.overflow = 'hidden';
+    }
     
     // Загружаем полные данные лида с сервера
     this.appService.getLead(lead.id).pipe(take(1)).subscribe({
@@ -244,6 +250,10 @@ export class LeadsPage implements OnInit {
   closeDetailsModal() {
     this.showDetailsModal.set(false);
     this.selectedLead.set(null);
+    // Восстанавливаем скролл body
+    if (typeof document !== 'undefined') {
+      document.body.style.overflow = 'auto';
+    }
     this.chatMessages.set([]);
     this.leadTasks.set([]);
     this.leadAttachments.set([]);
