@@ -1,4 +1,4 @@
-import { Component, OnInit, signal, inject, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit, AfterViewChecked, signal, inject, ViewEncapsulation, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
@@ -118,10 +118,11 @@ interface ChatMessage {
   styleUrls: ['./leads.page.scss'],
   encapsulation: ViewEncapsulation.None
 })
-export class LeadsPage implements OnInit {
+export class LeadsPage implements OnInit, AfterViewChecked {
   private readonly http = inject(HttpClient);
   public readonly appService = inject(AppService);
   private readonly modal = inject(BsModalService);
+  private readonly cdr = inject(ChangeDetectorRef);
   
   private readonly API_URL = 'https://car-api-production.up.railway.app';
 
@@ -173,6 +174,16 @@ export class LeadsPage implements OnInit {
     this.loadLeads();
   }
 
+  ngAfterViewChecked() {
+    // Перемещаем модальное окно в body, если оно открыто и находится не в body
+    if (this.showDetailsModal() && typeof document !== 'undefined') {
+      const modalOverlay = document.querySelector('.modal-overlay');
+      if (modalOverlay && modalOverlay.parentElement !== document.body) {
+        document.body.appendChild(modalOverlay);
+      }
+    }
+  }
+
   loadAdmin() {
     this.appService.auth().subscribe((admin: any) => {
       this.admin = admin;
@@ -218,33 +229,14 @@ export class LeadsPage implements OnInit {
       event.preventDefault();
     }
     
-    // Сначала показываем модальное окно с базовыми данными
-    this.selectedLead.set(lead);
-    this.showDetailsModal.set(true);
-    this.activeTab.set('info');
-    
-    console.log('Modal state:', { 
-      showDetailsModal: this.showDetailsModal(), 
-      selectedLead: this.selectedLead() 
-    });
-    
-    // Принудительно обновляем представление
-    setTimeout(() => {
-      console.log('Modal state after timeout:', { 
-        showDetailsModal: this.showDetailsModal(), 
-        selectedLead: this.selectedLead() 
-      });
-    }, 100);
-    
-    // Предотвращаем скролл body при открытом модальном окне
-    if (typeof document !== 'undefined') {
-      document.body.style.overflow = 'hidden';
-    }
-    
-    // Загружаем полные данные лида с сервера
+    // Загружаем полные данные лида с сервера перед открытием модального окна
     this.appService.getLead(lead.id).pipe(take(1)).subscribe({
       next: (fullLead: Lead) => {
+        // Используем ngx-bootstrap modal для гарантированного отображения
+        // Временно используем встроенное модальное окно, но с принудительным рендерингом
         this.selectedLead.set(fullLead);
+        this.showDetailsModal.set(true);
+        this.activeTab.set('info');
         
         // Загружаем все данные
         if (fullLead.chatSessionId) {
@@ -255,10 +247,22 @@ export class LeadsPage implements OnInit {
         this.loadLeadMeetings(fullLead.id);
         this.loadLeadActivities(fullLead.id);
         this.loadAllTags();
+        
+        // Принудительно перемещаем модальное окно в body после рендеринга
+        setTimeout(() => {
+          const modalOverlay = document.querySelector('.modal-overlay');
+          if (modalOverlay && modalOverlay.parentElement !== document.body) {
+            document.body.appendChild(modalOverlay);
+          }
+        }, 0);
       },
       error: (error: any) => {
         console.error('Error loading full lead:', error);
         // Используем данные из списка, если не удалось загрузить
+        this.selectedLead.set(lead);
+        this.showDetailsModal.set(true);
+        this.activeTab.set('info');
+        
         if (lead.chatSessionId) {
           this.loadChatMessages(lead.chatSessionId);
         }
@@ -267,6 +271,14 @@ export class LeadsPage implements OnInit {
         this.loadLeadMeetings(lead.id);
         this.loadLeadActivities(lead.id);
         this.loadAllTags();
+        
+        // Принудительно перемещаем модальное окно в body после рендеринга
+        setTimeout(() => {
+          const modalOverlay = document.querySelector('.modal-overlay');
+          if (modalOverlay && modalOverlay.parentElement !== document.body) {
+            document.body.appendChild(modalOverlay);
+          }
+        }, 0);
       }
     });
   }
@@ -277,6 +289,11 @@ export class LeadsPage implements OnInit {
     // Восстанавливаем скролл body
     if (typeof document !== 'undefined') {
       document.body.style.overflow = 'auto';
+      // Удаляем модальное окно из body, если оно там есть
+      const modalOverlay = document.querySelector('.modal-overlay');
+      if (modalOverlay && modalOverlay.parentElement === document.body) {
+        modalOverlay.remove();
+      }
     }
     this.chatMessages.set([]);
     this.leadTasks.set([]);
