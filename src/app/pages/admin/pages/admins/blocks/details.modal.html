@@ -24,7 +24,31 @@
 
     <!-- Modal Body -->
     <div class="modal-body">
-      @if (!isEditing()) {
+      <!-- Tabs Navigation -->
+      <ul class="nav nav-tabs mb-4" role="tablist">
+        <li class="nav-item" role="presentation">
+          <button 
+            class="nav-link" 
+            [class.active]="activeTab() === 'info'"
+            (click)="onTabChange('info')"
+            type="button">
+            <i class="fas fa-info-circle me-2"></i>Информация
+          </button>
+        </li>
+        <li class="nav-item" role="presentation">
+          <button 
+            class="nav-link" 
+            [class.active]="activeTab() === 'stats'"
+            (click)="onTabChange('stats')"
+            type="button">
+            <i class="fas fa-chart-bar me-2"></i>Статистика
+          </button>
+        </li>
+      </ul>
+
+      <!-- Tab Content -->
+      @if (activeTab() === 'info') {
+        @if (!isEditing()) {
         <!-- Режим просмотра -->
         <div class="info-section mb-4">
           <h5 class="mb-3">Основная информация</h5>
@@ -208,6 +232,123 @@
             </div>
           </div>
         </div>
+      }
+      } @else if (activeTab() === 'stats') {
+        <!-- Статистика -->
+        @if (isLoadingStats()) {
+          <div class="text-center p-5">
+            <div class="spinner-border text-primary" role="status">
+              <span class="visually-hidden">Загрузка...</span>
+            </div>
+            <p class="mt-3 text-muted">Загрузка статистики...</p>
+          </div>
+        } @else if (stats(); as statsData) {
+          <!-- Основные метрики -->
+          <div class="stats-grid mb-4">
+            <div class="stat-card stat-card--cars">
+              <div class="stat-card-icon">
+                <i class="fas fa-car"></i>
+              </div>
+              <div class="stat-card-content">
+                <div class="stat-card-value">{{ statsData.carsAdded || 0 }}</div>
+                <div class="stat-card-label">Добавлено машин</div>
+              </div>
+            </div>
+
+            <div class="stat-card stat-card--sold">
+              <div class="stat-card-icon">
+                <i class="fas fa-check-circle"></i>
+              </div>
+              <div class="stat-card-content">
+                <div class="stat-card-value">{{ statsData.soldCars || 0 }}</div>
+                <div class="stat-card-label">Проданных машин</div>
+              </div>
+            </div>
+
+            <div class="stat-card stat-card--leads">
+              <div class="stat-card-icon">
+                <i class="fas fa-user-tie"></i>
+              </div>
+              <div class="stat-card-content">
+                <div class="stat-card-value">{{ statsData.leads?.total || 0 }}</div>
+                <div class="stat-card-label">Всего лидов</div>
+              </div>
+            </div>
+
+            <div class="stat-card stat-card--score">
+              <div class="stat-card-icon">
+                <i class="fas fa-chart-line"></i>
+              </div>
+              <div class="stat-card-content">
+                <div class="stat-card-value">{{ statsData.productivityScore || 0 }}%</div>
+                <div class="stat-card-label">Продуктивность</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Статистика по лидам -->
+          @if (statsData.leads) {
+            <div class="leads-stats-section mb-4">
+              <h5>Статистика по лидам</h5>
+              <div class="leads-stats-grid">
+                <div class="lead-stat-item lead-stat-item--open">
+                  <div class="lead-stat-value">{{ statsData.leads.open || 0 }}</div>
+                  <div class="lead-stat-label">Открытых</div>
+                </div>
+                <div class="lead-stat-item lead-stat-item--progress">
+                  <div class="lead-stat-value">{{ statsData.leads.inProgress || 0 }}</div>
+                  <div class="lead-stat-label">В работе</div>
+                </div>
+                <div class="lead-stat-item lead-stat-item--closed">
+                  <div class="lead-stat-value">{{ statsData.leads.closed || 0 }}</div>
+                  <div class="lead-stat-label">Закрытых</div>
+                </div>
+                <div class="lead-stat-item lead-stat-item--lost">
+                  <div class="lead-stat-value">{{ statsData.leads.lost || 0 }}</div>
+                  <div class="lead-stat-label">Потерянных</div>
+                </div>
+              </div>
+            </div>
+          }
+
+          <!-- Последние операции -->
+          @if (statsData.recentLeads && statsData.recentLeads.length > 0) {
+            <div class="recent-leads-section">
+              <h5>Последние операции</h5>
+              <div class="recent-leads-list">
+                @for (lead of statsData.recentLeads; track lead.id) {
+                  <div class="recent-lead-item">
+                    <div class="lead-info">
+                      <div class="lead-name">{{ lead.name }}</div>
+                      <div class="lead-meta">
+                        <span class="lead-status" [class]="'status-' + lead.status">
+                          {{ getStatusLabel(lead.status) }}
+                        </span>
+                        <span class="lead-priority" [class]="'priority-' + lead.priority">
+                          {{ getPriorityLabel(lead.priority) }}
+                        </span>
+                        @if (lead.score !== undefined) {
+                          <span class="lead-score">Score: {{ lead.score }}</span>
+                        }
+                      </div>
+                    </div>
+                    <div class="lead-date">{{ formatDate(lead.updatedAt) }}</div>
+                  </div>
+                }
+              </div>
+            </div>
+          } @else {
+            <div class="empty-state">
+              <i class="fas fa-inbox"></i>
+              <p>Нет операций</p>
+            </div>
+          }
+        } @else {
+          <div class="empty-state">
+            <i class="fas fa-exclamation-circle"></i>
+            <p>Не удалось загрузить статистику</p>
+          </div>
+        }
       }
     </div>
 

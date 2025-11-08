@@ -54,6 +54,9 @@ export class AdminDetailsModal implements OnInit {
   public adminData = signal<Admin | null>(null);
   public isLoading = signal(true);
   public isEditing = signal(false);
+  public activeTab = signal<'info' | 'stats'>('info');
+  public stats = signal<any>(null);
+  public isLoadingStats = signal(false);
   
   // Форма редактирования
   public editForm = {
@@ -191,6 +194,51 @@ export class AdminDetailsModal implements OnInit {
     const admin = this.adminData();
     if (!admin || !admin.workingDays) return false;
     return admin.workingDays.some(day => day.enabled === true);
+  }
+
+  loadStats() {
+    const admin = this.adminData();
+    if (!admin) return;
+    
+    this.isLoadingStats.set(true);
+    this.appService.getAdminStats(admin.id).pipe(take(1)).subscribe({
+      next: (stats: any) => {
+        this.stats.set(stats);
+        this.isLoadingStats.set(false);
+      },
+      error: (error: any) => {
+        console.error('Error loading admin stats:', error);
+        this.isLoadingStats.set(false);
+      }
+    });
+  }
+
+  onTabChange(tab: 'info' | 'stats') {
+    this.activeTab.set(tab);
+    if (tab === 'stats' && !this.stats()) {
+      this.loadStats();
+    }
+  }
+
+  getStatusLabel(status: string): string {
+    const labels: Record<string, string> = {
+      'new': 'Новый',
+      'in_progress': 'В работе',
+      'contacted': 'Связались',
+      'closed': 'Закрыт',
+      'lost': 'Потерян',
+    };
+    return labels[status] || status;
+  }
+
+  getPriorityLabel(priority: string): string {
+    const labels: Record<string, string> = {
+      'low': 'Низкий',
+      'normal': 'Обычный',
+      'high': 'Высокий',
+      'urgent': 'Срочный',
+    };
+    return labels[priority] || priority;
   }
 }
 
