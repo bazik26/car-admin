@@ -16,16 +16,19 @@
     }
 
     p {
-      color: #6b7280;
+      color: #374151;
       font-size: 14px;
       margin: 0;
+      font-weight: 500;
     }
   }
 
   .loading {
     text-align: center;
     padding: 40px;
-    color: #6b7280;
+    color: #374151;
+    font-weight: 500;
+    font-size: 16px;
   }
 
   .stats-grid {
@@ -106,7 +109,8 @@
 
       &-label {
         font-size: 14px;
-        color: #6b7280;
+        color: #374151;
+        font-weight: 500;
       }
     }
   }
@@ -121,9 +125,11 @@
 
     h2 {
       font-size: 20px;
-      font-weight: 600;
-      color: #1a1a1a;
+      font-weight: 700;
+      color: #111827;
       margin: 0 0 20px 0;
+      border-bottom: 2px solid #e5e7eb;
+      padding-bottom: 12px;
     }
   }
 
@@ -168,8 +174,8 @@
 
       &-label {
         font-size: 13px;
-        color: #6b7280;
-        font-weight: 500;
+        color: #374151;
+        font-weight: 600;
       }
     }
   }
@@ -184,14 +190,16 @@
       justify-content: space-between;
       align-items: center;
       padding: 16px;
-      background: #f9fafb;
+      background: #ffffff;
       border-radius: 8px;
-      border: 1px solid #e5e7eb;
+      border: 1px solid #d1d5db;
       transition: all 0.2s ease;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
 
       &:hover {
-        background: #f3f4f6;
-        border-color: #d1d5db;
+        background: #f9fafb;
+        border-color: #9ca3af;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
       }
 
       .lead-info {
@@ -213,72 +221,84 @@
           .lead-status,
           .lead-priority,
           .lead-score {
-            padding: 4px 10px;
-            border-radius: 12px;
+            padding: 6px 12px;
+            border-radius: 8px;
             font-size: 12px;
-            font-weight: 500;
+            font-weight: 600;
+            border: 1px solid transparent;
           }
 
           .lead-status {
             &.status-new {
-              background: #eff6ff;
-              color: #3b82f6;
+              background: #dbeafe;
+              color: #1e40af;
+              border-color: #3b82f6;
             }
 
             &.status-in_progress {
               background: #fef3c7;
-              color: #f59e0b;
+              color: #92400e;
+              border-color: #f59e0b;
             }
 
             &.status-contacted {
-              background: #f0f9ff;
-              color: #0ea5e9;
+              background: #dbeafe;
+              color: #0c4a6e;
+              border-color: #0ea5e9;
             }
 
             &.status-closed {
               background: #d1fae5;
-              color: #10b981;
+              color: #065f46;
+              border-color: #10b981;
             }
 
             &.status-lost {
               background: #fee2e2;
-              color: #ef4444;
+              color: #991b1b;
+              border-color: #ef4444;
             }
           }
 
           .lead-priority {
             &.priority-low {
               background: #f3f4f6;
-              color: #6b7280;
+              color: #374151;
+              border-color: #9ca3af;
             }
 
             &.priority-normal {
-              background: #eff6ff;
-              color: #3b82f6;
+              background: #dbeafe;
+              color: #1e40af;
+              border-color: #3b82f6;
             }
 
             &.priority-high {
               background: #fef3c7;
-              color: #f59e0b;
+              color: #92400e;
+              border-color: #f59e0b;
             }
 
             &.priority-urgent {
               background: #fee2e2;
-              color: #ef4444;
+              color: #991b1b;
+              border-color: #ef4444;
             }
           }
 
           .lead-score {
-            background: #f3f4f6;
-            color: #1a1a1a;
-            font-weight: 600;
+            background: #f9fafb;
+            color: #111827;
+            font-weight: 700;
+            border-color: #d1d5db;
           }
         }
       }
 
       .lead-date {
         font-size: 13px;
-        color: #6b7280;
+        color: #374151;
+        font-weight: 500;
         white-space: nowrap;
         margin-left: 16px;
       }
