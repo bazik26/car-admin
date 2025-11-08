@@ -11,6 +11,8 @@ import { FormsModule } from '@angular/forms';
 import { BsModalRef } from 'ngx-bootstrap/modal';
 import { AppService } from '../../../../../services/app.service';
 import { take } from 'rxjs';
+import { LeadPipelineComponent } from './lead-pipeline.component';
+import { TaskCardComponent } from './task-card.component';
 
 interface Lead {
   id: number;
@@ -20,6 +22,7 @@ interface Lead {
   source: 'chat' | 'telegram' | 'phone' | 'email' | 'other';
   status: 'new' | 'in_progress' | 'contacted' | 'closed' | 'lost';
   priority: 'low' | 'normal' | 'high' | 'urgent';
+  pipelineStage?: 'new_lead' | 'first_contact' | 'qualification' | 'needs_analysis' | 'presentation' | 'negotiation' | 'deal_closing' | 'won' | 'lost';
   hasTelegramContact?: boolean;
   telegramUsername?: string;
   chatSessionId?: string;
@@ -30,6 +33,14 @@ interface Lead {
   tags?: any[];
   score?: number;
   convertedToClient?: boolean;
+  budget?: { min: number; max: number; currency: string };
+  carPreferences?: any;
+  city?: string;
+  region?: string;
+  timeline?: string;
+  objections?: string;
+  shownCars?: number[];
+  contactAttempts?: number;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -41,7 +52,7 @@ interface LeadComment {
   createdAt: string;
 }
 
-interface LeadTask {
+export interface LeadTask {
   id: number;
   title: string;
   description?: string;
@@ -99,7 +110,7 @@ interface ChatMessage {
 @Component({
   selector: 'app-lead-details-modal',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, LeadPipelineComponent, TaskCardComponent],
   templateUrl: './details.modal.html',
   styleUrls: ['./details.modal.scss'],
   encapsulation: ViewEncapsulation.None,
@@ -550,5 +561,19 @@ export class LeadDetailsModal implements OnInit {
       }
     });
   }
+  
+  getCompletedTasksCount(): number {
+    return this.leadTasks().filter(t => t.completed).length;
+  }
+  
+  getTotalTasksCount(): number {
+    return this.leadTasks().length;
+  }
+  
+  getCurrentPipelineStage(): any {
+    return this.leadData()?.pipelineStage || 'new_lead';
+  }
 }
+
+
 

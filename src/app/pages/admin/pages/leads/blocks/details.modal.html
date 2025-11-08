@@ -101,6 +101,13 @@
         <!-- Info Tab -->
         @if (activeTab() === 'info') {
           <div class="tab-pane fade show active">
+            <!-- НОВЫЙ КОМПОНЕНТ: Pipeline Visualization -->
+            <app-lead-pipeline 
+              [currentStage]="getCurrentPipelineStage()"
+              [completedTasks]="getCompletedTasksCount()"
+              [totalTasks]="getTotalTasksCount()">
+            </app-lead-pipeline>
+            
             <!-- Contact Information -->
             <div class="mb-4">
               <h5 class="mb-3">Контактная информация</h5>
@@ -257,7 +264,10 @@
         @if (activeTab() === 'tasks') {
           <div class="tab-pane fade show active">
             <div class="d-flex justify-content-between align-items-center mb-3">
-              <h5 class="mb-0">Задачи</h5>
+              <h5 class="mb-0">
+                Задачи 
+                <span class="badge bg-primary ms-2">{{ getCompletedTasksCount() }} / {{ getTotalTasksCount() }}</span>
+              </h5>
               <button class="btn btn-primary btn-sm" (click)="showTaskForm.set(!showTaskForm())">
                 <i class="fas fa-plus me-1"></i>Добавить задачу
               </button>
@@ -290,94 +300,11 @@
 
             @if (leadTasks().length > 0) {
               @for (task of leadTasks(); track task.id) {
-                <div class="card mb-2" [class.bg-light]="task.completed">
-                  <div class="card-body p-3">
-                    <div class="d-flex align-items-start">
-                      <input 
-                        type="checkbox" 
-                        class="form-check-input mt-1 me-2"
-                        [checked]="task.completed"
-                        (change)="toggleTask(task)">
-                      <div class="flex-grow-1">
-                        <div class="d-flex align-items-center gap-2 mb-2">
-                          <span class="fw-bold" [class.text-decoration-line-through]="task.completed">
-                            {{ task.title }}
-                          </span>
-                          <span class="badge" [ngClass]="'bg-' + (task.status === 'completed' ? 'success' : task.status === 'in_progress' ? 'info' : 'warning')">
-                            {{ task.status === 'completed' ? 'Выполнена' : task.status === 'in_progress' ? 'В работе' : 'Ожидает' }}
-                          </span>
-                        </div>
-                        @if (task.description) {
-                          <div class="text-muted small mb-2">{{ task.description }}</div>
-                        }
-                        <!-- Отображение данных задачи -->
-                        @if (task.taskData) {
-                          <div class="task-data-info mb-2">
-                            @if (task.taskType === 'contact' && task.taskData.contactMethod) {
-                              <div class="small">
-                                <strong>Способ связи:</strong> {{ task.taskData.contactMethod === 'phone' ? 'Телефон' : task.taskData.contactMethod === 'email' ? 'Email' : 'Telegram' }}
-                              </div>
-                              @if (task.taskData.contactResult) {
-                                <div class="small text-muted mt-1">
-                                  <strong>Результат:</strong> {{ task.taskData.contactResult }}
-                                </div>
-                              }
-                            }
-                            @if (task.taskType === 'car_preferences') {
-                              <div class="small">
-                                @if (task.taskData.preferredBrands?.length > 0) {
-                                  <div><strong>Марки:</strong> {{ task.taskData.preferredBrands.join(', ') }}</div>
-                                }
-                                @if (task.taskData.preferredModels?.length > 0) {
-                                  <div><strong>Модели:</strong> {{ task.taskData.preferredModels.join(', ') }}</div>
-                                }
-                                @if (task.taskData.preferredYearFrom || task.taskData.preferredYearTo) {
-                                  <div><strong>Год:</strong> {{ task.taskData.preferredYearFrom || '?' }} - {{ task.taskData.preferredYearTo || '?' }}</div>
-                                }
-                                @if (task.taskData.preferredMileageMax) {
-                                  <div><strong>Пробег до:</strong> {{ task.taskData.preferredMileageMax }} км</div>
-                                }
-                              </div>
-                            }
-                            @if (task.taskType === 'region' && (task.taskData.region || task.taskData.city)) {
-                              <div class="small">
-                                <strong>Регион:</strong> {{ task.taskData.region || 'Не указан' }}
-                                @if (task.taskData.city) {
-                                  <span>, {{ task.taskData.city }}</span>
-                                }
-                              </div>
-                            }
-                            @if (task.taskType === 'budget' && (task.taskData.budgetMin || task.taskData.budgetMax)) {
-                              <div class="small">
-                                <strong>Бюджет:</strong> 
-                                {{ task.taskData.budgetMin || '?' }} - {{ task.taskData.budgetMax || '?' }} 
-                                {{ task.taskData.currency || 'RUB' }}
-                              </div>
-                            }
-                            @if (task.taskType === 'register_lead' || task.taskType === 'additional_info') {
-                              @if (task.taskData.additionalNotes) {
-                                <div class="small text-muted mt-1">
-                                  {{ task.taskData.additionalNotes }}
-                                </div>
-                              }
-                            }
-                          </div>
-                        }
-                        <div class="d-flex gap-3 mt-2">
-                          @if (task.dueDate) {
-                            <small [class.text-danger]="isOverdue(task.dueDate)">
-                              <i class="fas fa-clock me-1"></i>{{ formatDate(task.dueDate) }}
-                            </small>
-                          }
-                          <small class="text-muted">{{ task.admin?.email || 'Админ' }}</small>
-                        </div>
-                      </div>
-                      <button class="btn btn-danger btn-sm" (click)="deleteTask(task.id)">
-                        <i class="fas fa-trash"></i>
-                      </button>
-                    </div>
-                  </div>
-                </div>
+                <app-task-card 
+                  [task]="task"
+                  (onToggle)="toggleTask($event)"
+                  (onDelete)="deleteTask($event)">
+                </app-task-card>
               }
             } @else {
               <p class="text-muted">Задач пока нет</p>
