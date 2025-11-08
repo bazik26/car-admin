@@ -74,28 +74,40 @@ export class TaskDetailsModalComponent implements OnInit {
     for (const line of lines) {
       const trimmed = line.trim();
       
-      // Находим секцию "ЧТО УЗНАТЬ"
-      if (trimmed.match(/^📋 ЧТО УЗНАТЬ/i) || trimmed.match(/^📝 ЧТО ОТМЕТИТЬ/i)) {
+      // Находим секцию "ЧТО УЗНАТЬ" или "ЧТО ОТМЕТИТЬ"
+      if (trimmed.match(/^📋\s*ЧТО УЗНАТЬ/i) || 
+          trimmed.match(/^📝\s*ЧТО ОТМЕТИТЬ/i) ||
+          trimmed.match(/^ЧТО УЗНАТЬ/i) ||
+          trimmed.match(/^ЧТО ОТМЕТИТЬ/i)) {
         inChecklistSection = true;
         continue;
       }
       
-      // Выходим из секции при следующем заголовке
-      if (trimmed.match(/^[🎯📞💬⚡💡📅]/) && inChecklistSection) {
+      // Выходим из секции при следующем заголовке с эмодзи или разделителе
+      if ((trimmed.match(/^[🎯📞💬⚡💡📅📋📝]/) || trimmed.match(/^━━+/)) && inChecklistSection && trimmed.length > 3) {
         inChecklistSection = false;
       }
       
-      if (inChecklistSection) {
-        // Парсим строки вида "Полное имя: Рустем" или "Email: _____"
+      if (inChecklistSection && trimmed.length > 0) {
+        // Парсим строки вида:
+        // "- ✓ Полное имя: Рустем"
+        // "- ✓ Email: _____"
+        // "Полное имя: Рустем"
+        // "Email: _______"
         const match = trimmed.match(/^-?\s*✓?\s*([^:]+):\s*(.+)$/);
         if (match) {
           const label = match[1].trim();
           const value = match[2].trim();
           const key = this.generateFieldKey(label);
           
-          // Проверяем, заполнено ли поле (не пустое и не только подчеркивания)
-          const isFilled = value && !value.match(/^_+$/);
+          // Проверяем, заполнено ли поле (не пустое и не только подчеркивания/пробелы)
+          const isFilled = value && !value.match(/^[_\-\.\s]+$/) && value.length > 0;
           const currentValue = this.taskForm.taskData[key] || (isFilled ? value : '');
+          
+          // Пропускаем пустые значения из описания (только подчеркивания)
+          if (!isFilled && !this.taskForm.taskData[key]) {
+            // Оставляем пустое значение для заполнения
+          }
           
           fields.push({
             key,
@@ -112,7 +124,7 @@ export class TaskDetailsModalComponent implements OnInit {
     // Инициализируем значения полей в taskForm.taskData
     fields.forEach(field => {
       if (!this.taskForm.taskData[field.key]) {
-        this.taskForm.taskData[field.key] = field.value;
+        this.taskForm.taskData[field.key] = field.value || '';
       }
     });
   }
