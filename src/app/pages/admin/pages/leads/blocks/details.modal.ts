@@ -639,8 +639,8 @@ export class LeadDetailsModal implements OnInit {
     if (!lead) return;
     
     this.appService.updateLead(lead.id, { pipelineStage: newStage }).pipe(take(1)).subscribe({
-      next: (updatedLead: Lead) => {
-        this.leadData.set(updatedLead);
+      next: () => {
+        this.loadFullLeadData();
         this.loadLeadActivities(lead.id);
       },
       error: (error: any) => {
