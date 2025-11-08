@@ -421,11 +421,69 @@ export class LeadDetailsModal implements OnInit {
       next: () => {
         const lead = this.leadData();
         if (lead) {
-          this.loadLeadTasks(lead.id);
-          this.loadLeadActivities(lead.id);
+          // Перезагружаем данные лида (включая обновленный pipelineStage)
+          this.loadFullLeadData();
+          
+          // Показываем уведомление об автопереходе
+          if (!task.completed) {
+            // Задача только что была выполнена
+            setTimeout(() => {
+              this.showStageChangeNotification();
+            }, 500);
+          }
         }
       }
     });
+  }
+  
+  // Показать уведомление о смене этапа
+  private showStageChangeNotification() {
+    // Проверяем, изменился ли этап
+    const currentStage = this.getCurrentPipelineStage();
+    const stageNames: any = {
+      'new_lead': 'Новый лид',
+      'first_contact': 'Первый контакт',
+      'qualification': 'Квалификация',
+      'needs_analysis': 'Выявление потребностей',
+      'presentation': 'Презентация',
+      'negotiation': 'Переговоры',
+      'deal_closing': 'Закрытие сделки',
+      'won': 'Успех! 🎉',
+      'lost': 'Отказ'
+    };
+    
+    // Создаем уведомление (toast)
+    const toast = document.createElement('div');
+    toast.className = 'stage-change-toast';
+    toast.innerHTML = `
+      <div class="toast-content">
+        <i class="fas fa-arrow-circle-up text-success"></i>
+        <div>
+          <strong>Этап обновлен!</strong>
+          <p class="mb-0">Лид перешел на этап: ${stageNames[currentStage] || currentStage}</p>
+        </div>
+      </div>
+    `;
+    toast.style.cssText = `
+      position: fixed;
+      top: 80px;
+      right: 20px;
+      background: white;
+      padding: 16px 20px;
+      border-radius: 12px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+      border-left: 4px solid #10b981;
+      z-index: 9999;
+      animation: slideInRight 0.3s ease;
+      min-width: 300px;
+    `;
+    
+    document.body.appendChild(toast);
+    
+    setTimeout(() => {
+      toast.style.animation = 'slideOutRight 0.3s ease';
+      setTimeout(() => toast.remove(), 300);
+    }, 3000);
   }
 
   deleteTask(taskId: number) {
