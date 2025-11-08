@@ -58,6 +58,18 @@
 
         <nav class="header-nav animate-fade-in">
           <ul class="nav nav-pills nav-elevated">
+            <li class="nav-item">
+              <a
+                class="nav-link"
+                [routerLink]="['/admin']"
+                routerLinkActive="active"
+                [routerLinkActiveOptions]="{exact: true}"
+                title="Главная страница"
+              >
+                <i class="fas fa-home"></i>
+                <span>Главная</span>
+              </a>
+            </li>
             @if (admin.isSuper) {
               <li class="nav-item">
                 <a

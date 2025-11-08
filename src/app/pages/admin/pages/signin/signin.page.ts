@@ -51,7 +51,7 @@ export class SigninPage implements OnInit, OnDestroy {
     this.appService
       .auth()
       .subscribe({
-        next: (auth) => this.router.navigate(['/admin/cars']),
+        next: (auth) => this.router.navigate(['/admin']),
         error: () => {
           this.authService.logout();
         }
@@ -98,7 +98,7 @@ export class SigninPage implements OnInit, OnDestroy {
     this.appService.signin(this.form.value).subscribe({
       next: (res) => {
         this.authService.setToken(res.AUTH_KEY);
-        this.router.navigate(['/admin/cars']);
+        this.router.navigate(['/admin']);
       },
       error: () => {
         this.error = 'Неверный логин или пароль';
