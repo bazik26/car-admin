@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, inject, OnInit, signal, ViewEncapsulation } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { BsModalRef } from 'ngx-bootstrap/modal';
@@ -33,7 +33,8 @@ export interface Task {
   standalone: true,
   imports: [CommonModule, FormsModule],
   templateUrl: './task-details.modal.html',
-  styleUrls: ['./task-details.modal.scss']
+  styleUrls: ['./task-details.modal.scss'],
+  encapsulation: ViewEncapsulation.None
 })
 export class TaskDetailsModalComponent implements OnInit {
   public readonly bsModalRef = inject(BsModalRef);

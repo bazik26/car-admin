@@ -71,149 +71,148 @@
       font-size: 14px;
       line-height: 1.8;
       color: #374151;
-      
-      ::ng-deep {
-        .section-header {
-          display: flex;
-          align-items: center;
-          gap: 8px;
-          margin: 20px 0 12px 0;
-          font-weight: 700;
-          color: #1f2937;
-          font-size: 15px;
-          padding-bottom: 8px;
-          border-bottom: 2px solid #e5e7eb;
-        }
-        
-        .section-header:first-child {
-          margin-top: 0;
-        }
-        
-        .goal-block {
-          background: #eff6ff;
-          padding: 12px 16px;
-          border-radius: 6px;
-          margin: 12px 0;
-          border-left: 3px solid #3b82f6;
-        }
-        
-        .script-block {
-          background: #f0fdf4;
-          padding: 16px;
-          border-radius: 6px;
-          margin: 12px 0;
-          border-left: 3px solid #10b981;
-        }
-        
-        .checklist-block {
-          background: #fffbeb;
-          padding: 16px;
-          border-radius: 6px;
-          margin: 12px 0;
-          border-left: 3px solid #f59e0b;
-        }
-        
-        .deadline-block {
-          background: #fef2f2;
-          padding: 12px 16px;
-          border-radius: 6px;
-          margin: 12px 0;
-          border-left: 3px solid #ef4444;
-          font-weight: 600;
-        }
-        
-        .checkbox-item {
-          display: flex;
-          align-items: flex-start;
-          gap: 8px;
-          margin: 8px 0;
-          padding: 4px 0;
-        }
-        
-        .checkbox-item input[type="checkbox"] {
-          margin-top: 4px;
-          flex-shrink: 0;
-        }
-        
-        .checkbox-item label {
-          flex: 1;
-          cursor: pointer;
-        }
-        
-        .checkbox-item .bullet {
-          color: #f59e0b;
-          font-weight: bold;
-          margin-right: 4px;
-        }
-        
-        .input-field {
-          display: flex;
-          align-items: baseline;
-          gap: 8px;
-          margin: 8px 0;
-          padding: 6px 0;
-        }
-        
-        .input-field label {
-          font-weight: 600;
-          color: #374151;
-          min-width: 80px;
-        }
-        
-        .input-field .input-placeholder {
-          color: #9ca3af;
-          font-family: 'Courier New', monospace;
-          letter-spacing: 2px;
-        }
-        
-        .input-field span:not(.input-placeholder) {
-          color: #1f2937;
-        }
-        
-        .table-row {
-          display: flex;
-          gap: 12px;
-          margin: 6px 0;
-          padding: 6px 0;
-          border-bottom: 1px solid #e5e7eb;
-        }
-        
-        .table-cell {
-          flex: 1;
-          padding: 4px 8px;
-          background: #f9fafb;
-          border-radius: 4px;
-        }
-        
-        strong {
-          color: #1f2937;
-          font-weight: 600;
-        }
-        
-        em {
-          color: #6b7280;
-          font-style: italic;
-        }
-        
-        code {
-          background: #f3f4f6;
-          padding: 2px 6px;
-          border-radius: 4px;
-          font-family: 'Courier New', monospace;
-          font-size: 13px;
-          color: #dc2626;
-        }
-        
-        hr {
-          border: none;
-          border-top: 2px solid #e5e7eb;
-          margin: 16px 0;
-        }
-        
-        p {
-          margin: 10px 0;
-        }
-      }
+    }
+    
+    // Глобальные стили для форматирования (без ::ng-deep, так как ViewEncapsulation.None)
+    .task-description .section-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin: 20px 0 12px 0;
+      font-weight: 700;
+      color: #1f2937;
+      font-size: 15px;
+      padding-bottom: 8px;
+      border-bottom: 2px solid #e5e7eb;
+    }
+    
+    .task-description .section-header:first-child {
+      margin-top: 0;
+    }
+    
+    .task-description .goal-block {
+      background: #eff6ff;
+      padding: 12px 16px;
+      border-radius: 6px;
+      margin: 12px 0;
+      border-left: 3px solid #3b82f6;
+    }
+    
+    .task-description .script-block {
+      background: #f0fdf4;
+      padding: 16px;
+      border-radius: 6px;
+      margin: 12px 0;
+      border-left: 3px solid #10b981;
+    }
+    
+    .task-description .checklist-block {
+      background: #fffbeb;
+      padding: 16px;
+      border-radius: 6px;
+      margin: 12px 0;
+      border-left: 3px solid #f59e0b;
+    }
+    
+    .task-description .deadline-block {
+      background: #fef2f2;
+      padding: 12px 16px;
+      border-radius: 6px;
+      margin: 12px 0;
+      border-left: 3px solid #ef4444;
+      font-weight: 600;
+    }
+    
+    .task-description .checkbox-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      margin: 8px 0;
+      padding: 4px 0;
+    }
+    
+    .task-description .checkbox-item input[type="checkbox"] {
+      margin-top: 4px;
+      flex-shrink: 0;
+    }
+    
+    .task-description .checkbox-item label {
+      flex: 1;
+      cursor: pointer;
+    }
+    
+    .task-description .checkbox-item .bullet {
+      color: #f59e0b;
+      font-weight: bold;
+      margin-right: 4px;
+    }
+    
+    .task-description .input-field {
+      display: flex;
+      align-items: baseline;
+      gap: 8px;
+      margin: 8px 0;
+      padding: 6px 0;
+    }
+    
+    .task-description .input-field label {
+      font-weight: 600;
+      color: #374151;
+      min-width: 80px;
+    }
+    
+    .task-description .input-field .input-placeholder {
+      color: #9ca3af;
+      font-family: 'Courier New', monospace;
+      letter-spacing: 2px;
+    }
+    
+    .task-description .input-field span:not(.input-placeholder) {
+      color: #1f2937;
+    }
+    
+    .task-description .table-row {
+      display: flex;
+      gap: 12px;
+      margin: 6px 0;
+      padding: 6px 0;
+      border-bottom: 1px solid #e5e7eb;
+    }
+    
+    .task-description .table-cell {
+      flex: 1;
+      padding: 4px 8px;
+      background: #f9fafb;
+      border-radius: 4px;
+    }
+    
+    .task-description strong {
+      color: #1f2937;
+      font-weight: 600;
+    }
+    
+    .task-description em {
+      color: #6b7280;
+      font-style: italic;
+    }
+    
+    .task-description code {
+      background: #f3f4f6;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-family: 'Courier New', monospace;
+      font-size: 13px;
+      color: #dc2626;
+    }
+    
+    .task-description hr {
+      border: none;
+      border-top: 2px solid #e5e7eb;
+      margin: 16px 0;
+    }
+    
+    .task-description p {
+      margin: 10px 0;
     }
   }
   
