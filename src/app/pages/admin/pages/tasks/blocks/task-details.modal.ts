@@ -113,12 +113,26 @@ export class TaskDetailsModalComponent implements OnInit {
         // Парсим строки вида:
         // "- ✓ Полное имя: Рустем"
         // "- ✓ Email: _____"
+        // "- ✓ Год от: _______"
         // "Полное имя: Рустем"
         // "Email: _______"
         const match = trimmed.match(/^-?\s*✓?\s*([^:]+):\s*(.+)$/);
         if (match) {
-          const label = match[1].trim();
-          const value = match[2].trim();
+          let label = match[1].trim();
+          let value = match[2].trim();
+          
+          // Обрабатываем "Пробег до: _______ км"
+          if (label.includes('Пробег') && value.includes('км')) {
+            value = value.replace(/км/g, '').trim();
+          }
+          
+          // Обрабатываем "Бюджет от: _____ ₽" и "Бюджет до: _____ ₽"
+          if (label.includes('Бюджет')) {
+            if (value.includes('₽')) {
+              value = value.replace(/₽/g, '').trim();
+            }
+          }
+          
           const key = this.generateFieldKey(label);
           
           // Проверяем, заполнено ли поле (не пустое и не только подчеркивания/пробелы)
@@ -162,7 +176,55 @@ export class TaskDetailsModalComponent implements OnInit {
       'Дата/время звонка': 'callDateTime',
       'Клиент взял трубку': 'clientAnswered',
       'Удобное время для разговора': 'convenientTime',
-      'Результат': 'result',
+      'Результат': 'callResult',
+      // Поля из таска 3 (предпочтения по автомобилям)
+      'Марки': 'preferredBrands',
+      'Модели': 'preferredModels',
+      'Год от': 'preferredYearFrom',
+      'Год до': 'preferredYearTo',
+      'Пробег до': 'preferredMileageMax',
+      // Поля из таска 4 (бюджет)
+      'Бюджет от': 'budgetMin',
+      'Бюджет до': 'budgetMax',
+      // Поля из таска 5 (регион)
+      'Регион': 'region',
+      'Город': 'city',
+      // Поля из таска 6 (сроки)
+      'Сроки': 'timeline',
+      // Поля из таска 7 (отправить подборку)
+      'Количество отправленных вариантов': 'offersCount',
+      'Дата отправки': 'offersSentDate',
+      'Способ отправки': 'offersMethod',
+      // Поля из таска 8 (расчет стоимости)
+      'Дата отправки расчета': 'calculationSentDate',
+      'Клиент понял стоимость': 'clientUnderstoodPrice',
+      'Возражения по цене': 'priceObjections',
+      // Поля из таска 9 (фото)
+      'Количество отправленных фото': 'photosCount',
+      'Клиент запросил дополнительные фото': 'clientRequestedPhotos',
+      // Поля из таска 10 (follow-up)
+      'Реакция клиента': 'clientReaction',
+      'Возражения': 'objections',
+      'Следующий шаг': 'nextStep',
+      // Поля из таска 11 (возражения)
+      'Тип возражения': 'objectionType',
+      'Ответ клиенту': 'objectionResponse',
+      'Результат обработки возражения': 'objectionResult',
+      // Поля из таска 12 (встреча)
+      'Дата/время встречи': 'meetingDateTime',
+      'Формат': 'meetingFormat',
+      'Подтверждено клиентом': 'meetingConfirmed',
+      // Поля из таска 13 (договор)
+      'Дата отправки договора': 'contractSentDate',
+      'Договор подписан': 'contractSigned',
+      'Первый платеж получен': 'firstPaymentReceived',
+      // Поля из таска 14 (предоплата)
+      'Сумма предоплаты': 'prepaymentAmount',
+      'Дата получения': 'prepaymentDate',
+      'Способ оплаты': 'paymentMethod',
+      // Поля из таска 15 (подтверждение сделки)
+      'Сделка подтверждена': 'dealConfirmed',
+      'Дата начала оформления': 'dealStartDate',
     };
     
     const normalizedLabel = label.trim();
@@ -285,29 +347,67 @@ export class TaskDetailsModalComponent implements OnInit {
     // Обновляем информацию о лиде на основе собранных данных из задачи
     const leadUpdate: any = {};
     
-    if (taskData.email) leadUpdate.email = taskData.email;
-    if (taskData.phone) leadUpdate.phone = taskData.phone;
-    if (taskData.telegram) leadUpdate.telegramUsername = taskData.telegram;
-    if (taskData.deliveryCity) leadUpdate.city = taskData.deliveryCity;
-    if (taskData.region) leadUpdate.region = taskData.region;
-    if (taskData.purchaseTimeline) leadUpdate.timeline = taskData.purchaseTimeline;
-    if (taskData.budgetMin || taskData.budgetMax) {
+    // Базовые контактные данные (из таска 1 и 2)
+    if (taskData.email || taskData.email === '') leadUpdate.email = taskData.email;
+    if (taskData.phone || taskData.phone === '') leadUpdate.phone = taskData.phone;
+    if (taskData.telegram || taskData.telegram === '') leadUpdate.telegramUsername = taskData.telegram;
+    if (taskData.fullName || taskData.fullName === '') leadUpdate.name = taskData.fullName;
+    
+    // Регион и город (из таска 5)
+    if (taskData.region || taskData.region === '') leadUpdate.region = taskData.region;
+    if (taskData.city || taskData.city === '') leadUpdate.city = taskData.city;
+    if (taskData.deliveryCity || taskData.deliveryCity === '') leadUpdate.city = taskData.deliveryCity;
+    
+    // Сроки (из таска 6)
+    if (taskData.timeline || taskData.timeline === '') leadUpdate.timeline = taskData.timeline;
+    if (taskData.purchaseTimeline || taskData.purchaseTimeline === '') leadUpdate.timeline = taskData.purchaseTimeline;
+    
+    // Бюджет (из таска 4)
+    if (taskData.budgetMin || taskData.budgetMax || taskData.budgetMin === 0 || taskData.budgetMax === 0) {
       leadUpdate.budget = {
         min: taskData.budgetMin || 0,
         max: taskData.budgetMax || 0,
         currency: taskData.currency || 'RUB'
       };
     }
-    if (taskData.preferredBrands || taskData.preferredModels) {
+    
+    // Предпочтения по автомобилям (из таска 3)
+    if (taskData.preferredBrands || taskData.preferredModels || taskData.preferredYearFrom || taskData.preferredYearTo || taskData.preferredMileageMax) {
+      const brands = taskData.preferredBrands ? 
+        (Array.isArray(taskData.preferredBrands) ? taskData.preferredBrands : 
+         taskData.preferredBrands.split(',').map((b: string) => b.trim()).filter((b: string) => b.length > 0)) : [];
+      const models = taskData.preferredModels ? 
+        (Array.isArray(taskData.preferredModels) ? taskData.preferredModels : 
+         taskData.preferredModels.split(',').map((m: string) => m.trim()).filter((m: string) => m.length > 0)) : [];
+      
       leadUpdate.carPreferences = {
-        brands: Array.isArray(taskData.preferredBrands) ? taskData.preferredBrands : 
-                (taskData.preferredBrands ? taskData.preferredBrands.split(',').map((b: string) => b.trim()) : []),
-        models: Array.isArray(taskData.preferredModels) ? taskData.preferredModels : 
-                (taskData.preferredModels ? taskData.preferredModels.split(',').map((m: string) => m.trim()) : []),
-        yearFrom: taskData.preferredYearFrom,
-        yearTo: taskData.preferredYearTo,
-        maxMileage: taskData.preferredMileageMax
+        brands: brands,
+        models: models,
+        yearFrom: taskData.preferredYearFrom || taskData.preferredYear?.split(' ')[1] || null,
+        yearTo: taskData.preferredYearTo || taskData.preferredYear?.split(' ')[3] || null,
+        maxMileage: taskData.preferredMileageMax || taskData.preferredMileage || null
       };
+    }
+    
+    // Возражения (из таска 11)
+    if (taskData.objectionType || taskData.objectionType === '') {
+      if (!leadUpdate.objections) leadUpdate.objections = [];
+      leadUpdate.objections.push({
+        type: taskData.objectionType,
+        response: taskData.objectionResponse || '',
+        result: taskData.objectionResult || ''
+      });
+    }
+    
+    // Показанные автомобили (из таска 7)
+    if (taskData.offersCount) {
+      leadUpdate.shownCars = (leadUpdate.shownCars || 0) + parseInt(taskData.offersCount);
+    }
+    
+    // Попытки контакта (из таска 1)
+    if (taskData.clientAnswered === 'Да' || taskData.clientAnswered === 'Нет') {
+      leadUpdate.contactAttempts = (leadUpdate.contactAttempts || 0) + 1;
+      leadUpdate.lastContactAttemptAt = new Date();
     }
 
     // Обновляем лид, если есть данные для обновления

@@ -20,12 +20,20 @@
     
     .task-info-section {
       .form-label {
-        color: #495057 !important;
-        font-weight: 500;
+        color: #1e293b !important;
+        font-weight: 600;
       }
       
       .form-control-plaintext {
         color: #212529 !important;
+      }
+    }
+    
+    .task-fields-section {
+      .form-label {
+        color: #1e293b !important;
+        font-weight: 600;
+        font-size: 14px;
       }
     }
     
@@ -40,8 +48,9 @@
       }
       
       .form-label {
-        color: #495057 !important;
-        font-weight: 500;
+        color: #1e293b !important;
+        font-weight: 600;
+        font-size: 14px;
       }
       
       .form-control, .form-select {
