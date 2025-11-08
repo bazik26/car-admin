@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter, signal } from '@angular/core';
+import { Component, Input, Output, EventEmitter, signal, ViewEncapsulation } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 interface LeadTask {
@@ -18,6 +18,7 @@ interface LeadTask {
   selector: 'app-task-card',
   standalone: true,
   imports: [CommonModule],
+  encapsulation: ViewEncapsulation.None,
   template: `
     <div class="task-card" [class.completed]="task.completed" [class.overdue]="isOverdue()">
       <div class="task-header">
@@ -348,7 +349,32 @@ interface LeadTask {
         border-radius: 4px;
         font-weight: 600;
       }
+      
+      .input-field {
+        display: flex;
+        align-items: baseline;
+        gap: 8px;
+        margin: 8px 0;
+        padding: 6px 0;
+      }
+      
+      .input-field label {
+        font-weight: 600;
+        color: #374151;
+        min-width: 80px;
+      }
+      
+      .input-field .input-placeholder {
+        color: #9ca3af;
+        font-family: 'Courier New', monospace;
+        letter-spacing: 2px;
+      }
+      
+      .input-field span:not(.input-placeholder) {
+        color: #1f2937;
+      }
     }
+    
     
     .task-show-script-btn {
       margin-top: 12px;
@@ -435,7 +461,9 @@ export class TaskCardComponent {
               break;
           }
           
-          result.push(blockHtml);
+          if (blockHtml) {
+            result.push(blockHtml);
+          }
         }
         currentBlock = null;
       }
@@ -444,16 +472,43 @@ export class TaskCardComponent {
     for (let i = 0; i < lines.length; i++) {
       const line = lines[i].trim();
       
-      // Заголовки секций
-      if (line.match(/^🎯 ЦЕЛЬ:?/i)) {
+      // Заголовки секций (проверяем, есть ли контент на той же строке)
+      if (line.match(/^🎯 ЦЕЛЬ:?\s*(.+)$/i)) {
+        closeCurrentBlock();
+        const match = line.match(/^🎯 ЦЕЛЬ:?\s*(.+)$/i);
+        result.push('<div class="section-header"><span>🎯</span><span>ЦЕЛЬ</span></div>');
+        if (match && match[1].trim()) {
+          result.push(`<div class="goal-block">${this.formatBlockContent(match[1].trim())}</div>`);
+        } else {
+          currentBlock = { type: 'goal', content: [] };
+        }
+      } else if (line.match(/^📞 СКРИПТ ЗВОНКА:?\s*(.+)$/i)) {
+        closeCurrentBlock();
+        const match = line.match(/^📞 СКРИПТ ЗВОНКА:?\s*(.+)$/i);
+        result.push('<div class="section-header"><span>📞</span><span>СКРИПТ ЗВОНКА</span></div>');
+        if (match && match[1].trim()) {
+          result.push(`<div class="script-block">${this.formatBlockContent(match[1].trim())}</div>`);
+        } else {
+          currentBlock = { type: 'script', content: [] };
+        }
+      } else if (line.match(/^💬 СКРИПТ:?\s*(.+)$/i)) {
+        closeCurrentBlock();
+        const match = line.match(/^💬 СКРИПТ:?\s*(.+)$/i);
+        result.push('<div class="section-header"><span>💬</span><span>СКРИПТ</span></div>');
+        if (match && match[1].trim()) {
+          result.push(`<div class="script-block">${this.formatBlockContent(match[1].trim())}</div>`);
+        } else {
+          currentBlock = { type: 'script', content: [] };
+        }
+      } else if (line.match(/^🎯 ЦЕЛЬ:?$/i)) {
         closeCurrentBlock();
         result.push('<div class="section-header"><span>🎯</span><span>ЦЕЛЬ</span></div>');
         currentBlock = { type: 'goal', content: [] };
-      } else if (line.match(/^📞 СКРИПТ ЗВОНКА:?/i)) {
+      } else if (line.match(/^📞 СКРИПТ ЗВОНКА:?$/i)) {
         closeCurrentBlock();
         result.push('<div class="section-header"><span>📞</span><span>СКРИПТ ЗВОНКА</span></div>');
         currentBlock = { type: 'script', content: [] };
-      } else if (line.match(/^💬 СКРИПТ:?/i)) {
+      } else if (line.match(/^💬 СКРИПТ:?$/i)) {
         closeCurrentBlock();
         result.push('<div class="section-header"><span>💬</span><span>СКРИПТ</span></div>');
         currentBlock = { type: 'script', content: [] };
@@ -532,11 +587,21 @@ export class TaskCardComponent {
   }
   
   formatLine(line: string): string {
-    let formatted = line;
+    let formatted = line.trim();
+    if (!formatted) return '';
+    
+    // Обрабатываем кавычки (скрипты)
+    if (formatted.match(/^["'`].*["'`]$/)) {
+      formatted = `<div style="font-style: italic; color: #1f2937; margin: 8px 0; padding-left: 12px; border-left: 3px solid #10b981;">${formatted}</div>`;
+    }
+    
+    // Обрабатываем поля ввода (Регион: ________)
+    formatted = formatted.replace(/^([А-Яа-яЁё\w\s]+):\s*_+$/g, '<div class="input-field"><label>$1:</label><span class="input-placeholder">________</span></div>');
+    formatted = formatted.replace(/^([А-Яа-яЁё\w\s]+):\s*(.+)$/g, '<div class="input-field"><label>$1:</label><span>$2</span></div>');
     
     // Подзаголовки
-    formatted = formatted.replace(/^(ПРИВЕТСТВИЕ:|ЕСЛИ ДА:|ЕСЛИ НЕТ:)/i, '<strong>$1</strong>');
-    formatted = formatted.replace(/^(1️⃣|2️⃣|3️⃣|4️⃣|5️⃣)/, '<strong>$1</strong>');
+    formatted = formatted.replace(/^(ПРИВЕТСТВИЕ:|ЕСЛИ ДА:|ЕСЛИ НЕТ:)/i, '<strong style="display: block; margin-top: 12px; margin-bottom: 6px;">$1</strong>');
+    formatted = formatted.replace(/^(1️⃣|2️⃣|3️⃣|4️⃣|5️⃣)\s*(.+)$/, '<strong>$1</strong> $2');
     
     // Чекбоксы
     formatted = formatted.replace(/^- ✓ (.+)$/, '<div class="checkbox-item"><input type="checkbox" disabled><label>$1</label></div>');
