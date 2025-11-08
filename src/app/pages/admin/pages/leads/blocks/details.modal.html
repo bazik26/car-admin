@@ -200,6 +200,14 @@
                     <span>{{ getSourceLabel(lead.source) }}</span>
                   </div>
                 </div>
+                @if (lead.projectSource) {
+                  <div class="col-md-6">
+                    <div class="d-flex align-items-center">
+                      <i class="fas fa-globe text-primary me-2"></i>
+                      <span>Домен: {{ getDomainFromProjectSource(lead.projectSource) }}</span>
+                    </div>
+                  </div>
+                }
                 @if (lead.hasTelegramContact) {
                   <div class="col-md-6">
                     <div class="d-flex align-items-center">

@@ -30,6 +30,7 @@ interface Lead {
   chatSessionId?: string;
   assignedAdminId?: number;
   assignedAdmin?: any;
+  projectSource?: string;
   description?: string;
   comments?: any[];
   tags?: any[];
@@ -329,6 +330,36 @@ export class LeadDetailsModal implements OnInit {
       other: 'Другое'
     };
     return labels[source] || source;
+  }
+
+  getDomainFromProjectSource(projectSource?: string): string {
+    if (!projectSource) return 'Не указан';
+    
+    // Если projectSource уже является доменом (содержит точку)
+    if (projectSource.includes('.')) {
+      // Извлекаем домен из URL
+      try {
+        const url = projectSource.startsWith('http') ? projectSource : `https://${projectSource}`;
+        const domain = new URL(url).hostname;
+        return domain.replace('www.', '');
+      } catch {
+        return projectSource;
+      }
+    }
+    
+    // Если это идентификатор проекта, преобразуем в читаемый формат
+    const projectLabels: Record<string, string> = {
+      'office_1': 'Офис 1',
+      'office_2': 'Офис 2',
+      'chat': 'Чат',
+      'manual': 'Ручной ввод',
+      'car-client': 'car-client',
+      'car-client-2': 'car-client-2',
+      'car-market': 'car-market',
+      'shop-ytb-client': 'shop-ytb-client',
+    };
+    
+    return projectLabels[projectSource] || projectSource;
   }
 
   getScoreClass(score: number): string {

@@ -122,17 +122,25 @@
                 </div>
               </td>
               <td data-label="Источник">
-                <span class="source-badge">
-                  <i class="fas" 
-                    [ngClass]="{
-                      'fa-comments': lead.source === 'chat',
-                      'fa-paper-plane': lead.source === 'telegram',
-                      'fa-phone': lead.source === 'phone',
-                      'fa-envelope': lead.source === 'email',
-                      'fa-question': lead.source === 'other'
-                    }"></i>
-                  {{ getSourceLabel(lead.source) }}
-                </span>
+                <div class="source-cell">
+                  <span class="source-badge">
+                    <i class="fas" 
+                      [ngClass]="{
+                        'fa-comments': lead.source === 'chat',
+                        'fa-paper-plane': lead.source === 'telegram',
+                        'fa-phone': lead.source === 'phone',
+                        'fa-envelope': lead.source === 'email',
+                        'fa-question': lead.source === 'other'
+                      }"></i>
+                    {{ getSourceLabel(lead.source) }}
+                  </span>
+                  @if (lead.projectSource) {
+                    <div class="domain-badge" title="Домен источника">
+                      <i class="fas fa-globe"></i>
+                      {{ getDomainFromProjectSource(lead.projectSource) }}
+                    </div>
+                  }
+                </div>
               </td>
               <td data-label="Статус">
                 <span class="status-badge" [class]="getStatusClass(lead.status)">
