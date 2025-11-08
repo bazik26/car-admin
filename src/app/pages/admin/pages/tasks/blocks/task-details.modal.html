@@ -42,7 +42,7 @@
       @if (task.description) {
         <div class="mb-3">
           <label class="form-label">Описание</label>
-          <p class="form-control-plaintext">{{ task.description }}</p>
+          <div class="task-description" [innerHTML]="formatDescription(task.description)"></div>
         </div>
       }
     </div>
