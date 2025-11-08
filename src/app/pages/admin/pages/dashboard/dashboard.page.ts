@@ -36,6 +36,7 @@ export class AdminDashboardPage implements OnInit, OnDestroy {
   public isLoading = signal(true);
   public hasNewData = signal(false);
   public lastDataHash = signal<string>('');
+  public error = signal<string | null>(null);
 
   private refreshInterval?: Subscription;
   private readonly REFRESH_INTERVAL_MS = 5 * 60 * 1000; // 5 минут
@@ -55,8 +56,10 @@ export class AdminDashboardPage implements OnInit, OnDestroy {
         this.admin.set(admin);
         this.loadDashboardData();
       },
-      error: () => {
-        // Обработка ошибки
+      error: (err) => {
+        console.error('Error loading admin:', err);
+        this.error.set('Ошибка загрузки данных администратора');
+        this.isLoading.set(false);
       }
     });
   }
@@ -100,8 +103,10 @@ export class AdminDashboardPage implements OnInit, OnDestroy {
 
       this.dashboardData.set(data);
       this.isLoading.set(false);
+      this.error.set(null);
     }).catch((error) => {
       console.error('Error loading dashboard data:', error);
+      this.error.set('Ошибка загрузки данных. Попробуйте обновить страницу.');
       this.isLoading.set(false);
     });
   }
@@ -131,15 +136,29 @@ export class AdminDashboardPage implements OnInit, OnDestroy {
       const weekAgo = new Date();
       weekAgo.setDate(weekAgo.getDate() - 7);
 
-      this.appService.getCarsByAdmin(admin.id).subscribe({
+      // Получаем все машины и фильтруем на клиенте
+      this.appService.getCarsAll().subscribe({
         next: (cars: any[]) => {
+          // Фильтруем машины по adminId и дате создания
           const carsThisWeek = cars.filter(car => {
-            const carDate = new Date(car.createdAt);
-            return carDate >= weekAgo;
+            // Проверяем, что машина добавлена этим админом
+            if (car.adminId && car.adminId !== admin.id) {
+              return false;
+            }
+            // Проверяем дату создания
+            if (car.createdAt) {
+              const carDate = new Date(car.createdAt);
+              return carDate >= weekAgo;
+            }
+            return false;
           });
           resolve(carsThisWeek.length);
         },
-        error: reject,
+        error: (err) => {
+          console.error('Error loading cars:', err);
+          // В случае ошибки возвращаем 0 вместо reject, чтобы не ломать весь dashboard
+          resolve(0);
+        },
       });
     });
   }

@@ -41,11 +41,37 @@
     }
   }
 
-  .loading-state {
+  .loading-state,
+  .error-state,
+  .empty-state {
     text-align: center;
     padding: 60px 20px;
     color: #374151;
     font-weight: 500;
+
+    .error-icon,
+    .empty-icon {
+      font-size: 64px;
+      margin-bottom: 20px;
+      color: #ef4444;
+    }
+
+    .empty-icon {
+      color: #6b7280;
+    }
+
+    h3 {
+      font-size: 24px;
+      font-weight: 700;
+      color: #111827;
+      margin: 0 0 12px 0;
+    }
+
+    p {
+      font-size: 16px;
+      color: #6b7280;
+      margin: 0 0 20px 0;
+    }
   }
 
   .permissions-stats-section {

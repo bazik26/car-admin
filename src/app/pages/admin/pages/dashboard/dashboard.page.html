@@ -16,7 +16,19 @@
     </div>
   </header>
 
-  @if (isLoading() && !dashboardData()) {
+  @if (error()) {
+    <div class="error-state">
+      <div class="error-icon">
+        <i class="fas fa-exclamation-triangle"></i>
+      </div>
+      <h3>Ошибка загрузки данных</h3>
+      <p>{{ error() }}</p>
+      <button class="btn btn-primary mt-3" (click)="loadAdmin()">
+        <i class="fas fa-redo me-2"></i>
+        Попробовать снова
+      </button>
+    </div>
+  } @else if (isLoading() && !dashboardData()) {
     <div class="loading-state">
       <div class="spinner-border text-primary" role="status">
         <span class="visually-hidden">Загрузка...</span>
@@ -218,6 +230,18 @@
         <span class="ms-2">•</span>
         <span class="ms-2">Автообновление каждые 5 минут</span>
       </small>
+    </div>
+  } @else {
+    <div class="empty-state">
+      <div class="empty-icon">
+        <i class="fas fa-info-circle"></i>
+      </div>
+      <h3>Данные не загружены</h3>
+      <p>Попробуйте обновить страницу или обратитесь к администратору.</p>
+      <button class="btn btn-primary mt-3" (click)="loadAdmin()">
+        <i class="fas fa-redo me-2"></i>
+        Обновить
+      </button>
     </div>
   }
 </div>
