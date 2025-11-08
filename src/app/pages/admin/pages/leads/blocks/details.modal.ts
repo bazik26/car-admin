@@ -6,6 +6,7 @@ import {
   OnInit,
   ViewEncapsulation,
   signal,
+  computed,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { BsModalRef } from 'ngx-bootstrap/modal';
@@ -13,6 +14,7 @@ import { AppService } from '../../../../../services/app.service';
 import { take } from 'rxjs';
 import { LeadPipelineComponent } from './lead-pipeline.component';
 import { TaskCardComponent } from './task-card.component';
+import { filterTasksByPipelineStage, getTasksForCurrentStage, PipelineStage as PipelineStageEnum } from '../../../../../utils/pipeline-helpers';
 
 interface Lead {
   id: number;
@@ -589,8 +591,12 @@ export class LeadDetailsModal implements OnInit {
       }
     });
   }
+  
+  // Задачи только текущего этапа
+  getCurrentStageTasks(): LeadTask[] {
+    const currentStage = this.getCurrentPipelineStage() as PipelineStageEnum;
+    const allTasks = this.leadTasks();
+    
+    return getTasksForCurrentStage(allTasks, currentStage);
+  }
 }
-
-
-
-

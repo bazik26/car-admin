@@ -31,6 +31,31 @@
   font-weight: 700;
 }
 
+.other-tasks-details {
+  cursor: pointer;
+  padding: 12px;
+  background: #f8f9fa;
+  border-radius: 8px;
+  border: 1px solid #dee2e6;
+}
+
+.other-tasks-details summary {
+  list-style: none;
+  user-select: none;
+}
+
+.other-tasks-details summary::-webkit-details-marker {
+  display: none;
+}
+
+.other-tasks-details[open] summary i {
+  transform: rotate(90deg);
+}
+
+.other-tasks-details summary i {
+  transition: transform 0.2s;
+}
+
 .lead-details-modal {
   .modal-header {
     border-bottom: 1px solid #dee2e6;
