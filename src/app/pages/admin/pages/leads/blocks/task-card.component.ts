@@ -220,15 +220,15 @@ interface LeadTask {
     }
     
     .task-description {
-      margin-top: 16px;
-      padding: 20px;
-      background: #ffffff;
-      border-radius: 12px;
-      border: 1px solid #e5e7eb;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-      font-size: 14px;
-      line-height: 1.7;
-      color: #374151;
+      margin-top: 12px;
+      padding: 14px;
+      background: #f8fafc;
+      border-radius: 8px;
+      border: 1px solid #e2e8f0;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+      font-size: 13px;
+      line-height: 1.6;
+      color: #475569;
     }
     
     .task-description ::ng-deep {
@@ -246,13 +246,13 @@ interface LeadTask {
       .section-header {
         display: flex;
         align-items: center;
-        gap: 10px;
-        margin: 24px 0 12px 0;
+        gap: 8px;
+        margin: 16px 0 8px 0;
         font-weight: 700;
-        color: #111827;
-        font-size: 15px;
-        padding: 8px 0;
-        border-bottom: 2px solid #e5e7eb;
+        color: #1e293b;
+        font-size: 14px;
+        padding: 6px 0;
+        border-bottom: 1px solid #cbd5e1;
       }
       
       .section-header:first-child {
@@ -260,158 +260,158 @@ interface LeadTask {
       }
       
       .section-header span:first-child {
-        font-size: 18px;
+        font-size: 16px;
       }
       
       .goal-block {
-        background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
-        padding: 16px 20px;
-        border-radius: 8px;
-        margin: 12px 0;
-        border-left: 4px solid #3b82f6;
-        color: #1e40af;
-        box-shadow: 0 2px 4px rgba(59, 130, 246, 0.1);
+        background: #e0f2fe;
+        padding: 10px 14px;
+        border-radius: 6px;
+        margin: 8px 0;
+        border-left: 3px solid #0284c7;
+        color: #0c4a6e;
+        box-shadow: 0 1px 2px rgba(2, 132, 199, 0.1);
       }
       
       .script-block {
-        background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
-        padding: 16px 20px;
-        border-radius: 8px;
-        margin: 12px 0;
-        border-left: 4px solid #10b981;
-        color: #065f46;
-        box-shadow: 0 2px 4px rgba(16, 185, 129, 0.1);
+        background: #d1fae5;
+        padding: 10px 14px;
+        border-radius: 6px;
+        margin: 8px 0;
+        border-left: 3px solid #059669;
+        color: #064e3b;
+        box-shadow: 0 1px 2px rgba(5, 150, 105, 0.1);
       }
       
       .checklist-block {
-        background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%);
-        padding: 16px 20px;
-        border-radius: 8px;
-        margin: 12px 0;
-        border-left: 4px solid #f59e0b;
-        color: #92400e;
-        box-shadow: 0 2px 4px rgba(245, 158, 11, 0.1);
+        background: #fef3c7;
+        padding: 10px 14px;
+        border-radius: 6px;
+        margin: 8px 0;
+        border-left: 3px solid #d97706;
+        color: #78350f;
+        box-shadow: 0 1px 2px rgba(217, 119, 6, 0.1);
       }
       
       .deadline-block {
-        background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%);
-        padding: 16px 20px;
-        border-radius: 8px;
-        margin: 12px 0;
-        border-left: 4px solid #ef4444;
+        background: #fee2e2;
+        padding: 10px 14px;
+        border-radius: 6px;
+        margin: 8px 0;
+        border-left: 3px solid #dc2626;
         font-weight: 600;
         color: #991b1b;
-        box-shadow: 0 2px 4px rgba(239, 68, 68, 0.1);
+        box-shadow: 0 1px 2px rgba(220, 38, 38, 0.1);
       }
       
       ul, ol {
-        margin: 12px 0;
-        padding-left: 24px;
+        margin: 8px 0;
+        padding-left: 20px;
       }
       
       li {
-        margin: 8px 0;
-        line-height: 1.8;
-        color: #4b5563;
+        margin: 4px 0;
+        line-height: 1.6;
+        color: #475569;
       }
       
       .checkbox-item {
         display: flex;
         align-items: flex-start;
-        gap: 10px;
-        margin: 8px 0;
-        padding: 8px 12px;
-        background: rgba(255, 255, 255, 0.6);
-        border-radius: 6px;
-        font-size: 13px;
+        gap: 8px;
+        margin: 4px 0;
+        padding: 6px 10px;
+        background: rgba(255, 255, 255, 0.7);
+        border-radius: 4px;
+        font-size: 12px;
         transition: background 0.2s;
       }
       
       .checkbox-item:hover {
-        background: rgba(255, 255, 255, 0.8);
+        background: rgba(255, 255, 255, 0.9);
       }
       
       .checkbox-item input[type="checkbox"] {
-        margin-top: 4px;
+        margin-top: 3px;
         flex-shrink: 0;
-        width: 18px;
-        height: 18px;
+        width: 16px;
+        height: 16px;
         cursor: pointer;
       }
       
       .checkbox-item label {
         flex: 1;
         cursor: pointer;
-        font-size: 13px;
-        color: #374151;
+        font-size: 12px;
+        color: #475569;
       }
       
       strong {
-        color: #111827;
+        color: #1e293b;
         font-weight: 600;
       }
       
       em {
-        color: #6b7280;
+        color: #64748b;
         font-style: italic;
       }
       
       code {
-        background: #f3f4f6;
-        padding: 3px 6px;
-        border-radius: 4px;
+        background: #e2e8f0;
+        padding: 2px 5px;
+        border-radius: 3px;
         font-family: 'Courier New', monospace;
-        font-size: 12px;
+        font-size: 11px;
         color: #dc2626;
-        border: 1px solid #e5e7eb;
+        border: 1px solid #cbd5e1;
       }
       
       hr {
         border: none;
-        border-top: 2px solid #e5e7eb;
-        margin: 16px 0;
+        border-top: 1px solid #cbd5e1;
+        margin: 10px 0;
       }
       
       p {
-        margin: 10px 0;
-        color: #4b5563;
+        margin: 6px 0;
+        color: #475569;
       }
       
       .highlight {
         background: #fef3c7;
-        padding: 3px 8px;
-        border-radius: 4px;
+        padding: 2px 6px;
+        border-radius: 3px;
         font-weight: 600;
-        color: #92400e;
+        color: #78350f;
       }
       
       .input-field {
         display: flex;
         align-items: baseline;
-        gap: 10px;
-        margin: 8px 0;
-        padding: 10px 12px;
-        background: rgba(255, 255, 255, 0.7);
-        border-radius: 6px;
-        border: 1px dashed #d1d5db;
-        font-size: 13px;
+        gap: 8px;
+        margin: 4px 0;
+        padding: 6px 10px;
+        background: rgba(255, 255, 255, 0.8);
+        border-radius: 4px;
+        border: 1px dashed #94a3b8;
+        font-size: 12px;
       }
       
       .input-field label {
         font-weight: 600;
-        color: #374151;
-        min-width: 120px;
+        color: #475569;
+        min-width: 100px;
       }
       
       .input-field .input-placeholder {
-        color: #9ca3af;
+        color: #94a3b8;
         font-family: 'Courier New', monospace;
-        letter-spacing: 1px;
-        font-size: 12px;
+        letter-spacing: 0.5px;
+        font-size: 11px;
       }
       
       .input-field span:not(.input-placeholder) {
-        color: #111827;
+        color: #1e293b;
       }
       
       // Стили для скриптов в кавычках
@@ -438,38 +438,38 @@ interface LeadTask {
       
       // Стили для скриптов в кавычках
       .script-quote {
-        background: #f0fdf4 !important;
-        border-left: 4px solid #10b981 !important;
-        padding: 12px 16px !important;
-        border-radius: 8px !important;
-        margin: 12px 0 !important;
-        color: #065f46 !important;
+        background: #d1fae5 !important;
+        border-left: 3px solid #059669 !important;
+        padding: 8px 12px !important;
+        border-radius: 6px !important;
+        margin: 8px 0 !important;
+        color: #064e3b !important;
         font-style: normal !important;
-        box-shadow: 0 2px 4px rgba(16, 185, 129, 0.1) !important;
+        box-shadow: 0 1px 2px rgba(5, 150, 105, 0.1) !important;
       }
       
       // Стили для подзаголовков типа "ПРИВЕТСТВИЕ:", "ЕСЛИ ДА:" и т.д.
       .subsection-header {
         display: block !important;
-        color: #111827 !important;
-        font-size: 14px !important;
+        color: #1e293b !important;
+        font-size: 13px !important;
         font-weight: 700 !important;
-        margin-top: 16px !important;
-        margin-bottom: 8px !important;
-        padding-bottom: 6px !important;
-        border-bottom: 2px solid #e5e7eb !important;
+        margin-top: 12px !important;
+        margin-bottom: 6px !important;
+        padding-bottom: 4px !important;
+        border-bottom: 1px solid #cbd5e1 !important;
       }
       
       .numbered-item {
-        color: #3b82f6;
-        font-size: 16px;
+        color: #0284c7;
+        font-size: 14px;
       }
       
       // Стили для стрелок и переходов
       .arrow-link {
         display: inline-block;
-        margin-left: 8px;
-        color: #10b981;
+        margin-left: 6px;
+        color: #059669;
         font-weight: 600;
       }
     }

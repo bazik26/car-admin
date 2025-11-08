@@ -83,6 +83,7 @@ export class TaskDetailsModalComponent implements OnInit {
     const fields: Array<{key: string; label: string; value: string; required: boolean}> = [];
     const lines = description.split('\n');
     let inChecklistSection = false;
+    let isRequiredSection = false;
 
     for (const line of lines) {
       const trimmed = line.trim();
@@ -90,15 +91,22 @@ export class TaskDetailsModalComponent implements OnInit {
       // Находим секцию "ЧТО УЗНАТЬ" или "ЧТО ОТМЕТИТЬ"
       if (trimmed.match(/^📋\s*ЧТО УЗНАТЬ/i) || 
           trimmed.match(/^📝\s*ЧТО ОТМЕТИТЬ/i) ||
+          trimmed.match(/^📝\s*ЗАПИСАТЬ/i) ||
+          trimmed.match(/^📝\s*ЗАПОЛНИТЬ/i) ||
           trimmed.match(/^ЧТО УЗНАТЬ/i) ||
-          trimmed.match(/^ЧТО ОТМЕТИТЬ/i)) {
+          trimmed.match(/^ЧТО ОТМЕТИТЬ/i) ||
+          trimmed.match(/^ЗАПИСАТЬ/i) ||
+          trimmed.match(/^ЗАПОЛНИТЬ/i)) {
         inChecklistSection = true;
+        // Проверяем, есть ли пометка "(обязательно)" в заголовке секции
+        isRequiredSection = !!trimmed.match(/\(обязательно\)/i);
         continue;
       }
       
       // Выходим из секции при следующем заголовке с эмодзи или разделителе
       if ((trimmed.match(/^[🎯📞💬⚡💡📅📋📝]/) || trimmed.match(/^━━+/)) && inChecklistSection && trimmed.length > 3) {
         inChecklistSection = false;
+        isRequiredSection = false;
       }
       
       if (inChecklistSection && trimmed.length > 0) {
@@ -126,7 +134,7 @@ export class TaskDetailsModalComponent implements OnInit {
             key,
             label,
             value: currentValue,
-            required: true // Все поля в "ЧТО УЗНАТЬ" обязательны
+            required: isRequiredSection // Поле обязательно только если секция помечена как "(обязательно)"
           });
         }
       }
