@@ -220,22 +220,23 @@ interface LeadTask {
     }
     
     .task-description {
-      margin-top: 12px;
-      padding: 12px;
-      background: #1f2937;
-      border-radius: 6px;
-      border-left: 3px solid #3b82f6;
-      font-size: 13px;
-      line-height: 1.6;
-      color: #e5e7eb;
+      margin-top: 16px;
+      padding: 20px;
+      background: #ffffff;
+      border-radius: 12px;
+      border: 1px solid #e5e7eb;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+      font-size: 14px;
+      line-height: 1.7;
+      color: #374151;
     }
     
     .task-description ::ng-deep {
       h3, h4 {
         margin: 20px 0 12px 0;
         font-weight: 700;
-        color: #1f2937;
-        font-size: 15px;
+        color: #111827;
+        font-size: 16px;
       }
       
       h3:first-child {
@@ -245,54 +246,62 @@ interface LeadTask {
       .section-header {
         display: flex;
         align-items: center;
-        gap: 6px;
-        margin: 12px 0 6px 0;
+        gap: 10px;
+        margin: 24px 0 12px 0;
         font-weight: 700;
-        color: #f3f4f6;
-        font-size: 13px;
-        padding-bottom: 4px;
-        border-bottom: 1px solid #4b5563;
+        color: #111827;
+        font-size: 15px;
+        padding: 8px 0;
+        border-bottom: 2px solid #e5e7eb;
       }
       
       .section-header:first-child {
         margin-top: 0;
       }
       
+      .section-header span:first-child {
+        font-size: 18px;
+      }
+      
       .goal-block {
-        background: #1e3a8a;
-        padding: 8px 12px;
-        border-radius: 4px;
-        margin: 8px 0;
-        border-left: 3px solid #60a5fa;
-        color: #dbeafe;
+        background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+        padding: 16px 20px;
+        border-radius: 8px;
+        margin: 12px 0;
+        border-left: 4px solid #3b82f6;
+        color: #1e40af;
+        box-shadow: 0 2px 4px rgba(59, 130, 246, 0.1);
       }
       
       .script-block {
-        background: #065f46;
-        padding: 8px 12px;
-        border-radius: 4px;
-        margin: 8px 0;
-        border-left: 3px solid #34d399;
-        color: #d1fae5;
+        background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+        padding: 16px 20px;
+        border-radius: 8px;
+        margin: 12px 0;
+        border-left: 4px solid #10b981;
+        color: #065f46;
+        box-shadow: 0 2px 4px rgba(16, 185, 129, 0.1);
       }
       
       .checklist-block {
-        background: #78350f;
-        padding: 8px 12px;
-        border-radius: 4px;
-        margin: 8px 0;
-        border-left: 3px solid #fbbf24;
-        color: #fef3c7;
+        background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%);
+        padding: 16px 20px;
+        border-radius: 8px;
+        margin: 12px 0;
+        border-left: 4px solid #f59e0b;
+        color: #92400e;
+        box-shadow: 0 2px 4px rgba(245, 158, 11, 0.1);
       }
       
       .deadline-block {
-        background: #7f1d1d;
-        padding: 8px 12px;
-        border-radius: 4px;
-        margin: 8px 0;
-        border-left: 3px solid #f87171;
+        background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%);
+        padding: 16px 20px;
+        border-radius: 8px;
+        margin: 12px 0;
+        border-left: 4px solid #ef4444;
         font-weight: 600;
-        color: #fee2e2;
+        color: #991b1b;
+        box-shadow: 0 2px 4px rgba(239, 68, 68, 0.1);
       }
       
       ul, ol {
@@ -301,91 +310,167 @@ interface LeadTask {
       }
       
       li {
-        margin: 6px 0;
-        line-height: 1.7;
+        margin: 8px 0;
+        line-height: 1.8;
+        color: #4b5563;
       }
       
       .checkbox-item {
         display: flex;
         align-items: flex-start;
-        gap: 6px;
-        margin: 4px 0;
-        padding: 2px 0;
-        font-size: 12px;
+        gap: 10px;
+        margin: 8px 0;
+        padding: 8px 12px;
+        background: rgba(255, 255, 255, 0.6);
+        border-radius: 6px;
+        font-size: 13px;
+        transition: background 0.2s;
+      }
+      
+      .checkbox-item:hover {
+        background: rgba(255, 255, 255, 0.8);
       }
       
       .checkbox-item input[type="checkbox"] {
-        margin-top: 3px;
+        margin-top: 4px;
         flex-shrink: 0;
-        width: 16px;
-        height: 16px;
+        width: 18px;
+        height: 18px;
+        cursor: pointer;
       }
       
       .checkbox-item label {
         flex: 1;
         cursor: pointer;
-        font-size: 12px;
+        font-size: 13px;
+        color: #374151;
       }
       
       strong {
-        color: #f3f4f6;
+        color: #111827;
         font-weight: 600;
       }
       
       em {
-        color: #d1d5db;
+        color: #6b7280;
         font-style: italic;
       }
       
       code {
-        background: #374151;
-        padding: 2px 4px;
-        border-radius: 3px;
+        background: #f3f4f6;
+        padding: 3px 6px;
+        border-radius: 4px;
         font-family: 'Courier New', monospace;
         font-size: 12px;
-        color: #fca5a5;
+        color: #dc2626;
+        border: 1px solid #e5e7eb;
       }
       
       hr {
         border: none;
-        border-top: 1px solid #4b5563;
-        margin: 8px 0;
+        border-top: 2px solid #e5e7eb;
+        margin: 16px 0;
       }
       
       p {
-        margin: 6px 0;
+        margin: 10px 0;
+        color: #4b5563;
       }
       
       .highlight {
         background: #fef3c7;
-        padding: 2px 6px;
+        padding: 3px 8px;
         border-radius: 4px;
         font-weight: 600;
+        color: #92400e;
       }
       
       .input-field {
         display: flex;
         align-items: baseline;
-        gap: 6px;
-        margin: 4px 0;
-        padding: 3px 0;
-        font-size: 12px;
+        gap: 10px;
+        margin: 8px 0;
+        padding: 10px 12px;
+        background: rgba(255, 255, 255, 0.7);
+        border-radius: 6px;
+        border: 1px dashed #d1d5db;
+        font-size: 13px;
       }
       
       .input-field label {
         font-weight: 600;
-        color: #d1d5db;
-        min-width: 70px;
+        color: #374151;
+        min-width: 120px;
       }
       
       .input-field .input-placeholder {
         color: #9ca3af;
         font-family: 'Courier New', monospace;
         letter-spacing: 1px;
+        font-size: 12px;
       }
       
       .input-field span:not(.input-placeholder) {
-        color: #e5e7eb;
+        color: #111827;
+      }
+      
+      // Стили для скриптов в кавычках
+      div[style*="border-left: 3px solid #10b981"] {
+        background: #f0fdf4 !important;
+        border-left: 4px solid #10b981 !important;
+        padding: 12px 16px !important;
+        border-radius: 8px !important;
+        margin: 12px 0 !important;
+        color: #065f46 !important;
+        font-style: normal !important;
+        box-shadow: 0 2px 4px rgba(16, 185, 129, 0.1) !important;
+      }
+      
+      // Стили для подзаголовков типа "ПРИВЕТСТВИЕ:", "ЕСЛИ ДА:" и т.д.
+      strong[style*="display: block"] {
+        color: #111827 !important;
+        font-size: 14px !important;
+        margin-top: 16px !important;
+        margin-bottom: 8px !important;
+        padding-bottom: 4px !important;
+        border-bottom: 1px solid #e5e7eb !important;
+      }
+      
+      // Стили для скриптов в кавычках
+      .script-quote {
+        background: #f0fdf4 !important;
+        border-left: 4px solid #10b981 !important;
+        padding: 12px 16px !important;
+        border-radius: 8px !important;
+        margin: 12px 0 !important;
+        color: #065f46 !important;
+        font-style: normal !important;
+        box-shadow: 0 2px 4px rgba(16, 185, 129, 0.1) !important;
+      }
+      
+      // Стили для подзаголовков типа "ПРИВЕТСТВИЕ:", "ЕСЛИ ДА:" и т.д.
+      .subsection-header {
+        display: block !important;
+        color: #111827 !important;
+        font-size: 14px !important;
+        font-weight: 700 !important;
+        margin-top: 16px !important;
+        margin-bottom: 8px !important;
+        padding-bottom: 6px !important;
+        border-bottom: 2px solid #e5e7eb !important;
+      }
+      
+      .numbered-item {
+        color: #3b82f6;
+        font-size: 16px;
+      }
+      
+      // Стили для стрелок и переходов
+      .arrow-link {
+        display: inline-block;
+        margin-left: 8px;
+        color: #10b981;
+        font-weight: 600;
       }
     }
     
@@ -629,16 +714,16 @@ export class TaskCardComponent {
     
     // Обрабатываем кавычки (скрипты)
     if (formatted.match(/^["'`].*["'`]$/)) {
-      formatted = `<div style="font-style: italic; color: #1f2937; margin: 8px 0; padding-left: 12px; border-left: 3px solid #10b981;">${formatted}</div>`;
+      formatted = `<div class="script-quote">${formatted}</div>`;
     }
     
     // Обрабатываем поля ввода (Регион: ________)
     formatted = formatted.replace(/^([А-Яа-яЁё\w\s]+):\s*_+$/g, '<div class="input-field"><label>$1:</label><span class="input-placeholder">________</span></div>');
     formatted = formatted.replace(/^([А-Яа-яЁё\w\s]+):\s*(.+)$/g, '<div class="input-field"><label>$1:</label><span>$2</span></div>');
     
-    // Подзаголовки
-    formatted = formatted.replace(/^(ПРИВЕТСТВИЕ:|ЕСЛИ ДА:|ЕСЛИ НЕТ:)/i, '<strong style="display: block; margin-top: 12px; margin-bottom: 6px;">$1</strong>');
-    formatted = formatted.replace(/^(1️⃣|2️⃣|3️⃣|4️⃣|5️⃣)\s*(.+)$/, '<strong>$1</strong> $2');
+      // Подзаголовки
+      formatted = formatted.replace(/^(ПРИВЕТСТВИЕ:|ЕСЛИ ДА:|ЕСЛИ НЕТ:)/i, '<strong class="subsection-header">$1</strong>');
+      formatted = formatted.replace(/^(1️⃣|2️⃣|3️⃣|4️⃣|5️⃣)\s*(.+)$/, '<strong class="numbered-item">$1</strong> <span>$2</span>');
     
     // Чекбоксы
     formatted = formatted.replace(/^- ✓ (.+)$/, '<div class="checkbox-item"><input type="checkbox" disabled><label>$1</label></div>');
@@ -647,8 +732,8 @@ export class TaskCardComponent {
     // Нумерованные списки
     formatted = formatted.replace(/^(\d+[\.\)])\s+(.+)$/, '<div class="checkbox-item"><span style="font-weight: 600; color: #3b82f6;">$1</span><span>$2</span></div>');
     
-    // Стрелки и переходы
-    formatted = formatted.replace(/→ (.+)/g, '<span style="color: #10b981; font-weight: 600;">→ $1</span>');
+      // Стрелки и переходы
+      formatted = formatted.replace(/→ (.+)/g, '<span class="arrow-link">→ $1</span>');
     
     // Выделение текста
     formatted = formatted.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');

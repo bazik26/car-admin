@@ -503,7 +503,7 @@ export class TaskDetailsModalComponent implements OnInit {
     
     // Обрабатываем кавычки (скрипты)
     if (formatted.match(/^["'`].*["'`]$/)) {
-      formatted = `<div style="font-style: italic; color: #1f2937; margin: 8px 0; padding-left: 12px; border-left: 3px solid #10b981;">${formatted}</div>`;
+      formatted = `<div class="script-quote">${formatted}</div>`;
     }
     
     // Обрабатываем таблицы (| Стоимость | [X] € |)
@@ -520,8 +520,8 @@ export class TaskDetailsModalComponent implements OnInit {
     formatted = formatted.replace(/^([А-Яа-яЁё\w\s]+):\s*(.+)$/g, '<div class="input-field"><label>$1:</label><span>$2</span></div>');
     
     // Подзаголовки
-    formatted = formatted.replace(/^(ПРИВЕТСТВИЕ:|ЕСЛИ ДА:|ЕСЛИ НЕТ:)/i, '<strong style="display: block; margin-top: 12px; margin-bottom: 6px;">$1</strong>');
-    formatted = formatted.replace(/^(1️⃣|2️⃣|3️⃣|4️⃣|5️⃣)\s*(.+)$/, '<strong>$1</strong> $2');
+    formatted = formatted.replace(/^(ПРИВЕТСТВИЕ:|ЕСЛИ ДА:|ЕСЛИ НЕТ:)/i, '<strong class="subsection-header">$1</strong>');
+    formatted = formatted.replace(/^(1️⃣|2️⃣|3️⃣|4️⃣|5️⃣)\s*(.+)$/, '<strong class="numbered-item">$1</strong> <span>$2</span>');
     
     // Чекбоксы и списки
     formatted = formatted.replace(/^- ✓ (.+)$/, '<div class="checkbox-item"><input type="checkbox" disabled><label>$1</label></div>');
@@ -532,7 +532,7 @@ export class TaskDetailsModalComponent implements OnInit {
     formatted = formatted.replace(/^(\d+[\.\)])\s+(.+)$/, '<div class="checkbox-item"><span style="font-weight: 600; color: #3b82f6;">$1</span><span>$2</span></div>');
     
     // Стрелки и переходы
-    formatted = formatted.replace(/→ (.+)/g, '<span style="color: #10b981; font-weight: 600;">→ $1</span>');
+    formatted = formatted.replace(/→ (.+)/g, '<span class="arrow-link">→ $1</span>');
     
     // Выделение текста
     formatted = formatted.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
