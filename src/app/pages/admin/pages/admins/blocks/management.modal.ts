@@ -49,6 +49,7 @@ export class AdminAdminsManagementModal implements OnInit {
         canViewCars: [true],
         canManageLeads: [true],
         canViewLeads: [true],
+        isLeadManager: [false], // По умолчанию НЕ Lead Manager
       }),
     });
   }
