@@ -10,6 +10,7 @@ import { ChatPage } from './pages/admin/pages/chat/chat.page';
 import { LeadsPage } from './pages/admin/pages/leads/leads.page';
 import { AdminStatsPage } from './pages/admin/pages/admin-stats/admin-stats.page';
 import { TasksPageComponent } from './pages/admin/pages/tasks/tasks.page';
+import { AdminDashboardPage } from './pages/admin/pages/dashboard/dashboard.page';
 
 export const routes: Routes = [
   {
@@ -29,6 +30,12 @@ export const routes: Routes = [
         path: '',
         component: AdminLayoutComponent,
         children: [
+          {
+            path: '',
+            pathMatch: 'full',
+            component: AdminDashboardPage,
+            title: 'Главная страница',
+          },
           {
             path: 'admins',
             component: AdminAdminsPage,

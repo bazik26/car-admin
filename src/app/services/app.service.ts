@@ -305,6 +305,13 @@ export class AppService {
       .pipe(map((response) => response));
   }
 
+  // Get all chat sessions
+  getChatSessions(): Observable<any> {
+    return this.http
+      .get(`${this.API_URL}/chat/sessions`)
+      .pipe(map((response) => response));
+  }
+
   // ==================== ACTIVITY LOG ====================
   getLeadActivities(leadId: number): Observable<any> {
     return this.http

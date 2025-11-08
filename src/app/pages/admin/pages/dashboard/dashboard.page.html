@@ -1,0 +1,224 @@
+<div class="dashboard-page" [class.has-new-data]="hasNewData()">
+  <!-- Header -->
+  <header class="dashboard-header">
+    <div class="header-content">
+      <h1 class="page-title">
+        <i class="fas fa-home me-2"></i>
+        Главная страница
+      </h1>
+      <p class="page-subtitle">Обзор ваших задач и активности</p>
+    </div>
+    <div class="header-actions">
+      <button class="btn btn-outline-primary btn-sm" (click)="manualRefresh()" [disabled]="isLoading()">
+        <i class="fas fa-sync-alt" [class.fa-spin]="isLoading()"></i>
+        Обновить
+      </button>
+    </div>
+  </header>
+
+  @if (isLoading() && !dashboardData()) {
+    <div class="loading-state">
+      <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">Загрузка...</span>
+      </div>
+      <p class="mt-3">Загрузка данных...</p>
+    </div>
+  } @else if (dashboardData(); as data) {
+    <!-- Разрешения и статистика -->
+    <div class="permissions-stats-section">
+      <div class="permissions-card">
+        <h3 class="section-title">
+          <i class="fas fa-shield-alt me-2"></i>
+          Вам выдано разрешение на:
+        </h3>
+        <div class="permissions-list">
+          @if (data.permissions.canManageLeads) {
+            <span class="permission-badge badge-success">
+              <i class="fas fa-check-circle me-1"></i>
+              Обработку лидов
+            </span>
+          }
+          @if (data.permissions.canViewLeads) {
+            <span class="permission-badge badge-info">
+              <i class="fas fa-eye me-1"></i>
+              Просмотр лидов
+            </span>
+          }
+          @if (data.permissions.canAddCars) {
+            <span class="permission-badge badge-primary">
+              <i class="fas fa-car me-1"></i>
+              Добавление машин
+            </span>
+          }
+          @if (data.permissions.canViewCars) {
+            <span class="permission-badge badge-secondary">
+              <i class="fas fa-eye me-1"></i>
+              Просмотр машин
+            </span>
+          }
+          @if (data.permissions.canManageLeads || data.permissions.canViewLeads) {
+            <span class="permission-badge badge-warning">
+              <i class="fas fa-comments me-1"></i>
+              Общение в чате
+            </span>
+          }
+        </div>
+      </div>
+
+      <div class="stats-grid">
+        <div class="stat-card stat-card--leads" (click)="goToLeads()">
+          <div class="stat-icon">
+            <i class="fas fa-user-tie"></i>
+          </div>
+          <div class="stat-content">
+            <div class="stat-value">{{ data.unassignedLeadsCount }}</div>
+            <div class="stat-label">Свободных лидов</div>
+          </div>
+        </div>
+
+        <div class="stat-card stat-card--cars" (click)="goToCars()">
+          <div class="stat-icon">
+            <i class="fas fa-car"></i>
+          </div>
+          <div class="stat-content">
+            <div class="stat-value">{{ data.carsAddedThisWeek }}</div>
+            <div class="stat-label">Машин добавлено на этой неделе</div>
+          </div>
+        </div>
+
+        <div class="stat-card stat-card--chats" (click)="goToChat()">
+          <div class="stat-icon">
+            <i class="fas fa-comments"></i>
+          </div>
+          <div class="stat-content">
+            <div class="stat-value">{{ data.chatsAwaitingResponse }}</div>
+            <div class="stat-label">Ожидают ответа в чате</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Задачи -->
+    <div class="tasks-section">
+      <h2 class="section-title">
+        <i class="fas fa-tasks me-2"></i>
+        Что нужно сделать
+      </h2>
+
+      <!-- Свободные лиды -->
+      @if (data.permissions.canManageLeads && data.unassignedLeadsCount > 0) {
+        <div class="task-card task-card--leads">
+          <div class="task-card-header">
+            <div class="task-icon">
+              <i class="fas fa-user-tie"></i>
+            </div>
+            <div class="task-info">
+              <h3 class="task-title">Есть свободные лиды</h3>
+              <p class="task-description">
+                {{ data.unassignedLeadsCount }} {{ data.unassignedLeadsCount === 1 ? 'лид ожидает' : 'лидов ожидают' }} назначения менеджера
+              </p>
+            </div>
+            <div class="task-badge">
+              <span class="badge bg-warning">{{ data.unassignedLeadsCount }}</span>
+            </div>
+          </div>
+          <div class="task-card-body">
+            <div class="leads-preview">
+              @for (lead of data.unassignedLeads; track lead.id) {
+                <div class="lead-preview-item">
+                  <div class="lead-name">{{ lead.name }}</div>
+                  <div class="lead-meta">
+                    @if (lead.phone) {
+                      <span class="lead-phone">
+                        <i class="fas fa-phone"></i>
+                        {{ lead.phone }}
+                      </span>
+                    }
+                    @if (lead.email) {
+                      <span class="lead-email">
+                        <i class="fas fa-envelope"></i>
+                        {{ lead.email }}
+                      </span>
+                    }
+                  </div>
+                </div>
+              }
+            </div>
+            <button class="btn btn-primary btn-sm mt-3" (click)="goToLeads()">
+              Перейти к лидам
+              <i class="fas fa-arrow-right ms-2"></i>
+            </button>
+          </div>
+        </div>
+      }
+
+      <!-- Чаты ожидающие ответа -->
+      @if ((data.permissions.canManageLeads || data.permissions.canViewLeads) && data.chatsAwaitingResponse > 0) {
+        <div class="task-card task-card--chats">
+          <div class="task-card-header">
+            <div class="task-icon">
+              <i class="fas fa-comments"></i>
+            </div>
+            <div class="task-info">
+              <h3 class="task-title">Новые чаты ожидают ответа</h3>
+              <p class="task-description">
+                {{ data.chatsAwaitingResponse }} {{ data.chatsAwaitingResponse === 1 ? 'чат' : 'чатов' }} с непрочитанными сообщениями
+              </p>
+            </div>
+            <div class="task-badge">
+              <span class="badge bg-danger">{{ data.chatsAwaitingResponse }}</span>
+            </div>
+          </div>
+          <div class="task-card-body">
+            <div class="chats-preview">
+              @for (session of data.chatSessions; track session.sessionId) {
+                <div class="chat-preview-item">
+                  <div class="chat-client">
+                    <strong>{{ session.clientName || 'Без имени' }}</strong>
+                    @if (session.unreadCount > 0) {
+                      <span class="badge bg-danger ms-2">{{ session.unreadCount }}</span>
+                    }
+                  </div>
+                  <div class="chat-meta">
+                    @if (session.lastMessageAt) {
+                      <span class="chat-time">
+                        <i class="fas fa-clock"></i>
+                        {{ formatDate(session.lastMessageAt) }}
+                      </span>
+                    }
+                  </div>
+                </div>
+              }
+            </div>
+            <button class="btn btn-primary btn-sm mt-3" (click)="goToChat()">
+              Перейти в чат
+              <i class="fas fa-arrow-right ms-2"></i>
+            </button>
+          </div>
+        </div>
+      }
+
+      <!-- Нет задач -->
+      @if (data.unassignedLeadsCount === 0 && data.chatsAwaitingResponse === 0) {
+        <div class="no-tasks-card">
+          <div class="no-tasks-icon">
+            <i class="fas fa-check-circle"></i>
+          </div>
+          <h3>Все задачи выполнены!</h3>
+          <p>Нет свободных лидов и новых чатов, требующих внимания.</p>
+        </div>
+      }
+    </div>
+
+    <!-- Информация о последнем обновлении -->
+    <div class="update-info">
+      <small class="text-muted">
+        <i class="fas fa-clock me-1"></i>
+        Последнее обновление: {{ formatDate(data.lastUpdateTime) }}
+        <span class="ms-2">•</span>
+        <span class="ms-2">Автообновление каждые 5 минут</span>
+      </small>
+    </div>
+  }
+</div>
+
