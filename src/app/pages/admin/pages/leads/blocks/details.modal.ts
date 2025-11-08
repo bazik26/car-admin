@@ -124,7 +124,8 @@ export class LeadDetailsModal implements OnInit {
   @Input()
   lead!: Lead;
 
-  public activeTab = signal('pipeline'); // Начинаем с вкладки "Воронка"
+  public activeTab = signal<'pipeline' | 'info' | 'collected' | 'tasks' | 'tags' | 'attachments' | 'meetings' | 'activity'>('pipeline'); // Начинаем с вкладки "Воронка"
+  public collectedData = signal<Map<string, {value: string; source: string; taskId: number}>>(new Map());
   public leadData = signal<Lead | null>(null);
   public isLoading = signal(true);
   
@@ -210,8 +211,77 @@ export class LeadDetailsModal implements OnInit {
     this.appService.getLeadTasks(leadId).pipe(take(1)).subscribe({
       next: (tasks: LeadTask[]) => {
         this.leadTasks.set(tasks);
+        this.collectDataFromTasks(tasks);
       }
     });
+  }
+
+  collectDataFromTasks(tasks: LeadTask[]) {
+    const collected = new Map<string, {value: string; source: string; taskId: number}>();
+    
+    tasks.forEach(task => {
+      if (task.taskData && task.completed) {
+        // Собираем данные из taskData
+        Object.keys(task.taskData).forEach(key => {
+          const value = task.taskData[key];
+          if (value && typeof value === 'string' && value.trim().length > 0 && !value.match(/^_+$/)) {
+            // Преобразуем ключ в читаемое название
+            const label = this.getFieldLabel(key);
+            if (!collected.has(label) || !collected.get(label)?.value) {
+              collected.set(label, {
+                value: value,
+                source: task.title,
+                taskId: task.id
+              });
+            }
+          } else if (Array.isArray(value) && value.length > 0) {
+            // Обрабатываем массивы (например, марки, модели)
+            const label = this.getFieldLabel(key);
+            const arrayValue = value.join(', ');
+            if (!collected.has(label) || !collected.get(label)?.value) {
+              collected.set(label, {
+                value: arrayValue,
+                source: task.title,
+                taskId: task.id
+              });
+            }
+          }
+        });
+      }
+    });
+    
+    this.collectedData.set(collected);
+  }
+
+  getFieldLabel(key: string): string {
+    const labelMap: Record<string, string> = {
+      'fullName': 'Полное имя',
+      'email': 'Email',
+      'phone': 'Телефон',
+      'telegram': 'Telegram',
+      'deliveryCity': 'Город доставки',
+      'purchaseTimeline': 'Когда планирует покупку',
+      'callDateTime': 'Дата/время звонка',
+      'clientAnswered': 'Клиент взял трубку',
+      'convenientTime': 'Удобное время для разговора',
+      'result': 'Результат',
+      'region': 'Регион',
+      'city': 'Город',
+      'budgetMin': 'Бюджет от',
+      'budgetMax': 'Бюджет до',
+      'currency': 'Валюта',
+      'preferredBrands': 'Предпочитаемые марки',
+      'preferredModels': 'Предпочитаемые модели',
+      'preferredYearFrom': 'Год от',
+      'preferredYearTo': 'Год до',
+      'preferredMileageMax': 'Максимальный пробег',
+    };
+    
+    return labelMap[key] || key;
+  }
+
+  getCollectedDataEntries(): Array<[string, {value: string; source: string; taskId: number}]> {
+    return Array.from(this.collectedData().entries());
   }
 
   loadLeadAttachments(leadId: number) {

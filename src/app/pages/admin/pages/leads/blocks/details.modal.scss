@@ -48,6 +48,39 @@
   display: none;
 }
 
+.collected-field-card {
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 12px;
+  transition: all 0.2s;
+  
+  &:hover {
+    border-color: #3b82f6;
+    box-shadow: 0 2px 8px rgba(59, 130, 246, 0.1);
+  }
+  
+  .field-label {
+    font-weight: 600;
+    color: #111827;
+    margin-bottom: 8px;
+    font-size: 14px;
+  }
+  
+  .field-value {
+    font-size: 16px;
+    color: #374151;
+    margin-bottom: 8px;
+    word-break: break-word;
+  }
+  
+  .field-source {
+    padding-top: 8px;
+    border-top: 1px solid #f3f4f6;
+  }
+}
+
 .other-tasks-details[open] summary i {
   transform: rotate(90deg);
 }

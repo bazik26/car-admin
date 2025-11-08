@@ -44,6 +44,7 @@ export class TaskDetailsModalComponent implements OnInit {
   task!: Task;
   taskForm: any = {};
   isSaving = signal(false);
+  taskFields = signal<Array<{key: string; label: string; value: string; required: boolean}>>([]);
 
   ngOnInit() {
     this.taskForm = {
@@ -58,6 +59,117 @@ export class TaskDetailsModalComponent implements OnInit {
     if (this.taskForm.taskData.preferredModels && Array.isArray(this.taskForm.taskData.preferredModels)) {
       this.taskForm.taskData.preferredModels = this.taskForm.taskData.preferredModels.join(', ');
     }
+
+    // Парсим описание задачи для извлечения полей
+    if (this.task.description) {
+      this.parseTaskFields(this.task.description);
+    }
+  }
+
+  parseTaskFields(description: string) {
+    const fields: Array<{key: string; label: string; value: string; required: boolean}> = [];
+    const lines = description.split('\n');
+    let inChecklistSection = false;
+
+    for (const line of lines) {
+      const trimmed = line.trim();
+      
+      // Находим секцию "ЧТО УЗНАТЬ"
+      if (trimmed.match(/^📋 ЧТО УЗНАТЬ/i) || trimmed.match(/^📝 ЧТО ОТМЕТИТЬ/i)) {
+        inChecklistSection = true;
+        continue;
+      }
+      
+      // Выходим из секции при следующем заголовке
+      if (trimmed.match(/^[🎯📞💬⚡💡📅]/) && inChecklistSection) {
+        inChecklistSection = false;
+      }
+      
+      if (inChecklistSection) {
+        // Парсим строки вида "Полное имя: Рустем" или "Email: _____"
+        const match = trimmed.match(/^-?\s*✓?\s*([^:]+):\s*(.+)$/);
+        if (match) {
+          const label = match[1].trim();
+          const value = match[2].trim();
+          const key = this.generateFieldKey(label);
+          
+          // Проверяем, заполнено ли поле (не пустое и не только подчеркивания)
+          const isFilled = value && !value.match(/^_+$/);
+          const currentValue = this.taskForm.taskData[key] || (isFilled ? value : '');
+          
+          fields.push({
+            key,
+            label,
+            value: currentValue,
+            required: true // Все поля в "ЧТО УЗНАТЬ" обязательны
+          });
+        }
+      }
+    }
+    
+    this.taskFields.set(fields);
+    
+    // Инициализируем значения полей в taskForm.taskData
+    fields.forEach(field => {
+      if (!this.taskForm.taskData[field.key]) {
+        this.taskForm.taskData[field.key] = field.value;
+      }
+    });
+  }
+
+  generateFieldKey(label: string): string {
+    // Преобразуем русские названия в ключи
+    const keyMap: Record<string, string> = {
+      'Полное имя': 'fullName',
+      'Email': 'email',
+      'Телефон': 'phone',
+      'Telegram': 'telegram',
+      'Город доставки': 'deliveryCity',
+      'Когда планирует покупку': 'purchaseTimeline',
+      'Дата/время звонка': 'callDateTime',
+      'Клиент взял трубку': 'clientAnswered',
+      'Удобное время для разговора': 'convenientTime',
+      'Результат': 'result',
+    };
+    
+    const normalizedLabel = label.trim();
+    return keyMap[normalizedLabel] || normalizedLabel.toLowerCase().replace(/\s+/g, '_');
+  }
+
+  updateFieldValue(key: string, value: string) {
+    if (!this.taskForm.taskData) {
+      this.taskForm.taskData = {};
+    }
+    this.taskForm.taskData[key] = value;
+    
+    // Обновляем значение в массиве полей
+    const fields = this.taskFields();
+    const fieldIndex = fields.findIndex(f => f.key === key);
+    if (fieldIndex >= 0) {
+      fields[fieldIndex].value = value;
+      this.taskFields.set([...fields]);
+    }
+  }
+
+  canCompleteTask(): boolean {
+    const fields = this.taskFields();
+    if (fields.length === 0) return true; // Если нет полей, можно завершить
+    
+    // Проверяем, что все обязательные поля заполнены
+    return fields.every(field => {
+      if (!field.required) return true;
+      const value = this.taskForm.taskData[field.key];
+      return value && value.trim().length > 0 && !value.match(/^_+$/);
+    });
+  }
+
+  getMissingFields(): string[] {
+    const fields = this.taskFields();
+    return fields
+      .filter(field => field.required && (!this.taskForm.taskData[field.key] || 
+        this.taskForm.taskData[field.key].trim().length === 0 || 
+        this.taskForm.taskData[field.key].match(/^_+$/)))
+      .map(field => field.label);
   }
 
   save() {
@@ -92,6 +204,92 @@ export class TaskDetailsModalComponent implements OnInit {
           this.isSaving.set(false);
         }
       });
+  }
+
+  completeTask() {
+    // Проверяем заполненность всех обязательных полей
+    if (!this.canCompleteTask()) {
+      const missingFields = this.getMissingFields();
+      alert(`Не все обязательные поля заполнены:\n${missingFields.join('\n')}`);
+      return;
+    }
+
+    // Сохраняем данные и помечаем задачу как выполненную
+    this.isSaving.set(true);
+    
+    const updateData: any = {
+      status: 'completed',
+      completed: true,
+      taskData: { ...this.taskForm.taskData },
+    };
+
+    // Преобразуем строки обратно в массивы
+    if (updateData.taskData.preferredBrands && typeof updateData.taskData.preferredBrands === 'string') {
+      updateData.taskData.preferredBrands = updateData.taskData.preferredBrands.split(',').map((b: string) => b.trim()).filter((b: string) => b.length > 0);
+    }
+    if (updateData.taskData.preferredModels && typeof updateData.taskData.preferredModels === 'string') {
+      updateData.taskData.preferredModels = updateData.taskData.preferredModels.split(',').map((m: string) => m.trim()).filter((m: string) => m.length > 0);
+    }
+
+    // Обновляем информацию о лиде на основе собранных данных
+    this.updateLeadFromTaskData(updateData.taskData);
+
+    this.appService.updateLeadTask(this.task.id, updateData)
+      .pipe(take(1))
+      .subscribe({
+        next: () => {
+          this.bsModalRef.hide();
+        },
+        error: (error: any) => {
+          console.error('Ошибка завершения задачи:', error);
+          alert('Ошибка завершения задачи');
+          this.isSaving.set(false);
+        }
+      });
+  }
+
+  updateLeadFromTaskData(taskData: any) {
+    // Обновляем информацию о лиде на основе собранных данных из задачи
+    const leadUpdate: any = {};
+    
+    if (taskData.email) leadUpdate.email = taskData.email;
+    if (taskData.phone) leadUpdate.phone = taskData.phone;
+    if (taskData.telegram) leadUpdate.telegramUsername = taskData.telegram;
+    if (taskData.deliveryCity) leadUpdate.city = taskData.deliveryCity;
+    if (taskData.region) leadUpdate.region = taskData.region;
+    if (taskData.purchaseTimeline) leadUpdate.timeline = taskData.purchaseTimeline;
+    if (taskData.budgetMin || taskData.budgetMax) {
+      leadUpdate.budget = {
+        min: taskData.budgetMin || 0,
+        max: taskData.budgetMax || 0,
+        currency: taskData.currency || 'RUB'
+      };
+    }
+    if (taskData.preferredBrands || taskData.preferredModels) {
+      leadUpdate.carPreferences = {
+        brands: Array.isArray(taskData.preferredBrands) ? taskData.preferredBrands : 
+                (taskData.preferredBrands ? taskData.preferredBrands.split(',').map((b: string) => b.trim()) : []),
+        models: Array.isArray(taskData.preferredModels) ? taskData.preferredModels : 
+                (taskData.preferredModels ? taskData.preferredModels.split(',').map((m: string) => m.trim()) : []),
+        yearFrom: taskData.preferredYearFrom,
+        yearTo: taskData.preferredYearTo,
+        maxMileage: taskData.preferredMileageMax
+      };
+    }
+
+    // Обновляем лид, если есть данные для обновления
+    if (Object.keys(leadUpdate).length > 0) {
+      this.appService.updateLead(this.task.leadId, leadUpdate)
+        .pipe(take(1))
+        .subscribe({
+          next: () => {
+            console.log('Информация о лиде обновлена');
+          },
+          error: (error: any) => {
+            console.error('Ошибка обновления лида:', error);
+          }
+        });
+    }
   }
 
   cancel() {
