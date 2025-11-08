@@ -74,28 +74,31 @@ interface LeadTask {
   `,
   styles: [`
     .task-card {
-      background: white;
-      border: 2px solid #e5e7eb;
-      border-radius: 10px;
-      padding: 16px;
+      background: #ffffff;
+      border: 1px solid #d1d5db;
+      border-left: 4px solid #3b82f6;
+      border-radius: 6px;
+      padding: 12px;
       transition: all 0.2s ease;
-      margin-bottom: 12px;
+      margin-bottom: 8px;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
     }
     
     .task-card:hover {
-      border-color: #cbd5e1;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+      border-left-color: #2563eb;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+      transform: translateY(-1px);
     }
     
     .task-card.completed {
       background: #f0fdf4;
-      border-color: #86efac;
-      opacity: 0.8;
+      border-left-color: #10b981;
+      opacity: 0.85;
     }
     
     .task-card.overdue:not(.completed) {
       background: #fef2f2;
-      border-color: #fca5a5;
+      border-left-color: #ef4444;
     }
     
     .task-header {
@@ -149,10 +152,11 @@ interface LeadTask {
     }
     
     .task-title {
-      font-size: 15px;
+      font-size: 14px;
       font-weight: 600;
-      color: #1f2937;
-      margin: 0 0 8px 0;
+      color: #111827;
+      margin: 0 0 4px 0;
+      line-height: 1.4;
     }
     
     .task-title.completed {
@@ -215,14 +219,14 @@ interface LeadTask {
     }
     
     .task-description {
-      margin-top: 16px;
-      padding: 20px;
-      background: #f9fafb;
-      border-radius: 8px;
-      border-left: 4px solid #3b82f6;
-      font-size: 14px;
-      line-height: 1.8;
-      color: #374151;
+      margin-top: 12px;
+      padding: 12px;
+      background: #1f2937;
+      border-radius: 6px;
+      border-left: 3px solid #3b82f6;
+      font-size: 13px;
+      line-height: 1.6;
+      color: #e5e7eb;
     }
     
     .task-description ::ng-deep {
@@ -240,13 +244,13 @@ interface LeadTask {
       .section-header {
         display: flex;
         align-items: center;
-        gap: 8px;
-        margin: 20px 0 12px 0;
+        gap: 6px;
+        margin: 12px 0 6px 0;
         font-weight: 700;
-        color: #1f2937;
-        font-size: 15px;
-        padding-bottom: 8px;
-        border-bottom: 2px solid #e5e7eb;
+        color: #f3f4f6;
+        font-size: 13px;
+        padding-bottom: 4px;
+        border-bottom: 1px solid #4b5563;
       }
       
       .section-header:first-child {
@@ -254,36 +258,40 @@ interface LeadTask {
       }
       
       .goal-block {
-        background: #eff6ff;
-        padding: 12px 16px;
-        border-radius: 6px;
-        margin: 12px 0;
-        border-left: 3px solid #3b82f6;
+        background: #1e3a8a;
+        padding: 8px 12px;
+        border-radius: 4px;
+        margin: 8px 0;
+        border-left: 3px solid #60a5fa;
+        color: #dbeafe;
       }
       
       .script-block {
-        background: #f0fdf4;
-        padding: 16px;
-        border-radius: 6px;
-        margin: 12px 0;
-        border-left: 3px solid #10b981;
+        background: #065f46;
+        padding: 8px 12px;
+        border-radius: 4px;
+        margin: 8px 0;
+        border-left: 3px solid #34d399;
+        color: #d1fae5;
       }
       
       .checklist-block {
-        background: #fffbeb;
-        padding: 16px;
-        border-radius: 6px;
-        margin: 12px 0;
-        border-left: 3px solid #f59e0b;
+        background: #78350f;
+        padding: 8px 12px;
+        border-radius: 4px;
+        margin: 8px 0;
+        border-left: 3px solid #fbbf24;
+        color: #fef3c7;
       }
       
       .deadline-block {
-        background: #fef2f2;
-        padding: 12px 16px;
-        border-radius: 6px;
-        margin: 12px 0;
-        border-left: 3px solid #ef4444;
+        background: #7f1d1d;
+        padding: 8px 12px;
+        border-radius: 4px;
+        margin: 8px 0;
+        border-left: 3px solid #f87171;
         font-weight: 600;
+        color: #fee2e2;
       }
       
       ul, ol {
@@ -299,48 +307,52 @@ interface LeadTask {
       .checkbox-item {
         display: flex;
         align-items: flex-start;
-        gap: 8px;
-        margin: 8px 0;
-        padding: 4px 0;
+        gap: 6px;
+        margin: 4px 0;
+        padding: 2px 0;
+        font-size: 12px;
       }
       
       .checkbox-item input[type="checkbox"] {
-        margin-top: 4px;
+        margin-top: 3px;
         flex-shrink: 0;
+        width: 16px;
+        height: 16px;
       }
       
       .checkbox-item label {
         flex: 1;
         cursor: pointer;
+        font-size: 12px;
       }
       
       strong {
-        color: #1f2937;
+        color: #f3f4f6;
         font-weight: 600;
       }
       
       em {
-        color: #6b7280;
+        color: #d1d5db;
         font-style: italic;
       }
       
       code {
-        background: #f3f4f6;
-        padding: 2px 6px;
-        border-radius: 4px;
+        background: #374151;
+        padding: 2px 4px;
+        border-radius: 3px;
         font-family: 'Courier New', monospace;
-        font-size: 13px;
-        color: #dc2626;
+        font-size: 12px;
+        color: #fca5a5;
       }
       
       hr {
         border: none;
-        border-top: 2px solid #e5e7eb;
-        margin: 16px 0;
+        border-top: 1px solid #4b5563;
+        margin: 8px 0;
       }
       
       p {
-        margin: 10px 0;
+        margin: 6px 0;
       }
       
       .highlight {
@@ -353,25 +365,26 @@ interface LeadTask {
       .input-field {
         display: flex;
         align-items: baseline;
-        gap: 8px;
-        margin: 8px 0;
-        padding: 6px 0;
+        gap: 6px;
+        margin: 4px 0;
+        padding: 3px 0;
+        font-size: 12px;
       }
       
       .input-field label {
         font-weight: 600;
-        color: #374151;
-        min-width: 80px;
+        color: #d1d5db;
+        min-width: 70px;
       }
       
       .input-field .input-placeholder {
         color: #9ca3af;
         font-family: 'Courier New', monospace;
-        letter-spacing: 2px;
+        letter-spacing: 1px;
       }
       
       .input-field span:not(.input-placeholder) {
-        color: #1f2937;
+        color: #e5e7eb;
       }
     }
     

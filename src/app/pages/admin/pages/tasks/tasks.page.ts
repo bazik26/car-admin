@@ -39,9 +39,11 @@ export class TasksPageComponent implements OnInit {
   private readonly modalService = inject(BsModalService);
 
   public tasks = signal<Task[]>([]);
+  public groupedTasks = signal<Map<number, Task[]>>(new Map());
   public isLoading = signal(false);
   public filterStatus = signal<string>('all'); // 'all' | 'pending' | 'in_progress' | 'completed'
   public filterCompleted = signal<boolean | null>(null);
+  public expandedLeads = signal<Set<number>>(new Set());
 
   ngOnInit() {
     this.loadTasks();
@@ -56,6 +58,7 @@ export class TasksPageComponent implements OnInit {
     this.appService.getAdminTasks(status, completed).subscribe({
       next: (tasks: Task[]) => {
         this.tasks.set(tasks);
+        this.groupTasksByLead(tasks);
         this.isLoading.set(false);
       },
       error: (error) => {
@@ -63,6 +66,92 @@ export class TasksPageComponent implements OnInit {
         this.isLoading.set(false);
       }
     });
+  }
+
+  groupTasksByLead(tasks: Task[]) {
+    const grouped = new Map<number, Task[]>();
+    
+    // Группируем задачи по лидам
+    tasks.forEach(task => {
+      if (!grouped.has(task.leadId)) {
+        grouped.set(task.leadId, []);
+      }
+      grouped.get(task.leadId)!.push(task);
+    });
+    
+    // Сортируем задачи внутри каждой группы:
+    // 1. Невыполненные сначала
+    // 2. По дате дедлайна (ближайшие сначала)
+    grouped.forEach((leadTasks, leadId) => {
+      leadTasks.sort((a, b) => {
+        // Сначала невыполненные
+        if (a.completed !== b.completed) {
+          return a.completed ? 1 : -1;
+        }
+        // Потом по дедлайну
+        if (a.dueDate && b.dueDate) {
+          return new Date(a.dueDate).getTime() - new Date(b.dueDate).getTime();
+        }
+        if (a.dueDate) return -1;
+        if (b.dueDate) return 1;
+        return 0;
+      });
+      
+      // Показываем только первые 3 невыполненные задачи для каждого лида
+      const uncompleted = leadTasks.filter(t => !t.completed);
+      const completed = leadTasks.filter(t => t.completed);
+      
+      // Если есть невыполненные, показываем только их (максимум 3)
+      if (uncompleted.length > 0) {
+        grouped.set(leadId, uncompleted.slice(0, 3));
+      } else {
+        // Если все выполнены, показываем последние 2
+        grouped.set(leadId, completed.slice(-2));
+      }
+    });
+    
+    this.groupedTasks.set(grouped);
+    
+    // Автоматически раскрываем все группы с невыполненными задачами
+    const leadsWithUncompleted = new Set<number>();
+    grouped.forEach((leadTasks, leadId) => {
+      if (leadTasks.some(t => !t.completed)) {
+        leadsWithUncompleted.add(leadId);
+      }
+    });
+    this.expandedLeads.set(leadsWithUncompleted);
+  }
+
+  toggleLead(leadId: number) {
+    const expanded = new Set(this.expandedLeads());
+    if (expanded.has(leadId)) {
+      expanded.delete(leadId);
+    } else {
+      expanded.add(leadId);
+    }
+    this.expandedLeads.set(expanded);
+  }
+
+  isLeadExpanded(leadId: number): boolean {
+    return this.expandedLeads().has(leadId);
+  }
+
+  getLeadTasks(leadId: number): Task[] {
+    return this.groupedTasks().get(leadId) || [];
+  }
+
+  getLeadName(leadId: number): string {
+    const tasks = this.tasks();
+    const task = tasks.find(t => t.leadId === leadId);
+    return task?.lead?.name || `Лид #${leadId}`;
+  }
+
+  getUncompletedCount(leadId: number): number {
+    return this.getLeadTasks(leadId).filter(t => !t.completed).length;
+  }
+
+  getLeadIds(): number[] {
+    return Array.from(this.groupedTasks().keys());
   }
 
   openTaskDetails(task: Task) {

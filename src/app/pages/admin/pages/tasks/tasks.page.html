@@ -53,64 +53,45 @@
     </div>
   } @else {
     <div class="tasks-list">
-      @for (task of tasks(); track task.id) {
-        <div class="task-card mb-3" [class.task-overdue]="isOverdue(task.dueDate)" (click)="openTaskDetails(task)">
-          <div class="card">
-            <div class="card-body">
-              <div class="row align-items-center">
-                <div class="col-md-6">
-                  <div class="d-flex align-items-start">
-                    <div class="task-icon me-3">
-                      <i class="fas fa-circle-check text-success" *ngIf="task.completed"></i>
-                      <i class="fas fa-circle" *ngIf="!task.completed"></i>
-                    </div>
-                    <div class="task-info flex-grow-1">
-                      <h5 class="task-title mb-1">
-                        {{ task.title }}
-                        <span class="badge ms-2" [ngClass]="getStatusBadgeClass(task.status)">
-                          {{ getStatusLabel(task.status) }}
-                        </span>
-                      </h5>
-                      <p class="task-description text-muted mb-2" *ngIf="task.description">
-                        {{ task.description }}
-                      </p>
-                      <div class="task-meta">
-                        <span class="badge bg-secondary me-2">
-                          <i class="fas fa-tag me-1"></i>
-                          {{ getTaskTypeLabel(task.taskType) }}
-                        </span>
-                        @if (task.lead) {
-                          <span class="text-muted">
-                            <i class="fas fa-user me-1"></i>
-                            {{ task.lead.name }}
-                          </span>
-                        }
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div class="col-md-6 text-end">
-                  <div class="task-dates">
-                    @if (task.dueDate) {
-                      <div class="due-date" [class.text-danger]="isOverdue(task.dueDate)">
-                        <i class="fas fa-calendar-alt me-1"></i>
-                        <strong>Срок:</strong> {{ formatDate(task.dueDate) }}
-                        @if (isOverdue(task.dueDate)) {
-                          <span class="badge bg-danger ms-2">Просрочено</span>
-                        }
-                      </div>
-                    }
-                    @if (task.completedAt) {
-                      <div class="completed-date text-success mt-2">
-                        <i class="fas fa-check-circle me-1"></i>
-                        Выполнено: {{ formatDate(task.completedAt) }}
-                      </div>
-                    }
-                  </div>
-                </div>
+      @for (leadId of getLeadIds(); track leadId) {
+        <div class="lead-group mb-3">
+          <div class="lead-header" (click)="toggleLead(leadId)">
+            <div class="d-flex align-items-center justify-content-between">
+              <div class="d-flex align-items-center gap-2">
+                <i class="fas" [class.fa-chevron-down]="isLeadExpanded(leadId)" [class.fa-chevron-right]="!isLeadExpanded(leadId)"></i>
+                <strong class="lead-name">{{ getLeadName(leadId) }}</strong>
+                <span class="badge bg-primary">{{ getUncompletedCount(leadId) }} невыполненных</span>
               </div>
             </div>
           </div>
+          
+          @if (isLeadExpanded(leadId)) {
+            <div class="lead-tasks">
+              @for (task of getLeadTasks(leadId); track task.id) {
+                <div class="task-card-compact" 
+                     [class.task-overdue]="isOverdue(task.dueDate)" 
+                     [class.task-completed]="task.completed"
+                     (click)="openTaskDetails(task)">
+                  <div class="task-card-content">
+                    <div class="task-title-row">
+                      <span class="task-title-text">{{ task.title }}</span>
+                      <span class="badge" [ngClass]="getStatusBadgeClass(task.status)">
+                        {{ getStatusLabel(task.status) }}
+                      </span>
+                    </div>
+                    <div class="task-meta-row">
+                      @if (task.dueDate) {
+                        <span class="task-date" [class.text-danger]="isOverdue(task.dueDate)">
+                          <i class="fas fa-clock"></i>
+                          {{ formatDate(task.dueDate) }}
+                        </span>
+                      }
+                    </div>
+                  </div>
+                </div>
+              }
+            </div>
+          }
         </div>
       }
     </div>
