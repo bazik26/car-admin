@@ -423,6 +423,7 @@
               @for (task of getCurrentStageTasks(); track task.id) {
                 <app-task-card 
                   [task]="task"
+                  [lead]="lead"
                   (onToggle)="toggleTask($event)"
                   (onDelete)="deleteTask($event)">
                 </app-task-card>
@@ -442,6 +443,7 @@
                       @if (!getCurrentStageTasks().includes(task)) {
                         <app-task-card 
                           [task]="task"
+                          [lead]="lead"
                           (onToggle)="toggleTask($event)"
                           (onDelete)="deleteTask($event)">
                         </app-task-card>

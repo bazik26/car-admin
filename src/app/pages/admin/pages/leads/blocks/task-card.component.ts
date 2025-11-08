@@ -1,5 +1,6 @@
-import { Component, Input, Output, EventEmitter, signal, ViewEncapsulation } from '@angular/core';
+import { Component, Input, Output, EventEmitter, signal, ViewEncapsulation, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { getTaskTemplate } from '../../../../../utils/task-templates';
 
 interface LeadTask {
   id: number;
@@ -34,7 +35,7 @@ interface LeadTask {
         
         <div class="task-info">
           <h5 class="task-title" [class.completed]="task.completed">
-            {{ task.title }}
+            {{ taskTitle() }}
           </h5>
           
           @if (task.dueDate && !task.completed) {
@@ -60,11 +61,11 @@ interface LeadTask {
         </button>
       </div>
       
-      @if (showDescription() && task.description) {
-        <div class="task-description" [innerHTML]="formatDescription(task.description)"></div>
+      @if (showDescription() && taskDescription()) {
+        <div class="task-description" [innerHTML]="formatDescription(taskDescription())"></div>
       }
       
-      @if (!task.completed && task.description) {
+      @if (!task.completed && taskDescription()) {
         <button class="task-show-script-btn" (click)="toggleDescription()">
           <i class="fas" [class.fa-chevron-down]="!isDescriptionVisible()" [class.fa-chevron-up]="isDescriptionVisible()"></i>
           {{ isDescriptionVisible() ? 'Скрыть скрипт' : 'Показать скрипт общения' }}
@@ -413,10 +414,33 @@ interface LeadTask {
 })
 export class TaskCardComponent {
   @Input() task!: LeadTask;
+  @Input() lead?: any; // Данные лида для подстановки в шаблоны
   @Output() onToggle = new EventEmitter<LeadTask>();
   @Output() onDelete = new EventEmitter<number>();
   
   descriptionVisible = signal(false);
+  
+  // Получаем описание из шаблона или используем существующее
+  taskDescription = computed(() => {
+    if (this.task.taskType && this.lead) {
+      const template = getTaskTemplate(this.task.taskType, this.lead);
+      if (template) {
+        return template.description;
+      }
+    }
+    return this.task.description || '';
+  });
+  
+  // Получаем заголовок из шаблона или используем существующий
+  taskTitle = computed(() => {
+    if (this.task.taskType && this.lead) {
+      const template = getTaskTemplate(this.task.taskType, this.lead);
+      if (template) {
+        return template.title;
+      }
+    }
+    return this.task.title;
+  });
   
   isDescriptionVisible(): boolean {
     return this.descriptionVisible();

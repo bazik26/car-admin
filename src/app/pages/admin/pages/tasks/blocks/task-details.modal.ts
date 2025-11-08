@@ -1,10 +1,11 @@
-import { Component, inject, OnInit, signal, ViewEncapsulation } from '@angular/core';
+import { Component, inject, OnInit, signal, ViewEncapsulation, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { BsModalRef } from 'ngx-bootstrap/modal';
 import { AppService } from '../../../../../services/app.service';
 import { Router } from '@angular/router';
 import { take } from 'rxjs/operators';
+import { getTaskTemplate } from '../../../../../utils/task-templates';
 
 export interface Task {
   id: number;
@@ -45,6 +46,17 @@ export class TaskDetailsModalComponent implements OnInit {
   taskForm: any = {};
   isSaving = signal(false);
   taskFields = signal<Array<{key: string; label: string; value: string; required: boolean}>>([]);
+  
+  // Получаем описание из шаблона или используем существующее
+  taskDescription = computed(() => {
+    if (this.task.taskType && this.task.lead) {
+      const template = getTaskTemplate(this.task.taskType, this.task.lead);
+      if (template) {
+        return template.description;
+      }
+    }
+    return this.task.description || '';
+  });
 
   ngOnInit() {
     this.taskForm = {
@@ -60,9 +72,10 @@ export class TaskDetailsModalComponent implements OnInit {
       this.taskForm.taskData.preferredModels = this.taskForm.taskData.preferredModels.join(', ');
     }
 
-    // Парсим описание задачи для извлечения полей
-    if (this.task.description) {
-      this.parseTaskFields(this.task.description);
+    // Парсим описание задачи для извлечения полей (используем шаблон если есть)
+    const description = this.taskDescription();
+    if (description) {
+      this.parseTaskFields(description);
     }
   }
 
