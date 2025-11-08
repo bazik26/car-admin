@@ -215,15 +215,139 @@ interface LeadTask {
     
     .task-description {
       margin-top: 16px;
-      padding: 16px;
+      padding: 20px;
       background: #f9fafb;
       border-radius: 8px;
       border-left: 4px solid #3b82f6;
-      font-size: 13px;
-      line-height: 1.6;
+      font-size: 14px;
+      line-height: 1.8;
       color: #374151;
-      white-space: pre-wrap;
-      font-family: 'Courier New', monospace;
+    }
+    
+    .task-description ::ng-deep {
+      h3, h4 {
+        margin: 20px 0 12px 0;
+        font-weight: 700;
+        color: #1f2937;
+        font-size: 15px;
+      }
+      
+      h3:first-child {
+        margin-top: 0;
+      }
+      
+      .section-header {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin: 20px 0 12px 0;
+        font-weight: 700;
+        color: #1f2937;
+        font-size: 15px;
+        padding-bottom: 8px;
+        border-bottom: 2px solid #e5e7eb;
+      }
+      
+      .section-header:first-child {
+        margin-top: 0;
+      }
+      
+      .goal-block {
+        background: #eff6ff;
+        padding: 12px 16px;
+        border-radius: 6px;
+        margin: 12px 0;
+        border-left: 3px solid #3b82f6;
+      }
+      
+      .script-block {
+        background: #f0fdf4;
+        padding: 16px;
+        border-radius: 6px;
+        margin: 12px 0;
+        border-left: 3px solid #10b981;
+      }
+      
+      .checklist-block {
+        background: #fffbeb;
+        padding: 16px;
+        border-radius: 6px;
+        margin: 12px 0;
+        border-left: 3px solid #f59e0b;
+      }
+      
+      .deadline-block {
+        background: #fef2f2;
+        padding: 12px 16px;
+        border-radius: 6px;
+        margin: 12px 0;
+        border-left: 3px solid #ef4444;
+        font-weight: 600;
+      }
+      
+      ul, ol {
+        margin: 12px 0;
+        padding-left: 24px;
+      }
+      
+      li {
+        margin: 6px 0;
+        line-height: 1.7;
+      }
+      
+      .checkbox-item {
+        display: flex;
+        align-items: flex-start;
+        gap: 8px;
+        margin: 8px 0;
+        padding: 4px 0;
+      }
+      
+      .checkbox-item input[type="checkbox"] {
+        margin-top: 4px;
+        flex-shrink: 0;
+      }
+      
+      .checkbox-item label {
+        flex: 1;
+        cursor: pointer;
+      }
+      
+      strong {
+        color: #1f2937;
+        font-weight: 600;
+      }
+      
+      em {
+        color: #6b7280;
+        font-style: italic;
+      }
+      
+      code {
+        background: #f3f4f6;
+        padding: 2px 6px;
+        border-radius: 4px;
+        font-family: 'Courier New', monospace;
+        font-size: 13px;
+        color: #dc2626;
+      }
+      
+      hr {
+        border: none;
+        border-top: 2px solid #e5e7eb;
+        margin: 16px 0;
+      }
+      
+      p {
+        margin: 10px 0;
+      }
+      
+      .highlight {
+        background: #fef3c7;
+        padding: 2px 6px;
+        border-radius: 4px;
+        font-weight: 600;
+      }
     }
     
     .task-show-script-btn {
@@ -284,12 +408,154 @@ export class TaskCardComponent {
   }
   
   formatDescription(description: string): string {
-    // Преобразуем markdown-like форматирование в HTML
-    return description
-      .replace(/\n/g, '<br>')
-      .replace(/━━━/g, '<hr style="border: 1px solid #e5e7eb; margin: 10px 0;">')
-      .replace(/^(✅|❌|💡|⚡|📝|💬|📞|📋|🎯)/gm, '<strong>$1</strong>')
-      .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+    if (!description) return '';
+    
+    const lines = description.split('\n');
+    const result: string[] = [];
+    let currentBlock: { type: string; content: string[] } | null = null;
+    
+    const closeCurrentBlock = () => {
+      if (currentBlock) {
+        const content = currentBlock.content.join('\n').trim();
+        if (content) {
+          let blockHtml = '';
+          
+          switch (currentBlock.type) {
+            case 'goal':
+              blockHtml = `<div class="goal-block">${this.formatBlockContent(content)}</div>`;
+              break;
+            case 'script':
+              blockHtml = `<div class="script-block">${this.formatBlockContent(content)}</div>`;
+              break;
+            case 'checklist':
+              blockHtml = `<div class="checklist-block">${this.formatBlockContent(content)}</div>`;
+              break;
+            case 'deadline':
+              blockHtml = `<div class="deadline-block"><strong>⚡ ДЕДЛАЙН:</strong> ${this.formatBlockContent(content)}</div>`;
+              break;
+          }
+          
+          result.push(blockHtml);
+        }
+        currentBlock = null;
+      }
+    };
+    
+    for (let i = 0; i < lines.length; i++) {
+      const line = lines[i].trim();
+      
+      // Заголовки секций
+      if (line.match(/^🎯 ЦЕЛЬ:?/i)) {
+        closeCurrentBlock();
+        result.push('<div class="section-header"><span>🎯</span><span>ЦЕЛЬ</span></div>');
+        currentBlock = { type: 'goal', content: [] };
+      } else if (line.match(/^📞 СКРИПТ ЗВОНКА:?/i)) {
+        closeCurrentBlock();
+        result.push('<div class="section-header"><span>📞</span><span>СКРИПТ ЗВОНКА</span></div>');
+        currentBlock = { type: 'script', content: [] };
+      } else if (line.match(/^💬 СКРИПТ:?/i)) {
+        closeCurrentBlock();
+        result.push('<div class="section-header"><span>💬</span><span>СКРИПТ</span></div>');
+        currentBlock = { type: 'script', content: [] };
+      } else if (line.match(/^📋 ЧТО УЗНАТЬ/i)) {
+        closeCurrentBlock();
+        result.push('<div class="section-header"><span>📋</span><span>ЧТО УЗНАТЬ</span></div>');
+        currentBlock = { type: 'checklist', content: [] };
+      } else if (line.match(/^📝 ЧТО ОТМЕТИТЬ:?/i)) {
+        closeCurrentBlock();
+        result.push('<div class="section-header"><span>📝</span><span>ЧТО ОТМЕТИТЬ</span></div>');
+        currentBlock = { type: 'checklist', content: [] };
+      } else if (line.match(/^📝 ЗАПОЛНИТЬ В СИСТЕМЕ:?/i)) {
+        closeCurrentBlock();
+        result.push('<div class="section-header"><span>📝</span><span>ЗАПОЛНИТЬ В СИСТЕМЕ</span></div>');
+        currentBlock = { type: 'checklist', content: [] };
+      } else if (line.match(/^⚡ ДЕДЛАЙН:?/i)) {
+        closeCurrentBlock();
+        const deadlineText = line.replace(/^⚡ ДЕДЛАЙН:?\s*/i, '').trim();
+        if (deadlineText) {
+          result.push(`<div class="deadline-block"><strong>⚡ ДЕДЛАЙН:</strong> ${this.formatBlockContent(deadlineText)}</div>`);
+        } else {
+          currentBlock = { type: 'deadline', content: [] };
+        }
+      } else if (line.match(/^⚡ СЛЕДУЮЩИЙ ШАГ:?/i)) {
+        closeCurrentBlock();
+        result.push('<div class="section-header"><span>⚡</span><span>СЛЕДУЮЩИЙ ШАГ</span></div>');
+        currentBlock = { type: 'goal', content: [] };
+      } else if (line.match(/^💡 ПОДСКАЗКА:?/i)) {
+        closeCurrentBlock();
+        result.push('<div class="section-header"><span>💡</span><span>ПОДСКАЗКА</span></div>');
+        currentBlock = { type: 'goal', content: [] };
+      } else if (line.match(/^📅 ПЛАН ДЕЙСТВИЙ:?/i)) {
+        closeCurrentBlock();
+        result.push('<div class="section-header"><span>📅</span><span>ПЛАН ДЕЙСТВИЙ</span></div>');
+        currentBlock = { type: 'checklist', content: [] };
+      } else if (line.match(/^📝 ДЕЙСТВИЯ:?/i)) {
+        closeCurrentBlock();
+        result.push('<div class="section-header"><span>📝</span><span>ДЕЙСТВИЯ</span></div>');
+        currentBlock = { type: 'checklist', content: [] };
+      } else if (line.match(/^━━━+/)) {
+        closeCurrentBlock();
+        result.push('<hr>');
+      } else if (line) {
+        // Добавляем строку в текущий блок или как обычный текст
+        if (currentBlock) {
+          currentBlock.content.push(line);
+        } else {
+          result.push(this.formatLine(line));
+        }
+      } else {
+        // Пустая строка
+        if (currentBlock && currentBlock.content.length > 0) {
+          currentBlock.content.push('');
+        } else {
+          result.push('<br>');
+        }
+      }
+    }
+    
+    closeCurrentBlock();
+    
+    return result.join('');
+  }
+  
+  formatBlockContent(content: string): string {
+    const lines = content.split('\n');
+    const formatted: string[] = [];
+    
+    for (const line of lines) {
+      if (line.trim()) {
+        formatted.push(this.formatLine(line));
+      }
+    }
+    
+    return formatted.join('<br>');
+  }
+  
+  formatLine(line: string): string {
+    let formatted = line;
+    
+    // Подзаголовки
+    formatted = formatted.replace(/^(ПРИВЕТСТВИЕ:|ЕСЛИ ДА:|ЕСЛИ НЕТ:)/i, '<strong>$1</strong>');
+    formatted = formatted.replace(/^(1️⃣|2️⃣|3️⃣|4️⃣|5️⃣)/, '<strong>$1</strong>');
+    
+    // Чекбоксы
+    formatted = formatted.replace(/^- ✓ (.+)$/, '<div class="checkbox-item"><input type="checkbox" disabled><label>$1</label></div>');
+    formatted = formatted.replace(/^- (.+)$/, '<div class="checkbox-item"><input type="checkbox" disabled><label>$1</label></div>');
+    
+    // Нумерованные списки
+    formatted = formatted.replace(/^(\d+[\.\)])\s+(.+)$/, '<div class="checkbox-item"><span style="font-weight: 600; color: #3b82f6;">$1</span><span>$2</span></div>');
+    
+    // Стрелки и переходы
+    formatted = formatted.replace(/→ (.+)/g, '<span style="color: #10b981; font-weight: 600;">→ $1</span>');
+    
+    // Выделение текста
+    formatted = formatted.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+    formatted = formatted.replace(/\*(.+?)\*/g, '<em>$1</em>');
+    
+    // Код/переменные
+    formatted = formatted.replace(/\[(.+?)\]/g, '<code>$1</code>');
+    
+    return formatted;
   }
 }
 
