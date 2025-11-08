@@ -34,6 +34,16 @@
         <li class="nav-item" role="presentation">
           <button 
             class="nav-link" 
+            [class.active]="activeTab() === 'pipeline'"
+            (click)="activeTab.set('pipeline'); loadLeadTasks(lead.id)"
+            type="button">
+            <i class="fas fa-route me-2"></i>Воронка
+            <span class="badge bg-warning text-dark ms-2">{{ getCompletedTasksCount() }}/{{ getTotalTasksCount() }}</span>
+          </button>
+        </li>
+        <li class="nav-item" role="presentation">
+          <button 
+            class="nav-link" 
             [class.active]="activeTab() === 'info'"
             (click)="activeTab.set('info')"
             type="button">
@@ -98,16 +108,60 @@
 
       <!-- Tab Content -->
       <div class="tab-content">
-        <!-- Info Tab -->
-        @if (activeTab() === 'info') {
+        <!-- НОВАЯ ВКЛАДКА: Pipeline (ПЕРВАЯ) -->
+        @if (activeTab() === 'pipeline') {
           <div class="tab-pane fade show active">
-            <!-- НОВЫЙ КОМПОНЕНТ: Pipeline Visualization -->
             <app-lead-pipeline 
               [currentStage]="getCurrentPipelineStage()"
               [completedTasks]="getCompletedTasksCount()"
-              [totalTasks]="getTotalTasksCount()">
+              [totalTasks]="getTotalTasksCount()"
+              (onStageChange)="updatePipelineStage($event)">
             </app-lead-pipeline>
             
+            <!-- Быстрая информация о лиде -->
+            <div class="quick-info-cards">
+              <div class="row g-3">
+                @if (lead.budget) {
+                  <div class="col-md-4">
+                    <div class="info-card">
+                      <i class="fas fa-ruble-sign"></i>
+                      <div>
+                        <div class="info-label">Бюджет</div>
+                        <div class="info-value">{{ lead.budget.min || '?' }} - {{ lead.budget.max || '?' }} ₽</div>
+                      </div>
+                    </div>
+                  </div>
+                }
+                @if (lead.city || lead.region) {
+                  <div class="col-md-4">
+                    <div class="info-card">
+                      <i class="fas fa-map-marker-alt"></i>
+                      <div>
+                        <div class="info-label">Регион</div>
+                        <div class="info-value">{{ lead.city || lead.region || 'Не указан' }}</div>
+                      </div>
+                    </div>
+                  </div>
+                }
+                @if (lead.timeline) {
+                  <div class="col-md-4">
+                    <div class="info-card">
+                      <i class="fas fa-calendar"></i>
+                      <div>
+                        <div class="info-label">Сроки</div>
+                        <div class="info-value">{{ lead.timeline }}</div>
+                      </div>
+                    </div>
+                  </div>
+                }
+              </div>
+            </div>
+          </div>
+        }
+        
+        <!-- Info Tab -->
+        @if (activeTab() === 'info') {
+          <div class="tab-pane fade show active">
             <!-- Contact Information -->
             <div class="mb-4">
               <h5 class="mb-3">Контактная информация</h5>

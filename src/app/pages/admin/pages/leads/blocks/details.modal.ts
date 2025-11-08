@@ -122,7 +122,7 @@ export class LeadDetailsModal implements OnInit {
   @Input()
   lead!: Lead;
 
-  public activeTab = signal('info');
+  public activeTab = signal('pipeline'); // Начинаем с вкладки "Воронка"
   public leadData = signal<Lead | null>(null);
   public isLoading = signal(true);
   
@@ -573,7 +573,24 @@ export class LeadDetailsModal implements OnInit {
   getCurrentPipelineStage(): any {
     return this.leadData()?.pipelineStage || 'new_lead';
   }
+  
+  updatePipelineStage(newStage: any) {
+    const lead = this.leadData();
+    if (!lead) return;
+    
+    this.appService.updateLead(lead.id, { pipelineStage: newStage }).pipe(take(1)).subscribe({
+      next: (updatedLead: Lead) => {
+        this.leadData.set(updatedLead);
+        this.loadLeadActivities(lead.id);
+      },
+      error: (error: any) => {
+        console.error('Error updating pipeline stage:', error);
+        alert('Ошибка при обновлении этапа');
+      }
+    });
+  }
 }
+
 
 
 

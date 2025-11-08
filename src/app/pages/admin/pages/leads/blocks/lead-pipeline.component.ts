@@ -1,4 +1,4 @@
-import { Component, Input, signal } from '@angular/core';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 export enum PipelineStage {
@@ -30,14 +30,14 @@ interface PipelineStep {
     <div class="lead-pipeline">
       <h4 class="pipeline-title">
         <i class="fas fa-route"></i>
-        Этапы работы с лидом
+        Воронка продаж
       </h4>
       
       <div class="pipeline-progress">
         <div class="progress-bar-container">
           <div class="progress-bar" [style.width.%]="getProgressPercentage()"></div>
         </div>
-        <span class="progress-text">{{ getProgressPercentage() }}% завершено</span>
+        <span class="progress-text">{{ getProgressPercentage() }}% завершено ({{ completedTasks }} из {{ totalTasks }} задач)</span>
       </div>
       
       <div class="pipeline-steps">
@@ -47,6 +47,8 @@ interface PipelineStep {
             [class.active]="isActiveStage(step.stage)"
             [class.completed]="isCompletedStage(step.stage)"
             [class.current]="isCurrentStage(step.stage)"
+            [class.clickable]="canMoveToStage(step.stage)"
+            (click)="onStageClick(step.stage)"
           >
             <div class="step-header">
               <div class="step-number">
@@ -66,6 +68,13 @@ interface PipelineStep {
                 <i class="fas fa-clock"></i>
                 {{ step.timeframe }}
               </span>
+              
+              @if (isCurrentStage(step.stage) && canMoveToNextStage()) {
+                <button class="stage-move-btn" (click)="moveToNextStage(); $event.stopPropagation()">
+                  <i class="fas fa-arrow-right"></i>
+                  Перейти к следующему этапу
+                </button>
+              }
             </div>
             
             @if (i < pipelineSteps.length - 2) {
@@ -76,13 +85,29 @@ interface PipelineStep {
       </div>
       
       <div class="pipeline-actions">
-        <div class="action-hint">
-          <i class="fas fa-lightbulb"></i>
-          <strong>Текущий этап:</strong> {{ getCurrentStageTitle() }}
+        <div class="action-hint current-stage">
+          <i class="fas fa-map-marker-alt"></i>
+          <div>
+            <strong>Текущий этап:</strong> {{ getCurrentStageTitle() }}
+            <div class="hint-description">{{ getNextAction() }}</div>
+          </div>
         </div>
-        <div class="action-hint">
-          <i class="fas fa-tasks"></i>
-          <strong>Следующее действие:</strong> {{ getNextAction() }}
+        
+        <div class="stage-controls">
+          <button 
+            class="btn btn-outline-secondary btn-sm"
+            [disabled]="!canMoveToPreviousStage()"
+            (click)="moveToPreviousStage()">
+            <i class="fas fa-arrow-left"></i>
+            Назад
+          </button>
+          <button 
+            class="btn btn-primary btn-sm"
+            [disabled]="!canMoveToNextStage()"
+            (click)="moveToNextStage()">
+            Далее
+            <i class="fas fa-arrow-right"></i>
+          </button>
         </div>
       </div>
     </div>
@@ -173,6 +198,15 @@ interface PipelineStep {
       animation: pulse 2s infinite;
     }
     
+    .pipeline-step.clickable {
+      cursor: pointer;
+    }
+    
+    .pipeline-step.clickable:hover:not(.current) {
+      transform: translateX(4px);
+      border-color: #3b82f6;
+    }
+    
     .step-header {
       display: flex;
       flex-direction: column;
@@ -259,6 +293,54 @@ interface PipelineStep {
       color: #3b82f6;
     }
     
+    .action-hint.current-stage {
+      background: #eff6ff;
+      padding: 16px;
+      border-radius: 8px;
+      border-left: 4px solid #3b82f6;
+    }
+    
+    .hint-description {
+      margin-top: 4px;
+      font-size: 13px;
+      color: #64748b;
+      font-weight: normal;
+    }
+    
+    .stage-controls {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+      margin-top: 16px;
+      padding-top: 16px;
+      border-top: 1px solid #e5e7eb;
+    }
+    
+    .stage-controls .btn {
+      min-width: 120px;
+    }
+    
+    .stage-move-btn {
+      margin-top: 12px;
+      padding: 8px 16px;
+      background: #10b981;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    
+    .stage-move-btn:hover {
+      background: #059669;
+      transform: translateX(4px);
+    }
+    
     @keyframes pulse {
       0%, 100% {
         transform: scale(1);
@@ -273,6 +355,7 @@ export class LeadPipelineComponent {
   @Input() currentStage: PipelineStage = PipelineStage.NEW_LEAD;
   @Input() completedTasks: number = 0;
   @Input() totalTasks: number = 14;
+  @Output() onStageChange = new EventEmitter<PipelineStage>();
   
   pipelineSteps: PipelineStep[] = [
     {
@@ -402,6 +485,65 @@ export class LeadPipelineComponent {
         return 'Проанализировать причину отказа';
       default:
         return 'Продолжить работу с лидом';
+    }
+  }
+  
+  canMoveToStage(stage: PipelineStage): boolean {
+    // Можно переключаться только на соседние этапы или назад
+    const currentIndex = this.pipelineSteps.findIndex(s => s.stage === this.currentStage);
+    const targetIndex = this.pipelineSteps.findIndex(s => s.stage === stage);
+    
+    // Нельзя кликать на WON/LOST напрямую (только через спец. кнопки)
+    if (stage === PipelineStage.WON || stage === PipelineStage.LOST) {
+      return false;
+    }
+    
+    // Можно кликнуть на предыдущие этапы или следующий
+    return targetIndex <= currentIndex + 1;
+  }
+  
+  onStageClick(stage: PipelineStage): void {
+    if (this.canMoveToStage(stage) && stage !== this.currentStage) {
+      this.onStageChange.emit(stage);
+    }
+  }
+  
+  canMoveToNextStage(): boolean {
+    const currentIndex = this.pipelineSteps.findIndex(s => s.stage === this.currentStage);
+    const nextStage = this.pipelineSteps[currentIndex + 1];
+    
+    // Проверяем что следующий этап существует и не WON/LOST
+    return nextStage && 
+           nextStage.stage !== PipelineStage.WON && 
+           nextStage.stage !== PipelineStage.LOST;
+  }
+  
+  canMoveToPreviousStage(): boolean {
+    const currentIndex = this.pipelineSteps.findIndex(s => s.stage === this.currentStage);
+    return currentIndex > 0 && 
+           this.currentStage !== PipelineStage.WON && 
+           this.currentStage !== PipelineStage.LOST;
+  }
+  
+  moveToNextStage(): void {
+    if (!this.canMoveToNextStage()) return;
+    
+    const currentIndex = this.pipelineSteps.findIndex(s => s.stage === this.currentStage);
+    const nextStage = this.pipelineSteps[currentIndex + 1];
+    
+    if (nextStage) {
+      this.onStageChange.emit(nextStage.stage);
+    }
+  }
+  
+  moveToPreviousStage(): void {
+    if (!this.canMoveToPreviousStage()) return;
+    
+    const currentIndex = this.pipelineSteps.findIndex(s => s.stage === this.currentStage);
+    const prevStage = this.pipelineSteps[currentIndex - 1];
+    
+    if (prevStage) {
+      this.onStageChange.emit(prevStage.stage);
     }
   }
 }
