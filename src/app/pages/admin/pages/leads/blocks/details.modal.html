@@ -316,27 +316,31 @@
                   Информация будет отображаться здесь после выполнения задач
                 </div>
               } @else {
-                <div class="row g-3">
-                  @for (entry of getCollectedDataEntries(); track entry[0]) {
-                    <div class="col-md-6">
-                      <div class="collected-field-card">
-                        <div class="field-label">
-                          <i class="fas fa-check-circle text-success me-2"></i>
-                          {{ entry[0] }}
+                @for (categoryEntry of getCollectedDataCategories(); track categoryEntry[0]) {
+                  <div class="collected-category mb-4">
+                    <h6 class="category-title mb-3">{{ categoryEntry[0] }}</h6>
+                    <div class="row g-3">
+                      @for (field of categoryEntry[1]; track field.label) {
+                        <div class="col-md-6">
+                          <div class="collected-field-card">
+                            <div class="field-label">
+                              {{ field.label }}
+                            </div>
+                            <div class="field-value">
+                              {{ field.value }}
+                            </div>
+                            <div class="field-source">
+                              <small class="text-muted">
+                                <i class="fas fa-tasks me-1"></i>
+                                {{ field.source }}
+                              </small>
+                            </div>
+                          </div>
                         </div>
-                        <div class="field-value">
-                          {{ entry[1].value }}
-                        </div>
-                        <div class="field-source">
-                          <small class="text-muted">
-                            <i class="fas fa-tasks me-1"></i>
-                            Из задачи: {{ entry[1].source }}
-                          </small>
-                        </div>
-                      </div>
+                      }
                     </div>
-                  }
-                </div>
+                  </div>
+                }
               }
             </div>
           </div>

@@ -34,14 +34,35 @@
                   <span class="required-mark">*</span>
                 }
               </label>
-              <input 
-                type="text" 
-                class="field-input"
-                [class.field-error]="field.required && (!taskForm.taskData[field.key] || taskForm.taskData[field.key].trim().length === 0)"
-                [(ngModel)]="taskForm.taskData[field.key]"
-                (ngModelChange)="updateFieldValue(field.key, $event)"
-                [placeholder]="'Введите ' + field.label.toLowerCase()"
-              />
+              @if (field.fieldType === 'select' && field.options) {
+                <select 
+                  class="field-input field-select"
+                  [class.field-error]="field.required && (!taskForm.taskData[field.key] || taskForm.taskData[field.key].trim().length === 0)"
+                  [(ngModel)]="taskForm.taskData[field.key]"
+                  (ngModelChange)="updateFieldValue(field.key, $event)">
+                  <option value="">Выберите...</option>
+                  @for (option of field.options; track option) {
+                    <option [value]="option">{{ option }}</option>
+                  }
+                </select>
+              } @else if (field.fieldType === 'date') {
+                <input 
+                  type="datetime-local" 
+                  class="field-input"
+                  [class.field-error]="field.required && (!taskForm.taskData[field.key] || taskForm.taskData[field.key].trim().length === 0)"
+                  [(ngModel)]="taskForm.taskData[field.key]"
+                  (ngModelChange)="updateFieldValue(field.key, $event)"
+                />
+              } @else {
+                <input 
+                  type="text" 
+                  class="field-input"
+                  [class.field-error]="field.required && (!taskForm.taskData[field.key] || taskForm.taskData[field.key].trim().length === 0)"
+                  [(ngModel)]="taskForm.taskData[field.key]"
+                  (ngModelChange)="updateFieldValue(field.key, $event)"
+                  [placeholder]="'Введите ' + field.label.toLowerCase()"
+                />
+              }
             </div>
           }
         </div>

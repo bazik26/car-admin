@@ -46,7 +46,7 @@ export class TaskDetailsModalComponent implements OnInit {
   task!: Task;
   taskForm: any = {};
   isSaving = signal(false);
-  taskFields = signal<Array<{key: string; label: string; value: string; required: boolean}>>([]);
+  taskFields = signal<Array<{key: string; label: string; value: string; required: boolean; fieldType?: 'text' | 'select' | 'date'; options?: string[]}>>([]);
   
   // Получаем описание из шаблона или используем существующее
   taskDescription = computed(() => {
@@ -81,7 +81,7 @@ export class TaskDetailsModalComponent implements OnInit {
   }
 
   parseTaskFields(description: string) {
-    const fields: Array<{key: string; label: string; value: string; required: boolean}> = [];
+    const fields: Array<{key: string; label: string; value: string; required: boolean; fieldType?: 'text' | 'select' | 'date'; options?: string[]}> = [];
     const lines = description.split('\n');
     let inChecklistSection = false;
     let isRequiredSection = false;
@@ -94,10 +94,12 @@ export class TaskDetailsModalComponent implements OnInit {
           trimmed.match(/^📝\s*ЧТО ОТМЕТИТЬ/i) ||
           trimmed.match(/^📝\s*ЗАПИСАТЬ/i) ||
           trimmed.match(/^📝\s*ЗАПОЛНИТЬ/i) ||
+          trimmed.match(/^📊\s*СОБРАТЬ/i) ||
           trimmed.match(/^ЧТО УЗНАТЬ/i) ||
           trimmed.match(/^ЧТО ОТМЕТИТЬ/i) ||
           trimmed.match(/^ЗАПИСАТЬ/i) ||
-          trimmed.match(/^ЗАПОЛНИТЬ/i)) {
+          trimmed.match(/^ЗАПОЛНИТЬ/i) ||
+          trimmed.match(/^СОБРАТЬ/i)) {
         inChecklistSection = true;
         // Проверяем, есть ли пометка "(обязательно)" в заголовке секции
         isRequiredSection = !!trimmed.match(/\(обязательно\)/i);
@@ -105,7 +107,7 @@ export class TaskDetailsModalComponent implements OnInit {
       }
       
       // Выходим из секции при следующем заголовке с эмодзи или разделителе
-      if ((trimmed.match(/^[🎯📞💬⚡💡📅📋📝]/) || trimmed.match(/^━━+/)) && inChecklistSection && trimmed.length > 3) {
+      if ((trimmed.match(/^[🎯📞💬⚡💡📅📋📝📊]/) || trimmed.match(/^━━+/)) && inChecklistSection && trimmed.length > 3) {
         inChecklistSection = false;
         isRequiredSection = false;
       }
@@ -114,13 +116,60 @@ export class TaskDetailsModalComponent implements OnInit {
         // Парсим строки вида:
         // "- ✓ Полное имя: Рустем"
         // "- ✓ Email: _____"
-        // "- ✓ Год от: _______"
+        // "- ✓ Клиент взял трубку: Да/Нет"
         // "Полное имя: Рустем"
         // "Email: _______"
         const match = trimmed.match(/^-?\s*✓?\s*([^:]+):\s*(.+)$/);
         if (match) {
           let label = match[1].trim();
           let value = match[2].trim();
+          
+          // Определяем тип поля и опции для селектора
+          let fieldType: 'text' | 'select' | 'date' = 'text';
+          let options: string[] | undefined = undefined;
+          
+          // Поля с селекторами
+          if (label.includes('Клиент взял трубку') || label.includes('Да/Нет')) {
+            fieldType = 'select';
+            options = ['Да', 'Нет'];
+          } else if (label.includes('Реакция на варианты') || label.includes('Реакция клиента')) {
+            fieldType = 'select';
+            options = ['Заинтересован', 'Сомневается', 'Не подошло', 'Не ответил'];
+          } else if (label.includes('Тип возражения')) {
+            fieldType = 'select';
+            options = ['Цена', 'Сроки', 'Качество', 'Документы', 'Другое'];
+          } else if (label.includes('Результат обработки возражения') || label.includes('Результат')) {
+            fieldType = 'select';
+            options = ['Согласен', 'Еще думает', 'Отказ'];
+          } else if (label.includes('Способ отправки') || label.includes('Способ оплаты')) {
+            fieldType = 'select';
+            options = label.includes('отправки') 
+              ? ['Email', 'Telegram', 'Другое']
+              : ['Банковский перевод', 'Карта', 'Наличные'];
+          } else if (label.includes('Статус оплаты')) {
+            fieldType = 'select';
+            options = ['Получена', 'Ожидается', 'Не получена'];
+          } else if (label.includes('Договор подписан')) {
+            fieldType = 'select';
+            options = ['Да', 'Нет', 'В процессе'];
+          } else if (label.includes('Все условия согласованы') || label.includes('Готовность начать')) {
+            fieldType = 'select';
+            options = ['Да', 'Нет'];
+          } else if (label.includes('Срочность') || label.includes('Приоритет')) {
+            fieldType = 'select';
+            options = ['Высокий', 'Средний', 'Низкий'];
+          } else if (label.includes('Тип кузова')) {
+            fieldType = 'select';
+            options = ['Седан', 'Универсал', 'Кроссовер', 'Хэтчбек', 'Купе', 'Кабриолет'];
+          } else if (label.includes('Коробка передач') || label.includes('Коробка')) {
+            fieldType = 'select';
+            options = ['Автомат', 'Механика', 'Робот', 'Вариатор'];
+          } else if (label.includes('Тип топлива') || label.includes('Топливо')) {
+            fieldType = 'select';
+            options = ['Бензин', 'Дизель', 'Гибрид', 'Электро'];
+          } else if (label.includes('Дата') && (label.includes('отправки') || label.includes('получения') || label.includes('звонка'))) {
+            fieldType = 'date';
+          }
           
           // Обрабатываем "Пробег до: _______ км"
           if (label.includes('Пробег') && value.includes('км')) {
@@ -140,16 +189,13 @@ export class TaskDetailsModalComponent implements OnInit {
           const isFilled = value && !value.match(/^[_\-\.\s]+$/) && value.length > 0;
           const currentValue = this.taskForm.taskData[key] || (isFilled ? value : '');
           
-          // Пропускаем пустые значения из описания (только подчеркивания)
-          if (!isFilled && !this.taskForm.taskData[key]) {
-            // Оставляем пустое значение для заполнения
-          }
-          
           fields.push({
             key,
             label,
             value: currentValue,
-            required: isRequiredSection // Поле обязательно только если секция помечена как "(обязательно)"
+            required: isRequiredSection,
+            fieldType,
+            options
           });
         }
       }
@@ -168,68 +214,67 @@ export class TaskDetailsModalComponent implements OnInit {
   generateFieldKey(label: string): string {
     // Преобразуем русские названия в ключи
     const keyMap: Record<string, string> = {
+      // Контактные данные
       'Полное имя': 'fullName',
       'Email': 'email',
       'Телефон': 'phone',
       'Telegram': 'telegram',
-      'Город доставки': 'deliveryCity',
-      'Когда планирует покупку': 'purchaseTimeline',
+      // Информация о звонке
       'Дата/время звонка': 'callDateTime',
       'Клиент взял трубку': 'clientAnswered',
       'Удобное время для разговора': 'convenientTime',
-      'Результат': 'callResult',
-      // Поля из таска 3 (предпочтения по автомобилям)
-      'Марки': 'preferredBrands',
-      'Модели': 'preferredModels',
+      'Результат звонка': 'callResult',
+      // Предпочтения по автомобилю
+      'Марки (через запятую)': 'preferredBrands',
+      'Модели (через запятую)': 'preferredModels',
       'Год от': 'preferredYearFrom',
       'Год до': 'preferredYearTo',
+      'Максимальный пробег': 'preferredMileageMax',
       'Пробег до': 'preferredMileageMax',
-      // Поля из таска 4 (бюджет)
+      'Тип кузова': 'bodyType',
+      'Коробка передач': 'gearbox',
+      'Коробка': 'gearbox',
+      'Тип топлива': 'fuelType',
+      'Топливо': 'fuelType',
+      // Бюджет и сроки
       'Бюджет от': 'budgetMin',
       'Бюджет до': 'budgetMax',
-      // Поля из таска 5 (регион)
+      'Когда планирует покупку': 'purchaseTimeline',
+      'Срочность': 'urgency',
+      'Сроки': 'timeline',
+      // Доставка
       'Регион': 'region',
       'Город': 'city',
-      // Поля из таска 6 (сроки)
-      'Сроки': 'timeline',
-      // Поля из таска 7 (отправить подборку)
+      'Город доставки': 'deliveryCity',
+      // Реакции и возражения (задача 2)
       'Количество отправленных вариантов': 'offersCount',
       'Дата отправки': 'offersSentDate',
-      'Способ отправки': 'offersMethod',
-      // Поля из таска 8 (расчет стоимости)
-      'Дата отправки расчета': 'calculationSentDate',
-      'Клиент понял стоимость': 'clientUnderstoodPrice',
-      'Возражения по цене': 'priceObjections',
-      // Поля из таска 9 (фото)
-      'Количество отправленных фото': 'photosCount',
-      'Клиент запросил дополнительные фото': 'clientRequestedPhotos',
-      // Поля из таска 10 (follow-up)
+      'Способ отправки вариантов': 'offersMethod',
+      'Реакция на варианты': 'clientReaction',
       'Реакция клиента': 'clientReaction',
-      'Возражения': 'objections',
-      'Следующий шаг': 'nextStep',
-      // Поля из таска 11 (возражения)
+      'Какой вариант понравился больше всего': 'likedVariant',
+      'Что не устроило': 'objections',
+      'Нужны ли дополнительные варианты': 'needsMoreVariants',
       'Тип возражения': 'objectionType',
-      'Ответ клиенту': 'objectionResponse',
+      'Ответ на возражение': 'objectionResponse',
       'Результат обработки возражения': 'objectionResult',
-      // Поля из таска 12 (встреча)
-      'Дата/время встречи': 'meetingDateTime',
-      'Формат': 'meetingFormat',
-      'Подтверждено клиентом': 'meetingConfirmed',
-      // Поля из таска 13 (договор)
+      'Что показать дальше': 'nextStep',
+      'Когда связаться снова': 'nextContactDate',
+      // Договор и оплата (задача 3)
       'Дата отправки договора': 'contractSentDate',
-      'Договор подписан': 'contractSigned',
-      'Первый платеж получен': 'firstPaymentReceived',
-      // Поля из таска 14 (предоплата)
+      'Дата отправки расчета': 'calculationSentDate',
+      'Способ отправки договора': 'contractMethod',
       'Сумма предоплаты': 'prepaymentAmount',
       'Дата получения': 'prepaymentDate',
       'Способ оплаты': 'paymentMethod',
-      // Поля из таска 15 (подтверждение сделки)
-      'Сделка подтверждена': 'dealConfirmed',
-      'Дата начала оформления': 'dealStartDate',
+      'Статус оплаты': 'paymentStatus',
+      'Договор подписан': 'contractSigned',
+      'Все условия согласованы': 'dealConfirmed',
+      'Готовность начать оформление': 'readyToStart',
     };
     
     const normalizedLabel = label.trim();
-    return keyMap[normalizedLabel] || normalizedLabel.toLowerCase().replace(/\s+/g, '_');
+    return keyMap[normalizedLabel] || normalizedLabel.toLowerCase().replace(/\s+/g, '_').replace(/[()]/g, '');
   }
 
   updateFieldValue(key: string, value: string) {

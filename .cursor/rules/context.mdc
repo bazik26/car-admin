@@ -1,0 +1,21 @@
+---
+description: >
+  Key conventions for the Angular-based CRM in `car-admin`.
+appliesTo:
+  - car-admin/**
+---
+
+# Car Admin CRM
+
+- **Stack**: Angular 20 with standalone components, RxJS 7, Bootstrap 5; served via `start.js` on Railway (`npm run build` + `serve`).
+- **Routes**: `/admin/pages/**` hosts the CRM shell; `app.routes.ts` wires public auth, leads, cars, tasks, chat, and XML export views under a nested admin layout.
+- **State & Services**: `src/app/services` centralises API access; `AuthInterceptor` injects saved tokens and forces logout on `401`; `AppService` wraps all REST calls to `car-api` using `environment.API_URL`.
+- **CRM Features**: `pages/admin/pages/leads` contains pipelines, tasks, comments, scoring, and activity timeline; modal components live under `blocks/**`. `utils/task-templates.ts` and `pipeline-helpers.ts` power scripted workflows.
+- **Multi-office Rule**: Rely on API-provided `projectId` separation—never mix office data on the client; each request must include the auth token for correct tenancy filtering.
+- **Real-time**: Chat integrates via `socket.io-client` from `services/sound.service.ts`/chat modules; keep the socket namespace aligned with API expectations when expanding chat features.
+
+# Development Tips
+
+- Use `environment.ts` for local API host overrides; production swaps to Railway URL.
+- When creating new pages, prefer standalone components and register them in `app.routes.ts`; keep admin-only features under `/admin` to avoid bundling them into the public shell.
+- Shared modals live under `pages/**/blocks`; reuse rather than duplicating dialog logic.

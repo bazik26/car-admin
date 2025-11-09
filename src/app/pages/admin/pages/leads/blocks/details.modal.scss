@@ -48,6 +48,17 @@
   display: none;
 }
 
+.collected-category {
+  .category-title {
+    font-size: 18px;
+    font-weight: 600;
+    color: #111827;
+    padding-bottom: 12px;
+    border-bottom: 2px solid #e5e7eb;
+    margin-bottom: 16px;
+  }
+}
+
 .collected-field-card {
   background: #ffffff;
   border: 1px solid #e5e7eb;

@@ -126,7 +126,7 @@ export class LeadDetailsModal implements OnInit {
   lead!: Lead;
 
   public activeTab = signal<'pipeline' | 'info' | 'collected' | 'tasks' | 'activity'>('pipeline'); // Начинаем с вкладки "Воронка"
-  public collectedData = signal<Map<string, {value: string; source: string; taskId: number}>>(new Map());
+  public collectedData = signal<Map<string, {value: string; source: string; taskId: number; category?: string}>>(new Map());
   public leadData = signal<Lead | null>(null);
   public isLoading = signal(true);
   
@@ -218,7 +218,65 @@ export class LeadDetailsModal implements OnInit {
   }
 
   collectDataFromTasks(tasks: LeadTask[]) {
-    const collected = new Map<string, {value: string; source: string; taskId: number}>();
+    const collected = new Map<string, {value: string; source: string; taskId: number; category?: string}>();
+    
+    // Категории для группировки
+    const categoryMap: Record<string, string> = {
+      // Контактные данные
+      'fullName': 'Контактные данные',
+      'email': 'Контактные данные',
+      'phone': 'Контактные данные',
+      'telegram': 'Контактные данные',
+      // Информация о звонке
+      'callDateTime': 'Информация о звонке',
+      'clientAnswered': 'Информация о звонке',
+      'convenientTime': 'Информация о звонке',
+      'callResult': 'Информация о звонке',
+      // Предпочтения по авто
+      'preferredBrands': 'Предпочтения по автомобилю',
+      'preferredModels': 'Предпочтения по автомобилю',
+      'preferredYearFrom': 'Предпочтения по автомобилю',
+      'preferredYearTo': 'Предпочтения по автомобилю',
+      'preferredMileageMax': 'Предпочтения по автомобилю',
+      'bodyType': 'Предпочтения по автомобилю',
+      'gearbox': 'Предпочтения по автомобилю',
+      'fuelType': 'Предпочтения по автомобилю',
+      // Бюджет и сроки
+      'budgetMin': 'Бюджет и сроки',
+      'budgetMax': 'Бюджет и сроки',
+      'currency': 'Бюджет и сроки',
+      'purchaseTimeline': 'Бюджет и сроки',
+      'urgency': 'Бюджет и сроки',
+      'timeline': 'Бюджет и сроки',
+      // Доставка
+      'region': 'Доставка',
+      'city': 'Доставка',
+      'deliveryCity': 'Доставка',
+      // Реакции и возражения
+      'offersCount': 'Реакции и возражения',
+      'offersSentDate': 'Реакции и возражения',
+      'offersMethod': 'Реакции и возражения',
+      'clientReaction': 'Реакции и возражения',
+      'likedVariant': 'Реакции и возражения',
+      'objections': 'Реакции и возражения',
+      'objectionType': 'Реакции и возражения',
+      'objectionResponse': 'Реакции и возражения',
+      'objectionResult': 'Реакции и возражения',
+      'nextStep': 'Реакции и возражения',
+      'nextContactDate': 'Реакции и возражения',
+      'needsMoreVariants': 'Реакции и возражения',
+      // Договор и оплата
+      'contractSentDate': 'Договор и оплата',
+      'calculationSentDate': 'Договор и оплата',
+      'contractMethod': 'Договор и оплата',
+      'prepaymentAmount': 'Договор и оплата',
+      'prepaymentDate': 'Договор и оплата',
+      'paymentMethod': 'Договор и оплата',
+      'paymentStatus': 'Договор и оплата',
+      'contractSigned': 'Договор и оплата',
+      'dealConfirmed': 'Договор и оплата',
+      'readyToStart': 'Договор и оплата',
+    };
     
     tasks.forEach(task => {
       if (task.taskData && task.completed) {
@@ -228,22 +286,46 @@ export class LeadDetailsModal implements OnInit {
           if (value && typeof value === 'string' && value.trim().length > 0 && !value.match(/^_+$/)) {
             // Преобразуем ключ в читаемое название
             const label = this.getFieldLabel(key);
-            if (!collected.has(label) || !collected.get(label)?.value) {
-              collected.set(label, {
+            const category = categoryMap[key] || 'Прочее';
+            
+            // Группируем по категориям - используем составной ключ
+            const groupedKey = `${category}::${label}`;
+            
+            if (!collected.has(groupedKey) || !collected.get(groupedKey)?.value) {
+              collected.set(groupedKey, {
                 value: value,
                 source: task.title,
-                taskId: task.id
+                taskId: task.id,
+                category: category
               });
             }
           } else if (Array.isArray(value) && value.length > 0) {
             // Обрабатываем массивы (например, марки, модели)
             const label = this.getFieldLabel(key);
+            const category = categoryMap[key] || 'Прочее';
             const arrayValue = value.join(', ');
-            if (!collected.has(label) || !collected.get(label)?.value) {
-              collected.set(label, {
+            const groupedKey = `${category}::${label}`;
+            
+            if (!collected.has(groupedKey) || !collected.get(groupedKey)?.value) {
+              collected.set(groupedKey, {
                 value: arrayValue,
                 source: task.title,
-                taskId: task.id
+                taskId: task.id,
+                category: category
+              });
+            }
+          } else if (typeof value === 'number' && value > 0) {
+            // Обрабатываем числа
+            const label = this.getFieldLabel(key);
+            const category = categoryMap[key] || 'Прочее';
+            const groupedKey = `${category}::${label}`;
+            
+            if (!collected.has(groupedKey) || !collected.get(groupedKey)?.value) {
+              collected.set(groupedKey, {
+                value: String(value),
+                source: task.title,
+                taskId: task.id,
+                category: category
               });
             }
           }
@@ -256,33 +338,92 @@ export class LeadDetailsModal implements OnInit {
 
   getFieldLabel(key: string): string {
     const labelMap: Record<string, string> = {
+      // Контактные данные
       'fullName': 'Полное имя',
       'email': 'Email',
       'phone': 'Телефон',
       'telegram': 'Telegram',
-      'deliveryCity': 'Город доставки',
-      'purchaseTimeline': 'Когда планирует покупку',
+      // Информация о звонке
       'callDateTime': 'Дата/время звонка',
       'clientAnswered': 'Клиент взял трубку',
       'convenientTime': 'Удобное время для разговора',
-      'result': 'Результат',
-      'region': 'Регион',
-      'city': 'Город',
-      'budgetMin': 'Бюджет от',
-      'budgetMax': 'Бюджет до',
-      'currency': 'Валюта',
+      'callResult': 'Результат звонка',
+      // Предпочтения по автомобилю
       'preferredBrands': 'Предпочитаемые марки',
       'preferredModels': 'Предпочитаемые модели',
       'preferredYearFrom': 'Год от',
       'preferredYearTo': 'Год до',
       'preferredMileageMax': 'Максимальный пробег',
+      'bodyType': 'Тип кузова',
+      'gearbox': 'Коробка передач',
+      'fuelType': 'Тип топлива',
+      // Бюджет и сроки
+      'budgetMin': 'Бюджет от',
+      'budgetMax': 'Бюджет до',
+      'currency': 'Валюта',
+      'purchaseTimeline': 'Когда планирует покупку',
+      'urgency': 'Срочность',
+      'timeline': 'Сроки',
+      // Доставка
+      'region': 'Регион',
+      'city': 'Город',
+      'deliveryCity': 'Город доставки',
+      // Реакции и возражения
+      'offersCount': 'Количество отправленных вариантов',
+      'offersSentDate': 'Дата отправки',
+      'offersMethod': 'Способ отправки',
+      'clientReaction': 'Реакция клиента',
+      'likedVariant': 'Какой вариант понравился',
+      'objections': 'Что не устроило',
+      'objectionType': 'Тип возражения',
+      'objectionResponse': 'Ответ на возражение',
+      'objectionResult': 'Результат обработки возражения',
+      'nextStep': 'Следующий шаг',
+      'nextContactDate': 'Когда связаться снова',
+      // Договор и оплата
+      'contractSentDate': 'Дата отправки договора',
+      'calculationSentDate': 'Дата отправки расчета',
+      'contractMethod': 'Способ отправки',
+      'prepaymentAmount': 'Сумма предоплаты',
+      'prepaymentDate': 'Дата получения',
+      'paymentMethod': 'Способ оплаты',
+      'paymentStatus': 'Статус оплаты',
+      'contractSigned': 'Договор подписан',
+      'dealConfirmed': 'Все условия согласованы',
+      'readyToStart': 'Готовность начать оформление',
     };
     
     return labelMap[key] || key;
   }
 
-  getCollectedDataEntries(): Array<[string, {value: string; source: string; taskId: number}]> {
+  getCollectedDataEntries(): Array<[string, {value: string; source: string; taskId: number; category?: string}]> {
     return Array.from(this.collectedData().entries());
+  }
+
+  getCollectedDataByCategory(): Map<string, Array<{label: string; value: string; source: string; taskId: number}>> {
+    const grouped = new Map<string, Array<{label: string; value: string; source: string; taskId: number}>>();
+    
+    this.collectedData().forEach((data, key) => {
+      const category = data.category || 'Прочее';
+      const [_, label] = key.split('::');
+      
+      if (!grouped.has(category)) {
+        grouped.set(category, []);
+      }
+      
+      grouped.get(category)!.push({
+        label: label || key,
+        value: data.value,
+        source: data.source,
+        taskId: data.taskId
+      });
+    });
+    
+    return grouped;
+  }
+
+  getCollectedDataCategories(): Array<[string, Array<{label: string; value: string; source: string; taskId: number}>]> {
+    return Array.from(this.getCollectedDataByCategory().entries());
   }
 
   loadLeadAttachments(leadId: number) {
