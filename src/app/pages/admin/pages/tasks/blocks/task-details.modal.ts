@@ -410,6 +410,29 @@ export class TaskDetailsModalComponent implements OnInit {
       leadUpdate.lastContactAttemptAt = new Date();
     }
 
+    // Данные из секции "ЧТО ОТМЕТИТЬ" (из таска 1)
+    // Эти данные сохраняются в taskData и отображаются во вкладке "Собранная информация"
+    // Также добавляем их в описание лида для удобства
+    const callInfo: string[] = [];
+    if (taskData.callDateTime) callInfo.push(`Дата/время звонка: ${taskData.callDateTime}`);
+    if (taskData.clientAnswered) callInfo.push(`Клиент взял трубку: ${taskData.clientAnswered}`);
+    if (taskData.convenientTime) callInfo.push(`Удобное время: ${taskData.convenientTime}`);
+    if (taskData.callResult) callInfo.push(`Результат: ${taskData.callResult}`);
+    
+    if (callInfo.length > 0) {
+      // Добавляем информацию о звонке в описание лида
+      const lead = this.task.lead;
+      const currentDescription = lead?.description || '';
+      const newCallInfo = callInfo.join('\n');
+      
+      // Проверяем, не добавлена ли уже эта информация
+      if (!currentDescription.includes(newCallInfo)) {
+        leadUpdate.description = currentDescription 
+          ? `${currentDescription}\n\n--- Информация из задачи "${this.task.title}" ---\n${newCallInfo}`
+          : `--- Информация из задачи "${this.task.title}" ---\n${newCallInfo}`;
+      }
+    }
+
     // Обновляем лид, если есть данные для обновления
     if (Object.keys(leadUpdate).length > 0) {
       this.appService.updateLead(this.task.leadId, leadUpdate)
@@ -444,6 +467,83 @@ export class TaskDetailsModalComponent implements OnInit {
       hour: '2-digit',
       minute: '2-digit',
     });
+  }
+
+  getGoal(): string {
+    const description = this.taskDescription();
+    if (!description) return '';
+    
+    const lines = description.split('\n');
+    for (let i = 0; i < lines.length; i++) {
+      const line = lines[i].trim();
+      if (line.match(/^🎯 ЦЕЛЬ:?\s*(.+)$/i)) {
+        const match = line.match(/^🎯 ЦЕЛЬ:?\s*(.+)$/i);
+        if (match && match[1]) {
+          return match[1].trim();
+        }
+      }
+      // Если нашли секцию ЦЕЛЬ без текста, берем следующую строку
+      if (line.match(/^🎯 ЦЕЛЬ:?$/i) && i + 1 < lines.length) {
+        const nextLine = lines[i + 1].trim();
+        if (nextLine && !nextLine.match(/^[🎯📞💬⚡💡📅📋📝]/)) {
+          return nextLine;
+        }
+      }
+    }
+    return '';
+  }
+
+  getScript(): string {
+    const description = this.taskDescription();
+    if (!description) return '';
+    
+    const lines = description.split('\n');
+    let scriptStart = -1;
+    let scriptEnd = -1;
+    
+    for (let i = 0; i < lines.length; i++) {
+      const line = lines[i].trim();
+      if (line.match(/^📞 СКРИПТ ЗВОНКА:?/i) || line.match(/^💬 СКРИПТ:?/i)) {
+        scriptStart = i;
+      } else if (scriptStart >= 0 && (line.match(/^📝 ЧТО ОТМЕТИТЬ/i) || line.match(/^📋 ЧТО УЗНАТЬ/i) || line.match(/^⚡ ДЕДЛАЙН/i))) {
+        scriptEnd = i;
+        break;
+      }
+    }
+    
+    if (scriptStart >= 0) {
+      const scriptLines = lines.slice(scriptStart + 1, scriptEnd >= 0 ? scriptEnd : lines.length);
+      return scriptLines.join('\n').trim();
+    }
+    
+    return '';
+  }
+
+  formatScript(script: string): string {
+    if (!script) return '';
+    
+    let formatted = script;
+    
+    // Обрабатываем подзаголовки
+    formatted = formatted.replace(/^(ПРИВЕТСТВИЕ:|ЕСЛИ ДА:|ЕСЛИ НЕТ:)/gim, '<strong style="display: block; margin-top: 16px; margin-bottom: 8px; font-size: 13px; color: #111827;">$1</strong>');
+    
+    // Обрабатываем кавычки (скрипты)
+    formatted = formatted.replace(/^["'`](.+?)["'`]$/gm, '<div class="script-quote">$1</div>');
+    
+    // Обрабатываем стрелки
+    formatted = formatted.replace(/→ (.+)/g, '<span style="color: #10b981; font-weight: 500;">→ $1</span>');
+    
+    // Обрабатываем нумерованные списки
+    formatted = formatted.replace(/^(\d+[\.\)])\s+(.+)$/gm, '<div style="margin: 6px 0;"><span style="font-weight: 600; color: #3b82f6;">$1</span> <span>$2</span></div>');
+    
+    // Обрабатываем маркированные списки
+    formatted = formatted.replace(/^- (.+)$/gm, '<div style="margin: 4px 0; padding-left: 8px;">• $1</div>');
+    
+    // Разделяем параграфы
+    formatted = formatted.replace(/\n\n/g, '</p><p>');
+    formatted = '<p>' + formatted + '</p>';
+    
+    return formatted;
   }
 
   formatDescription(description: string): string {
