@@ -24,6 +24,7 @@ export interface Task {
     name: string;
     email?: string;
     phone?: string;
+    description?: string;
   };
   createdAt: string;
   updatedAt: string;
@@ -412,26 +413,7 @@ export class TaskDetailsModalComponent implements OnInit {
 
     // Данные из секции "ЧТО ОТМЕТИТЬ" (из таска 1)
     // Эти данные сохраняются в taskData и отображаются во вкладке "Собранная информация"
-    // Также добавляем их в описание лида для удобства
-    const callInfo: string[] = [];
-    if (taskData.callDateTime) callInfo.push(`Дата/время звонка: ${taskData.callDateTime}`);
-    if (taskData.clientAnswered) callInfo.push(`Клиент взял трубку: ${taskData.clientAnswered}`);
-    if (taskData.convenientTime) callInfo.push(`Удобное время: ${taskData.convenientTime}`);
-    if (taskData.callResult) callInfo.push(`Результат: ${taskData.callResult}`);
-    
-    if (callInfo.length > 0) {
-      // Добавляем информацию о звонке в описание лида
-      const lead = this.task.lead;
-      const currentDescription = lead?.description || '';
-      const newCallInfo = callInfo.join('\n');
-      
-      // Проверяем, не добавлена ли уже эта информация
-      if (!currentDescription.includes(newCallInfo)) {
-        leadUpdate.description = currentDescription 
-          ? `${currentDescription}\n\n--- Информация из задачи "${this.task.title}" ---\n${newCallInfo}`
-          : `--- Информация из задачи "${this.task.title}" ---\n${newCallInfo}`;
-      }
-    }
+    // Данные автоматически собираются из taskData выполненных задач и отображаются в карточке лида
 
     // Обновляем лид, если есть данные для обновления
     if (Object.keys(leadUpdate).length > 0) {
