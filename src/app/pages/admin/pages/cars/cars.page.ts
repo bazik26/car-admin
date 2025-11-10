@@ -32,7 +32,13 @@ export class AdminCarsPage implements OnInit {
 
   ngOnInit() {
     this.getCarsAll();
-    this.appService.auth().subscribe((admin) => (this.admin = admin));
+    this.appService.auth().subscribe({
+      next: (admin) => (this.admin = admin),
+      error: () => {
+        // Ошибка аутентификации обрабатывается в layout компоненте
+        // Здесь просто игнорируем, чтобы не дублировать редирект
+      }
+    });
   }
 
   openModal(car?: any) {

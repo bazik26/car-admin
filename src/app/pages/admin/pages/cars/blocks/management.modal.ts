@@ -896,7 +896,15 @@ export class AdminCarsManagementModal implements OnInit {
           },
           error: (err) => {
             this.isSubmitting = false;
-            this.showErrorNotification('Ошибка при обновлении автомобиля: ' + err.message);
+            let errorMessage = 'Ошибка при обновлении автомобиля';
+            if (err.status === 401) {
+              errorMessage = 'Сессия истекла. Пожалуйста, войдите заново.';
+            } else if (err.error?.message) {
+              errorMessage += ': ' + err.error.message;
+            } else if (err.message) {
+              errorMessage += ': ' + err.message;
+            }
+            this.showErrorNotification(errorMessage);
           }
         });
     } else {
@@ -918,7 +926,15 @@ export class AdminCarsManagementModal implements OnInit {
           },
           error: (err) => {
             this.isSubmitting = false;
-            this.showErrorNotification('Ошибка при создании автомобиля: ' + err.message);
+            let errorMessage = 'Ошибка при создании автомобиля';
+            if (err.status === 401) {
+              errorMessage = 'Сессия истекла. Пожалуйста, войдите заново.';
+            } else if (err.error?.message) {
+              errorMessage += ': ' + err.error.message;
+            } else if (err.message) {
+              errorMessage += ': ' + err.message;
+            }
+            this.showErrorNotification(errorMessage);
           }
         });
     }

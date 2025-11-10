@@ -18,11 +18,12 @@ export const AuthInterceptor: HttpInterceptorFn = (req, next) => {
     catchError((error: HttpErrorResponse) => {
       // Обрабатываем 401 ошибку (Unauthorized)
       if (error.status === 401) {
-        // Проверяем, что это не запрос на логин или аутентификацию
-        const isAuthRequest = req.url.includes('/auth/signin') || req.url.includes('/auth');
+        // Проверяем, что это не запрос на вход (signin)
+        const isSigninRequest = req.url.includes('/auth/signin');
         
-        if (!isAuthRequest) {
-          // Токен истек, перенаправляем на логин
+        if (!isSigninRequest) {
+          // Для всех остальных запросов (включая /auth) - токен истек или невалиден
+          // Очищаем токен и перенаправляем на логин
           authService.handleTokenExpiry();
         }
       }
