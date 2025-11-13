@@ -55,6 +55,23 @@
               </div>
 
               <div class="mt-3 form-group">
+                <label class="form-label">
+                  <i class="fas fa-globe"></i>
+                  URL источника (домен сайта)
+                </label>
+                <input
+                  class="form-control"
+                  type="text"
+                  [(ngModel)]="leadForm.projectSource"
+                  name="projectSource"
+                  placeholder="например: car-client.com или https://car-client.com"
+                />
+                <small class="form-text text-muted">
+                  Укажите URL сайта, с которого пришел лид (например: car-client, car-client-2, car-market, shop-yml-client)
+                </small>
+              </div>
+
+              <div class="mt-3 form-group">
                 <label class="form-label">Статус</label>
                 <select
                   class="form-control"

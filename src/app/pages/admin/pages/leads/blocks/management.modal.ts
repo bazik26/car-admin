@@ -21,6 +21,7 @@ interface Lead {
   priority: 'low' | 'normal' | 'high' | 'urgent';
   hasTelegramContact?: boolean;
   telegramUsername?: string;
+  projectSource?: string;
   description?: string;
 }
 
@@ -48,6 +49,7 @@ export class LeadManagementModal implements OnInit {
     priority: 'normal',
     hasTelegramContact: false,
     telegramUsername: '',
+    projectSource: '',
     description: ''
   };
 
@@ -92,6 +94,11 @@ export class LeadManagementModal implements OnInit {
     }
   }
 }
+
+
+
+
+
 
 
 

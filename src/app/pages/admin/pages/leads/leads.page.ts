@@ -21,7 +21,7 @@ interface Lead {
   chatSessionId?: string;
   assignedAdminId?: number;
   assignedAdmin?: any;
-  projectSource?: string;
+  projectSource?: string; // URL сайта-источника (car-client, car-client-2, car-market, shop-yml-client)
   description?: string;
   comments?: LeadComment[];
   tags?: LeadTag[];
