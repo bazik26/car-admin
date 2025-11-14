@@ -67,6 +67,27 @@ interface Website {
     .website-selector .selected-website i {
       color: #eaa430 !important;
     }
+    .website-selector .ng-dropdown-panel {
+      background: rgba(20, 35, 60, 0.98) !important;
+      border: 1px solid rgba(234, 164, 48, 0.3) !important;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5) !important;
+      z-index: 9999 !important;
+    }
+    .website-selector .ng-dropdown-panel .ng-option {
+      padding: 1rem;
+      color: #ffffff !important;
+      background: transparent;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    }
+    .website-selector .ng-dropdown-panel .ng-option:hover {
+      background: rgba(234, 164, 48, 0.15) !important;
+    }
+    .website-selector .ng-dropdown-panel .ng-option strong {
+      color: #ffffff !important;
+    }
+    .website-selector .ng-dropdown-panel .ng-option small {
+      color: rgba(255, 255, 255, 0.7) !important;
+    }
   `]
 })
 export class XmlExportPage implements OnInit {

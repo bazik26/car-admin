@@ -829,6 +829,22 @@ hr {
   position: absolute !important;
 }
 
+/* Special styling for website selector dropdown (appended to body) */
+.ng-dropdown-panel[aria-labelledby*="ng-select"] {
+  background: rgba(20, 35, 60, 0.98) !important;
+  border: 1px solid rgba(234, 164, 48, 0.3) !important;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5) !important;
+}
+
+.ng-dropdown-panel .ng-option strong {
+  color: var(--white);
+  font-weight: 600;
+}
+
+.ng-dropdown-panel .ng-option small {
+  color: rgba(255, 255, 255, 0.7);
+}
+
 .ng-dropdown-panel .ng-dropdown-panel-items {
   background: transparent;
 }
