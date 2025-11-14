@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { NgSelectModule } from '@ng-select/ng-select';
@@ -45,6 +45,29 @@ interface Website {
   imports: [CommonModule, FormsModule, NgSelectModule],
   templateUrl: './xml-export.page.html',
   styleUrls: ['./xml-export.page.scss'],
+  encapsulation: ViewEncapsulation.None,
+  styles: [`
+    .website-selector .ng-select .ng-select-container {
+      background: #ffffff !important;
+      border: 1px solid #eaa430 !important;
+    }
+    .website-selector .ng-select .ng-value,
+    .website-selector .ng-select .ng-value-label,
+    .website-selector .ng-select .ng-value-container,
+    .website-selector .ng-select .ng-value-container * {
+      color: #000000 !important;
+    }
+    .website-selector .ng-select .ng-arrow-wrapper .ng-arrow {
+      border-color: #000000 transparent transparent !important;
+    }
+    .website-selector .selected-website,
+    .website-selector .selected-website * {
+      color: #000000 !important;
+    }
+    .website-selector .selected-website i {
+      color: #eaa430 !important;
+    }
+  `]
 })
 export class XmlExportPage implements OnInit {
   cars: Car[] = [];
