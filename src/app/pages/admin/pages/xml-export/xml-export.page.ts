@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { NgSelectModule } from '@ng-select/ng-select';
 import { AppService } from '../../../../services/app.service';
 
 interface Car {
@@ -29,10 +31,18 @@ interface Car {
   };
 }
 
+interface Website {
+  id: string;
+  name: string;
+  companyName: string;
+  url: string;
+  apiImageUrl: string;
+}
+
 @Component({
   selector: 'app-xml-export',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, FormsModule, NgSelectModule],
   templateUrl: './xml-export.page.html',
   styleUrls: ['./xml-export.page.scss'],
 })
@@ -44,12 +54,54 @@ export class XmlExportPage implements OnInit {
   showXml = false;
   currentDate = new Date().toLocaleDateString('ru-RU');
   ymlFeedUrl = '';
+  
+  websites: Website[] = [
+    {
+      id: 'adenatrans',
+      name: 'Adena Trans',
+      companyName: 'Adena Trans Company',
+      url: 'https://adenatrans.ru',
+      apiImageUrl: 'https://adenatrans.ru/api/images/cars'
+    },
+    {
+      id: 'vamauto',
+      name: 'Vam Auto',
+      companyName: 'Vam Auto Company',
+      url: 'https://vamauto.com',
+      apiImageUrl: 'https://vamauto.com/api/images/cars'
+    },
+    {
+      id: 'primeautos',
+      name: 'Prime Autos',
+      companyName: 'Prime Autos Company',
+      url: 'https://prime-autos.ru',
+      apiImageUrl: 'https://prime-autos.ru/api/images/cars'
+    },
+    {
+      id: 'autocars',
+      name: 'Auto C Cars',
+      companyName: 'Auto C Cars Company',
+      url: 'https://www.auto-c-cars.ru',
+      apiImageUrl: 'https://www.auto-c-cars.ru/api/images/cars'
+    }
+  ];
+  
+  selectedWebsite: Website = this.websites[0];
 
   constructor(private appService: AppService) {}
 
   ngOnInit() {
-    this.ymlFeedUrl = `${this.appService.API_URL}/cars/yml-export`;
+    this.updateYmlFeedUrl();
     this.loadCars();
+  }
+  
+  onWebsiteChange() {
+    this.updateYmlFeedUrl();
+    this.generateXml();
+  }
+  
+  updateYmlFeedUrl() {
+    this.ymlFeedUrl = `${this.appService.API_URL}/cars/yml-export?site=${this.selectedWebsite.id}`;
   }
 
   loadCars() {
@@ -76,9 +128,9 @@ export class XmlExportPage implements OnInit {
     const xmlHeader = '<?xml version="1.0" encoding="UTF-8"?>';
     const ymlHeader = `<yml_catalog date="${currentDate}">
 <shop>
-<name>Adena Trans</name>
-<company>Adena Trans Company</company>
-<url>https://adenatrans.ru/</url>
+<name>${this.escapeXml(this.selectedWebsite.name)}</name>
+<company>${this.escapeXml(this.selectedWebsite.companyName)}</company>
+<url>${this.selectedWebsite.url}/</url>
 <currencies>
 <currency id="RUB" rate="1"/>
 </currencies>
@@ -103,11 +155,11 @@ export class XmlExportPage implements OnInit {
       
       return `
 <offer id="${car.id}" available="true">
-<url>https://adenatrans.ru/car/${car.id}</url>
+<url>${this.selectedWebsite.url}/car/${car.id}</url>
 <price>${car.price || 0}</price>
 <currencyId>RUB</currencyId>
 <categoryId>${categoryId}</categoryId>
-<picture>https://adenatrans.ru/api/images/cars/${car.id}</picture>
+<picture>${this.selectedWebsite.apiImageUrl}/${car.id}</picture>
 <vendor>${this.escapeXml(car.brand || '')}</vendor>
 <vendorCode>${this.escapeXml(car.vin || '')}</vendorCode>
 <name>${this.escapeXml(carName)}</name>
@@ -207,7 +259,8 @@ export class XmlExportPage implements OnInit {
     const url = window.URL.createObjectURL(blob);
     const link = document.createElement('a');
     link.href = url;
-    link.download = `adenatrans-catalog-${new Date().toISOString().split('T')[0]}.yml`;
+    const fileName = `${this.selectedWebsite.id}-catalog-${new Date().toISOString().split('T')[0]}.yml`;
+    link.download = fileName;
     link.click();
     window.URL.revokeObjectURL(url);
   }

@@ -167,6 +167,82 @@
   color: var(--white);
 }
 
+.website-selector {
+  padding: 1.5rem;
+}
+
+.selector-header {
+  margin-bottom: 1rem;
+}
+
+.selector-header h3 {
+  margin: 0 0 0.5rem 0;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--white);
+  font-size: 1.1rem;
+}
+
+.selector-header h3 i {
+  color: var(--lion-gold);
+}
+
+.selector-hint {
+  margin: 0;
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.6);
+  line-height: 1.5;
+}
+
+.selector-content {
+  margin-top: 1rem;
+}
+
+.website-select {
+  width: 100%;
+}
+
+.selected-website {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.25rem 0;
+}
+
+.selected-website i {
+  color: var(--lion-gold);
+  font-size: 1.1rem;
+}
+
+.selected-website .website-name {
+  font-weight: 600;
+  color: var(--white);
+}
+
+.selected-website .website-url {
+  margin-left: auto;
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.website-option {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  padding: 0.5rem 0;
+}
+
+.website-option strong {
+  color: var(--white);
+  font-weight: 600;
+}
+
+.website-option small {
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 0.8rem;
+}
+
 .export-link {
   padding: 1.5rem;
 }

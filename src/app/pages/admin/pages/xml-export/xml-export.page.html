@@ -7,7 +7,7 @@
       </span>
       <h2 class="page-title">Экспорт YML каталога</h2>
       <p class="page-subtitle">
-        Экспорт списка всех активных автомобилей в формате YML для Яндекс.Маркета и рекламных интеграций Adena Trans.
+        Экспорт списка всех активных автомобилей в формате YML для Яндекс.Маркета и рекламных интеграций для выбранного сайта.
       </p>
     </div>
     <div class="page-header-actions">
@@ -56,6 +56,44 @@
             <span class="stat-label">Дата экспорта</span>
             <strong class="stat-value">{{ currentDate }}</strong>
           </div>
+        </div>
+      </div>
+
+      <div class="website-selector glass-card">
+        <div class="selector-header">
+          <h3>
+            <i class="fas fa-globe"></i>
+            Выбор сайта
+          </h3>
+          <p class="selector-hint">
+            Выберите сайт, для которого хотите сгенерировать YML-каталог
+          </p>
+        </div>
+        <div class="selector-content">
+          <ng-select
+            [(ngModel)]="selectedWebsite"
+            [items]="websites"
+            bindLabel="name"
+            [clearable]="false"
+            [searchable]="false"
+            (change)="onWebsiteChange()"
+            placeholder="Выберите сайт"
+            class="website-select"
+          >
+            <ng-template ng-label-tmp let-item="item">
+              <div class="selected-website">
+                <i class="fas fa-globe"></i>
+                <span class="website-name">{{ item.name }}</span>
+                <small class="website-url">{{ item.url }}</small>
+              </div>
+            </ng-template>
+            <ng-template ng-option-tmp let-item="item">
+              <div class="website-option">
+                <strong>{{ item.name }}</strong>
+                <small>{{ item.url }}</small>
+              </div>
+            </ng-template>
+          </ng-select>
         </div>
       </div>
 
