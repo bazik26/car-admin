@@ -203,8 +203,10 @@
   width: 100%;
 
   ::ng-deep .ng-select-container {
-    min-height: 50px;
+    min-height: 56px;
     padding: 0.5rem;
+    background: rgba(255, 255, 255, 0.95) !important;
+    border: 1px solid rgba(234, 164, 48, 0.3) !important;
   }
 
   ::ng-deep .ng-value-container {
@@ -212,7 +214,24 @@
   }
 
   ::ng-deep .ng-placeholder {
-    color: rgba(255, 255, 255, 0.5);
+    color: rgba(0, 0, 0, 0.5) !important;
+  }
+
+  ::ng-deep .ng-value {
+    color: #1a1a1a !important;
+  }
+
+  ::ng-deep .ng-arrow-wrapper .ng-arrow {
+    border-color: rgba(0, 0, 0, 0.5) transparent transparent !important;
+  }
+
+  ::ng-deep.ng-select-opened .ng-arrow-wrapper .ng-arrow {
+    border-color: transparent transparent rgba(0, 0, 0, 0.5) !important;
+  }
+
+  ::ng-deep.ng-select-focused .ng-select-container {
+    border-color: var(--lion-gold) !important;
+    box-shadow: 0 0 0 3px rgba(234, 164, 48, 0.15) !important;
   }
 }
 
@@ -230,13 +249,13 @@
 
 .selected-website .website-name {
   font-weight: 600;
-  color: var(--white);
+  color: #1a1a1a;
 }
 
 .selected-website .website-url {
   margin-left: auto;
   font-size: 0.8rem;
-  color: rgba(255, 255, 255, 0.5);
+  color: rgba(0, 0, 0, 0.6);
 }
 
 .website-option {
@@ -249,11 +268,44 @@
 .website-option strong {
   color: var(--white);
   font-weight: 600;
+  font-size: 0.95rem;
 }
 
 .website-option small {
-  color: rgba(255, 255, 255, 0.6);
+  color: rgba(255, 255, 255, 0.7);
   font-size: 0.8rem;
+}
+
+/* Override ng-select dropdown styles for this specific component */
+.website-selector {
+  ::ng-deep .ng-dropdown-panel {
+    background: rgba(20, 35, 60, 0.98) !important;
+    border: 1px solid rgba(234, 164, 48, 0.3) !important;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5) !important;
+    margin-top: 4px;
+  }
+
+  ::ng-deep .ng-dropdown-panel .ng-option {
+    padding: 1rem;
+    color: var(--white);
+    background: transparent;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  }
+
+  ::ng-deep .ng-dropdown-panel .ng-option:last-child {
+    border-bottom: none;
+  }
+
+  ::ng-deep .ng-dropdown-panel .ng-option:hover,
+  ::ng-deep .ng-dropdown-panel .ng-option.ng-option-marked {
+    background: rgba(234, 164, 48, 0.15) !important;
+    color: var(--white);
+  }
+
+  ::ng-deep .ng-dropdown-panel .ng-option.ng-option-selected {
+    background: rgba(234, 164, 48, 0.25) !important;
+    color: var(--lion-gold);
+  }
 }
 
 .export-link {
