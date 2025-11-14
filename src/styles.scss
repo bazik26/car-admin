@@ -776,6 +776,8 @@ hr {
   box-shadow: var(--shadow-lg);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
+  z-index: 9999 !important;
+  position: absolute !important;
 }
 
 .ng-dropdown-panel .ng-dropdown-panel-items {
