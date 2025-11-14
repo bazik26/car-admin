@@ -64,18 +64,11 @@ export class XmlExportPage implements OnInit {
       apiImageUrl: 'https://adenatrans.ru/api/images/cars'
     },
     {
-      id: 'vamauto',
-      name: 'Vam Auto',
-      companyName: 'Vam Auto Company',
-      url: 'https://vamauto.com',
-      apiImageUrl: 'https://vamauto.com/api/images/cars'
-    },
-    {
-      id: 'primeautos',
-      name: 'Prime Autos',
-      companyName: 'Prime Autos Company',
-      url: 'https://prime-autos.ru',
-      apiImageUrl: 'https://prime-autos.ru/api/images/cars'
+      id: 'autobroker',
+      name: 'AutoBroker Yar',
+      companyName: 'AutoBroker Yar Company',
+      url: 'https://autobroker-yar.ru',
+      apiImageUrl: 'https://autobroker-yar.ru/api/images/cars'
     },
     {
       id: 'autocars',
