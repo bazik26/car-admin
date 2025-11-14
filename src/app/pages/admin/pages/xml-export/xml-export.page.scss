@@ -201,6 +201,19 @@
 
 .website-select {
   width: 100%;
+
+  ::ng-deep .ng-select-container {
+    min-height: 50px;
+    padding: 0.5rem;
+  }
+
+  ::ng-deep .ng-value-container {
+    padding: 0.25rem 0.5rem;
+  }
+
+  ::ng-deep .ng-placeholder {
+    color: rgba(255, 255, 255, 0.5);
+  }
 }
 
 .selected-website {
