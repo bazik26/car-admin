@@ -25,6 +25,7 @@ interface Car {
   createdAt: string;
   updatedAt: string;
   deletedAt?: string | null;
+  files?: any[];
   admin?: {
     id: number;
     email: string;
@@ -189,6 +190,7 @@ export class XmlExportPage implements OnInit {
       const categoryId = this.getCategoryId(car);
       const carName = this.generateCarName(car);
       const description = this.generateDescription(car);
+      const imageUrl = this.getImageUrl(car);
       
       return `
 <offer id="${car.id}" available="true">
@@ -196,7 +198,7 @@ export class XmlExportPage implements OnInit {
 <price>${car.price || 0}</price>
 <currencyId>RUB</currencyId>
 <categoryId>${categoryId}</categoryId>
-<picture>${this.selectedWebsite.apiImageUrl}/${car.id}</picture>
+<picture>${imageUrl}</picture>
 <vendor>${this.escapeXml(car.brand || '')}</vendor>
 <vendorCode>${this.escapeXml(car.vin || '')}</vendorCode>
 <name>${this.escapeXml(carName)}</name>
@@ -270,6 +272,29 @@ export class XmlExportPage implements OnInit {
     if (gearboxLower.includes('механик') || gearboxLower.includes('manual')) return 'Механика';
     if (gearboxLower.includes('вариатор') || gearboxLower.includes('cvt')) return 'Вариатор';
     return 'Автомат';
+  }
+
+  getImageUrl(car: Car): string {
+    if (car.files && car.files.length > 0) {
+      const firstFile = car.files.find((f: any) => !f.deletedAt) || car.files[0];
+      if (firstFile && firstFile.path) {
+        // Если path - это полный URL (http/https), используем напрямую
+        if (firstFile.path.startsWith('http')) {
+          return firstFile.path;
+        }
+        
+        // Относительный путь - убираем "images/" и добавляем API URL
+        let cleanPath = firstFile.path;
+        if (cleanPath.startsWith('images/')) {
+          cleanPath = cleanPath.replace('images/', '');
+        }
+        const normalizedPath = cleanPath.startsWith('/') ? cleanPath : `/${cleanPath}`;
+        return `${this.appService.API_URL}${normalizedPath}`;
+      }
+    }
+    
+    // Fallback
+    return 'https://via.placeholder.com/800x600?text=No+Image';
   }
 
   escapeXml(text: string): string {
