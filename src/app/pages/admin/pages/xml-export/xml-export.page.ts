@@ -192,7 +192,7 @@ export class XmlExportPage implements OnInit {
       
       return `
 <offer id="${car.id}" available="true">
-<url>${this.selectedWebsite.url}/car/${car.id}</url>
+<url>${this.selectedWebsite.url}/cars/${car.id}</url>
 <price>${car.price || 0}</price>
 <currencyId>RUB</currencyId>
 <categoryId>${categoryId}</categoryId>
