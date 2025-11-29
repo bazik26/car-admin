@@ -18,7 +18,7 @@ import { AccordionModule } from 'ngx-bootstrap/accordion';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { BsModalRef } from 'ngx-bootstrap/modal';
 
-import { switchMap } from 'rxjs';
+import { switchMap, catchError } from 'rxjs';
 
 import { AppService } from '../../../../../services/app.service';
 
@@ -875,6 +875,18 @@ export class AdminCarsManagementModal implements OnInit {
     // Защита от множественных кликов
     if (this.isSubmitting) return;
     
+    // Проверка наличия изображений перед созданием новой машины
+    const files = this.form.get('files')!.value;
+    const filesToUpload = files.filter((file: any) => file && !file.id);
+    
+    if (!this.car) {
+      // Для новой машины требуем минимум 8 изображений
+      if (filesToUpload.length < 8) {
+        this.showErrorNotification(`Пожалуйста, загрузите минимум 8 изображений. Загружено: ${filesToUpload.length}`);
+        return;
+      }
+    }
+    
     this.isSubmitting = true;
     
     if (this.car) {
@@ -892,7 +904,10 @@ export class AdminCarsManagementModal implements OnInit {
           next: () => {
             this.showSuccessNotification('Автомобиль успешно обновлён!');
             this.result = { reload: true };
-            setTimeout(() => this.activeModal.hide(), 500); // Небольшая задержка для показа уведомления
+            setTimeout(() => {
+              this.isSubmitting = false;
+              this.activeModal.hide();
+            }, 500);
           },
           error: (err) => {
             this.isSubmitting = false;
@@ -908,31 +923,61 @@ export class AdminCarsManagementModal implements OnInit {
           }
         });
     } else {
+      // При создании новой машины изображения уже проверены выше
+      let createdCarId: number | null = null;
+      
       this.appService
         .createCar(this.form.value)
         .pipe(
-          switchMap((car: any) =>
-            this.appService.uploadCarImages(
+          switchMap((car: any) => {
+            // Сохраняем ID созданной машины для возможного удаления при ошибке
+            createdCarId = car.id;
+            // Если создание успешно, загружаем изображения
+            return this.appService.uploadCarImages(
               car.id,
               this.form.get('files')!.value,
-            ),
-          ),
+            );
+          }),
+          catchError((err) => {
+            // Если загрузка изображений не удалась, удаляем созданную машину
+            if (createdCarId) {
+              this.appService.deleteCar(createdCarId).subscribe({
+                next: () => {
+                  console.log('Автомобиль удален из-за ошибки загрузки изображений');
+                },
+                error: (deleteErr) => {
+                  console.error('Ошибка при удалении автомобиля:', deleteErr);
+                }
+              });
+            }
+            // Пробрасываем ошибку дальше
+            throw err;
+          })
         )
         .subscribe({
           next: () => {
             this.showSuccessNotification('Автомобиль успешно добавлен!');
             this.result = { reload: true };
-            setTimeout(() => this.activeModal.hide(), 500); // Небольшая задержка для показа уведомления
+            setTimeout(() => {
+              this.isSubmitting = false;
+              this.activeModal.hide();
+            }, 500);
           },
           error: (err) => {
             this.isSubmitting = false;
             let errorMessage = 'Ошибка при создании автомобиля';
             if (err.status === 401) {
               errorMessage = 'Сессия истекла. Пожалуйста, войдите заново.';
+            } else if (err.status === 409) {
+              errorMessage = 'Автомобиль с таким VIN уже существует';
             } else if (err.error?.message) {
               errorMessage += ': ' + err.error.message;
             } else if (err.message) {
               errorMessage += ': ' + err.message;
+            }
+            // Если это ошибка загрузки изображений, добавляем дополнительное сообщение
+            if (createdCarId && err.status !== 409) {
+              errorMessage += '. Автомобиль был удален из-за ошибки загрузки изображений.';
             }
             this.showErrorNotification(errorMessage);
           }

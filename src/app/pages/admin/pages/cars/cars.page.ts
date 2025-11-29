@@ -116,6 +116,14 @@ export class AdminCarsPage implements OnInit {
     return this.cars.filter((car: any) => car.deletedAt).length;
   }
 
+  getOfficeName(projectId: string): string {
+    const officeNames: { [key: string]: string } = {
+      'office_1': 'Офис 1',
+      'office_2': 'Офис 2',
+    };
+    return officeNames[projectId] || projectId;
+  }
+
   private showNotification(message: string, type: 'success' | 'error' | 'info') {
     // Простое уведомление (можно заменить на toast или другой компонент)
     const alertClass = type === 'success' ? 'alert-success' : 

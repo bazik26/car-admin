@@ -270,6 +270,23 @@
   font-size: 1.1rem;
 }
 
+.car-office {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  color: #374151 !important;
+}
+
+.car-office i {
+  color: #3b82f6 !important;
+  font-size: 1.1rem;
+}
+
+.office-missing {
+  color: #9ca3af !important;
+  font-size: 0.82rem;
+}
+
 .data-table thead {
   background: rgba(15, 28, 52, 0.85);
 }
@@ -306,7 +323,9 @@
 .car-name strong,
 .car-vin,
 .car-author,
-.author-missing {
+.author-missing,
+.car-office,
+.office-missing {
   color: #1a1a1a !important;
 }
 

@@ -71,6 +71,7 @@
               <th>Действия</th>
               @if (admin.isSuper) {
                 <th>Автор</th>
+                <th>Офис</th>
               }
             </tr>
           </thead>
@@ -198,6 +199,21 @@
                       </div>
                     } @else {
                       <span class="author-missing">Не указан</span>
+                    }
+                  </td>
+                  <td data-label="Офис">
+                    @if (car.projectId) {
+                      <div class="car-office">
+                        <i class="fas fa-building"></i>
+                        <span>{{ getOfficeName(car.projectId) }}</span>
+                      </div>
+                    } @else if (car.admin?.projectId) {
+                      <div class="car-office">
+                        <i class="fas fa-building"></i>
+                        <span>{{ getOfficeName(car.admin.projectId) }}</span>
+                      </div>
+                    } @else {
+                      <span class="office-missing">Не указан</span>
                     }
                   </td>
                 }
