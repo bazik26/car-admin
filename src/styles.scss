@@ -587,11 +587,11 @@ ng-select,
 }
 
 /* ==========================================================================
-   8. КАРТОЧКИ - МОДЕРН С АНИМАЦИЯМИ
+   8. КАРТОЧКИ - МОДЕРН С РАМКАМИ И ЦВЕТАМИ
    ========================================================================== */
 .card {
-  background-color: var(--color-background);
-  border: 1px solid var(--color-border);
+  background-color: #fff;
+  border: 2px solid var(--color-border);
   border-radius: var(--radius-xl);
   box-shadow: var(--shadow-md);
   margin-bottom: var(--spacing-lg);
@@ -602,62 +602,152 @@ ng-select,
 .card:hover {
   transform: translateY(-4px);
   box-shadow: var(--shadow-xl);
-  border-color: var(--color-border-hover);
+  border-color: var(--color-primary);
 }
 
 .card-header {
   padding: 1.25rem 1.5rem;
-  background: linear-gradient(to bottom, #ffffff 0%, var(--color-background-secondary) 100%);
-  border-bottom: 1px solid var(--color-border);
-  font-weight: 600;
+  background: linear-gradient(135deg, var(--color-background-secondary) 0%, #fff 100%);
+  border-bottom: 2px solid var(--color-border);
+  font-weight: 700;
+  color: var(--color-text);
+  font-size: 1.1rem;
 }
 
 .card-body {
   padding: 1.5rem;
   color: var(--color-text);
+  background: #fff;
 }
 
-/* Карточки статистики */
+/* КАРТОЧКИ СТАТИСТИКИ - ЯРКИЕ И СОВРЕМЕННЫЕ */
+
+/* Базовая карточка */
 .stat-card {
   background: #fff;
   border-radius: var(--radius-xl);
-  padding: 1.5rem;
-  box-shadow: var(--shadow-md);
+  padding: 2rem;
+  box-shadow: var(--shadow-lg);
   transition: var(--transition);
-  border: 1px solid transparent;
+  border: 3px solid transparent;
   cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+
+.stat-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 6px;
+  background: linear-gradient(90deg, transparent, currentColor, transparent);
+  opacity: 0;
+  transition: var(--transition);
+}
+
+.stat-card:hover::before {
+  opacity: 1;
 }
 
 .stat-card:hover {
-  transform: translateY(-6px) scale(1.02);
-  box-shadow: var(--shadow-2xl);
+  transform: translateY(-8px) scale(1.03);
 }
 
-.stat-card.stat-active {
+/* Активно - ЗЕЛЕНЫЙ */
+.stat-card.stat-active,
+.card-active {
   border-color: var(--color-active);
-  background: linear-gradient(135deg, #fff 0%, var(--color-active-light) 100%);
+  background: linear-gradient(135deg, #fff 0%, var(--color-active-light) 60%);
+  color: var(--color-active);
 }
 
 .stat-card.stat-active:hover {
-  box-shadow: 0 12px 32px rgba(34, 197, 94, 0.25);
+  box-shadow: 0 16px 40px rgba(34, 197, 94, 0.3);
+  border-color: var(--color-active);
 }
 
-.stat-card.stat-sold {
+/* Продано - ОРАНЖЕВЫЙ */
+.stat-card.stat-sold,
+.card-sold {
   border-color: var(--color-sold);
-  background: linear-gradient(135deg, #fff 0%, var(--color-sold-light) 100%);
+  background: linear-gradient(135deg, #fff 0%, var(--color-sold-light) 60%);
+  color: var(--color-sold);
 }
 
 .stat-card.stat-sold:hover {
-  box-shadow: 0 12px 32px rgba(245, 158, 11, 0.25);
+  box-shadow: 0 16px 40px rgba(245, 158, 11, 0.3);
+  border-color: var(--color-sold);
 }
 
-.stat-card.stat-deleted {
+/* Удалено - КРАСНЫЙ */
+.stat-card.stat-deleted,
+.card-deleted {
   border-color: var(--color-deleted);
-  background: linear-gradient(135deg, #fff 0%, var(--color-deleted-light) 100%);
+  background: linear-gradient(135deg, #fff 0%, var(--color-deleted-light) 60%);
+  color: var(--color-deleted);
 }
 
 .stat-card.stat-deleted:hover {
-  box-shadow: 0 12px 32px rgba(239, 68, 68, 0.25);
+  box-shadow: 0 16px 40px rgba(239, 68, 68, 0.3);
+  border-color: var(--color-deleted);
+}
+
+/* Без фото - ФИОЛЕТОВЫЙ */
+.stat-card.stat-no-photo,
+.card-no-photo {
+  border-color: var(--color-purple);
+  background: linear-gradient(135deg, #fff 0%, var(--color-purple-light) 60%);
+  color: var(--color-purple);
+}
+
+.stat-card.stat-no-photo:hover {
+  box-shadow: 0 16px 40px rgba(139, 92, 246, 0.3);
+}
+
+/* Контент карточки статистики */
+.stat-card-icon {
+  width: 72px;
+  height: 72px;
+  display: grid;
+  place-items: center;
+  border-radius: var(--radius-xl);
+  font-size: 2rem;
+  color: #fff;
+  margin-bottom: 1rem;
+  box-shadow: var(--shadow-lg);
+}
+
+.stat-active .stat-card-icon {
+  background: var(--color-active-gradient);
+}
+
+.stat-sold .stat-card-icon {
+  background: var(--color-sold-gradient);
+}
+
+.stat-deleted .stat-card-icon {
+  background: var(--color-deleted-gradient);
+}
+
+.stat-no-photo .stat-card-icon {
+  background: var(--color-purple-gradient);
+}
+
+.stat-card-value {
+  font-size: 3rem;
+  font-weight: 900;
+  line-height: 1;
+  margin-bottom: 0.5rem;
+}
+
+.stat-card-label {
+  font-size: 1rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  opacity: 0.8;
 }
 
 /* ==========================================================================
@@ -706,105 +796,133 @@ ng-select,
 }
 
 /* ==========================================================================
-   11. БЕЙДЖИ - МОДЕРН С ГРАДИЕНТАМИ
+   11. БЕЙДЖИ - ЯРКИЕ И ВИДИМЫЕ
    ========================================================================== */
 .badge {
   display: inline-flex;
   align-items: center;
-  gap: 0.35rem;
-  padding: 0.5rem 1rem;
-  font-size: 0.875rem;
-  font-weight: 600;
+  gap: 0.5rem;
+  padding: 0.65rem 1.25rem;
+  font-size: 0.95rem;
+  font-weight: 700;
   line-height: 1;
   text-align: center;
   white-space: nowrap;
   border-radius: var(--radius-full);
   transition: var(--transition);
+  border: 2px solid transparent;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
 }
 
 .badge:hover {
-  transform: scale(1.05);
+  transform: scale(1.08);
+  box-shadow: var(--shadow-lg);
 }
 
-/* СТАТУСЫ АВТОМОБИЛЕЙ - ЦВЕТОВАЯ КОДИРОВКА */
+/* СТАТУСЫ АВТОМОБИЛЕЙ - ЯРКАЯ ЦВЕТОВАЯ КОДИРОВКА */
 
-/* Активна - ЗЕЛЕНЫЙ */
+/* Активна - ЗЕЛЕНЫЙ ЯРКИЙ */
 .badge-active,
-.badge.bg-success {
-  color: #fff;
-  background: var(--color-active-gradient);
-  box-shadow: 0 4px 12px rgba(34, 197, 94, 0.3);
+.badge.bg-success,
+button.active,
+.status-active {
+  color: #fff !important;
+  background: var(--color-active-gradient) !important;
+  box-shadow: 0 6px 16px rgba(34, 197, 94, 0.4) !important;
+  border-color: var(--color-active) !important;
 }
 
-.badge-active::before {
-  content: '✓';
-  font-weight: bold;
+.badge-active::before,
+.status-active::before {
+  content: '✓ ';
+  font-weight: 900;
+  font-size: 1.1em;
 }
 
-/* Продана - ОРАНЖЕВЫЙ */
+/* Продана - ОРАНЖЕВЫЙ ЯРКИЙ */
 .badge-sold,
-.badge.bg-warning {
-  color: #fff;
-  background: var(--color-sold-gradient);
-  box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3);
+.badge.bg-warning,
+button.sold,
+.status-sold {
+  color: #fff !important;
+  background: var(--color-sold-gradient) !important;
+  box-shadow: 0 6px 16px rgba(245, 158, 11, 0.4) !important;
+  border-color: var(--color-sold) !important;
 }
 
-.badge-sold::before {
-  content: '₽';
-  font-weight: bold;
+.badge-sold::before,
+.status-sold::before {
+  content: '₽ ';
+  font-weight: 900;
+  font-size: 1.1em;
 }
 
-/* Удалена - КРАСНЫЙ */
+/* Удалена - КРАСНЫЙ ЯРКИЙ */
 .badge-deleted,
-.badge.bg-danger {
-  color: #fff;
-  background: var(--color-deleted-gradient);
+.badge.bg-danger,
+button.deleted,
+.status-deleted {
+  color: #fff !important;
+  background: var(--color-deleted-gradient) !important;
+  box-shadow: 0 6px 16px rgba(239, 68, 68, 0.4) !important;
+  border-color: var(--color-deleted) !important;
+}
+
+.badge-deleted::before,
+.status-deleted::before {
+  content: '✕ ';
+  font-weight: 900;
+  font-size: 1.1em;
+}
+
+/* Проблемная - КРАСНЫЙ С РАМКОЙ */
+.badge-problem {
+  color: var(--color-deleted) !important;
+  background: var(--color-deleted-light) !important;
+  border: 3px solid var(--color-deleted) !important;
+  font-weight: 800;
   box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
 }
 
-.badge-deleted::before {
-  content: '✕';
-  font-weight: bold;
+.badge-problem::before {
+  content: '⚠ ';
+  font-weight: 900;
 }
 
-/* Проблемная - КРАСНЫЙ */
-.badge-problem {
-  color: #991b1b;
-  background: var(--color-deleted-light);
-  border: 1px solid var(--color-deleted);
-  font-weight: 700;
-}
-
-/* Primary */
+/* Primary - СИНИЙ */
 .badge-primary,
 .badge.bg-primary {
-  color: #fff;
-  background: var(--color-blue-gradient);
-  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+  color: #fff !important;
+  background: var(--color-blue-gradient) !important;
+  box-shadow: 0 6px 16px rgba(59, 130, 246, 0.4) !important;
+  border-color: var(--color-blue) !important;
 }
 
-/* Secondary */
+/* Secondary - СЕРЫЙ С РАМКОЙ */
 .badge-secondary,
 .badge.bg-secondary {
-  color: var(--color-text);
-  background: var(--color-background-secondary);
-  border: 1px solid var(--color-border);
+  color: var(--color-text) !important;
+  background: var(--color-background-secondary) !important;
+  border: 2px solid var(--color-border-hover) !important;
+  font-weight: 600;
 }
 
-/* Info */
+/* Info - ЦИАН */
 .badge-info,
 .badge.bg-info {
-  color: #fff;
-  background: var(--color-cyan-gradient);
-  box-shadow: 0 4px 12px rgba(6, 182, 212, 0.3);
+  color: #fff !important;
+  background: var(--color-cyan-gradient) !important;
+  box-shadow: 0 6px 16px rgba(6, 182, 212, 0.4) !important;
+  border-color: var(--color-cyan) !important;
 }
 
 /* Light бейджи */
 .badge-light {
-  color: var(--color-text);
-  background: var(--color-background-secondary);
-  border: 1px solid var(--color-border);
-  font-weight: 500;
+  color: var(--color-text) !important;
+  background: #fff !important;
+  border: 2px solid var(--color-border) !important;
+  font-weight: 600;
 }
 
 /* ==========================================================================
@@ -842,8 +960,28 @@ ng-select,
 }
 
 /* ==========================================================================
-   13. УТИЛИТЫ
+   13. УТИЛИТЫ И LAYOUT
    ========================================================================== */
+
+/* Container */
+.container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 var(--spacing-lg);
+}
+
+/* Row и Column - с gap */
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-md);
+  margin: 0;
+}
+
+.col {
+  flex: 1;
+  min-width: 0;
+}
 
 /* Текст */
 .text-muted {
@@ -869,6 +1007,153 @@ ng-select,
 
 .bg-white {
   background-color: var(--color-background) !important;
+}
+
+/* СТАТИСТИКА ПО ЛИДАМ - ЯРКИЕ КАРТОЧКИ */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: var(--spacing-xl);
+  margin-bottom: var(--spacing-xl);
+}
+
+.stat-card-lead {
+  padding: 2rem;
+  background: #fff;
+  border-radius: var(--radius-2xl);
+  box-shadow: var(--shadow-lg);
+  transition: var(--transition);
+  border: 3px solid transparent;
+  position: relative;
+  overflow: hidden;
+}
+
+.stat-card-lead::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 8px;
+}
+
+.stat-card-lead:hover {
+  transform: translateY(-8px) scale(1.03);
+}
+
+/* Открытых - СИНИЙ */
+.stat-card-lead.stat-open {
+  border-color: var(--color-blue);
+  background: linear-gradient(135deg, #fff 0%, var(--color-blue-light) 50%);
+}
+
+.stat-card-lead.stat-open::before {
+  background: var(--color-blue-gradient);
+}
+
+.stat-card-lead.stat-open:hover {
+  box-shadow: 0 16px 40px rgba(59, 130, 246, 0.3);
+}
+
+/* В работе - ОРАНЖЕВЫЙ */
+.stat-card-lead.stat-progress {
+  border-color: var(--color-sold);
+  background: linear-gradient(135deg, #fff 0%, var(--color-sold-light) 50%);
+}
+
+.stat-card-lead.stat-progress::before {
+  background: var(--color-sold-gradient);
+}
+
+.stat-card-lead.stat-progress:hover {
+  box-shadow: 0 16px 40px rgba(245, 158, 11, 0.3);
+}
+
+/* Закрытых - ЗЕЛЕНЫЙ */
+.stat-card-lead.stat-closed {
+  border-color: var(--color-active);
+  background: linear-gradient(135deg, #fff 0%, var(--color-active-light) 50%);
+}
+
+.stat-card-lead.stat-closed::before {
+  background: var(--color-active-gradient);
+}
+
+.stat-card-lead.stat-closed:hover {
+  box-shadow: 0 16px 40px rgba(34, 197, 94, 0.3);
+}
+
+/* Потерянных - КРАСНЫЙ */
+.stat-card-lead.stat-lost {
+  border-color: var(--color-deleted);
+  background: linear-gradient(135deg, #fff 0%, var(--color-deleted-light) 50%);
+}
+
+.stat-card-lead.stat-lost::before {
+  background: var(--color-deleted-gradient);
+}
+
+.stat-card-lead.stat-lost:hover {
+  box-shadow: 0 16px 40px rgba(239, 68, 68, 0.3);
+}
+
+.stat-card-lead-icon {
+  width: 72px;
+  height: 72px;
+  display: grid;
+  place-items: center;
+  border-radius: var(--radius-xl);
+  font-size: 2rem;
+  color: #fff;
+  margin-bottom: 1.5rem;
+  box-shadow: var(--shadow-lg);
+}
+
+.stat-open .stat-card-lead-icon {
+  background: var(--color-blue-gradient);
+}
+
+.stat-progress .stat-card-lead-icon {
+  background: var(--color-sold-gradient);
+}
+
+.stat-closed .stat-card-lead-icon {
+  background: var(--color-active-gradient);
+}
+
+.stat-lost .stat-card-lead-icon {
+  background: var(--color-deleted-gradient);
+}
+
+.stat-card-lead-value {
+  font-size: 3.5rem;
+  font-weight: 900;
+  line-height: 1;
+  margin-bottom: 0.75rem;
+}
+
+.stat-open .stat-card-lead-value {
+  color: var(--color-blue);
+}
+
+.stat-progress .stat-card-lead-value {
+  color: var(--color-sold);
+}
+
+.stat-closed .stat-card-lead-value {
+  color: var(--color-active);
+}
+
+.stat-lost .stat-card-lead-value {
+  color: var(--color-deleted);
+}
+
+.stat-card-lead-label {
+  font-size: 1.1rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  opacity: 0.9;
 }
 
 /* Отступы */
