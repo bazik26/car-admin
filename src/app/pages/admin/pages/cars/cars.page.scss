@@ -1,5 +1,5 @@
 /* ==========================================================================
-   Cars Management Page Styling
+   Cars Page - Светлая современная тема
    ========================================================================== */
 
 .cars-page {
@@ -8,6 +8,7 @@
   gap: var(--spacing-lg);
 }
 
+/* Хедер страницы */
 .page-header-glass {
   display: flex;
   flex-wrap: wrap;
@@ -15,57 +16,44 @@
   justify-content: space-between;
   gap: var(--spacing-md);
   padding: var(--spacing-lg);
-  border-radius: var(--radius-xl);
-  background: linear-gradient(130deg, rgba(12, 24, 46, 0.92), rgba(18, 32, 60, 0.88));
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  box-shadow: var(--shadow-lg);
-  position: relative;
-  overflow: hidden;
-}
-
-.page-header-glass::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: radial-gradient(circle at 85% 15%, rgba(59, 130, 246, 0.25), transparent 55%), radial-gradient(circle at 10% 85%, rgba(234, 164, 48, 0.25), transparent 55%);
-  opacity: 0.85;
-  pointer-events: none;
-}
-
-.page-header-glass > * {
-  position: relative;
-  z-index: 2;
+  border-radius: var(--radius-lg);
+  background: #fff;
+  border: 1px solid var(--color-border);
+  box-shadow: var(--shadow-sm);
 }
 
 .page-header-text {
-  max-width: 620px;
   display: flex;
   flex-direction: column;
-  gap: 0.75rem;
+  gap: 0.5rem;
 }
 
 .eyebrow-label {
   display: inline-flex;
   align-items: center;
-  gap: 0.45rem;
-  font-size: 0.78rem;
+  gap: 0.35rem;
+  font-size: 0.75rem;
   text-transform: uppercase;
   letter-spacing: 0.1em;
-  color: rgba(255, 255, 255, 0.65);
+  color: var(--color-text-muted);
+  font-weight: 600;
 }
 
 .eyebrow-label i {
-  color: var(--lion-gold);
+  color: var(--color-primary);
 }
 
 .page-title {
-  font-size: 2rem;
+  font-size: 1.75rem;
   margin: 0;
+  color: var(--color-text);
+  font-weight: 700;
 }
 
 .page-subtitle {
   margin: 0;
-  color: rgba(255, 255, 255, 0.68);
+  color: var(--color-text-muted);
+  font-size: 0.95rem;
 }
 
 .page-header-actions {
@@ -75,348 +63,270 @@
   flex-wrap: wrap;
 }
 
+/* Статистика */
 .stats-chip {
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
-  padding: 0.65rem 1.1rem;
-  border-radius: var(--radius-full);
-  background: rgba(255, 255, 255, 0.06);
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  padding: 0.5rem 1rem;
+  border-radius: var(--radius-lg);
+  background: var(--color-background-secondary);
+  border: 1px solid var(--color-border);
   font-weight: 600;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.85);
+  color: var(--color-text);
+}
+
+.stats-chip i {
+  font-size: 1.25rem;
 }
 
 .stats-chip small {
-  font-size: 0.72rem;
-  color: rgba(255, 255, 255, 0.6);
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+  font-weight: 400;
 }
 
+/* Карточки метрик */
 .metrics-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
   gap: var(--spacing-md);
+  margin-bottom: var(--spacing-lg);
 }
 
-.metric-card {
+.metric-item {
+  padding: var(--spacing-lg);
+  border-radius: var(--radius-lg);
+  background: #fff;
+  border: 1px solid var(--color-border);
+  box-shadow: var(--shadow-sm);
+  transition: var(--transition);
+}
+
+.metric-item:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+.metric-header {
   display: flex;
-  gap: var(--spacing-sm);
   align-items: center;
-  padding: 1.5rem;
-  position: relative;
-  overflow: hidden;
-}
-
-.metric-card::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(140deg, rgba(255, 255, 255, 0.06), transparent 65%);
-  opacity: 0.85;
-  pointer-events: none;
+  justify-content: space-between;
+  margin-bottom: var(--spacing-sm);
 }
 
 .metric-icon {
-  width: 58px;
-  height: 58px;
-  border-radius: var(--radius-lg);
+  width: 48px;
+  height: 48px;
   display: grid;
   place-items: center;
-  font-size: 1.45rem;
-  color: var(--white);
-  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08);
+  border-radius: var(--radius-md);
+  font-size: 1.5rem;
+  color: #fff;
 }
 
-.metric-icon.success {
-  background: rgba(34, 197, 94, 0.18);
-  color: #86efac;
+.metric-icon.active {
+  background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
 }
 
-.metric-icon.warning {
-  background: rgba(245, 158, 11, 0.18);
-  color: #fcd34d;
+.metric-icon.sold {
+  background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
 }
 
-.metric-icon.danger {
-  background: rgba(239, 68, 68, 0.18);
-  color: #fca5a5;
+.metric-icon.deleted {
+  background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
 }
 
-.metric-content {
-  display: flex;
-  flex-direction: column;
-  gap: 0.35rem;
+.metric-icon.noPhoto {
+  background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
 }
 
-.metric-label {
-  font-size: 0.78rem;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.58);
+.metric-details {
+  text-align: right;
 }
 
 .metric-value {
-  font-size: 1.6rem;
+  font-size: 2rem;
   font-weight: 700;
-  color: var(--white);
+  color: var(--color-text);
+  line-height: 1;
+  margin-bottom: 0.25rem;
 }
 
-.table-card {
-  padding: 0;
-  border-radius: var(--radius-xl);
-  overflow: hidden;
-  background: rgba(9, 17, 33, 0.92);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  box-shadow: var(--shadow-lg);
+.metric-label {
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+  font-weight: 500;
 }
 
-.table-card .table {
-  margin: 0;
-  background: transparent;
-  color: rgba(255, 255, 255, 0.9);
+/* Фильтры */
+.filters-shell {
+  background: #fff;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-lg);
+  box-shadow: var(--shadow-sm);
+  margin-bottom: var(--spacing-lg);
 }
 
-.car-meta {
+.filters-title {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--color-text);
+  margin-bottom: var(--spacing-md);
+}
+
+.filters-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-md);
+  align-items: flex-end;
+}
+
+.filter-group {
   display: flex;
   flex-direction: column;
-  gap: 0.4rem;
+  gap: 0.35rem;
+  flex: 1;
+  min-width: 180px;
 }
 
-.car-name {
-  display: flex;
-  align-items: baseline;
-  gap: 0.75rem;
-  color: var(--white);
+.filter-group label {
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--color-text-muted);
 }
 
-.car-name strong {
-  font-size: 1.05rem;
-  letter-spacing: 0.02em;
+.filter-group input,
+.filter-group select {
+  padding: 0.75rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  font-size: 0.95rem;
+  background: #fff;
+  color: var(--color-text);
 }
 
-.car-year {
-  padding: 0.25rem 0.6rem;
-  border-radius: var(--radius-full);
-  background: rgba(59, 130, 246, 0.15) !important;
-  border: 1px solid rgba(59, 130, 246, 0.3) !important;
-  font-size: 0.7rem;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: #1e40af !important;
-  font-weight: 600;
+.filter-group input:focus,
+.filter-group select:focus {
+  border-color: var(--color-primary);
+  outline: none;
+  box-shadow: 0 0 0 0.2rem rgba(33, 126, 2, 0.1);
 }
 
-.car-vin {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.4rem;
-  font-size: 0.78rem;
-  letter-spacing: 0.04em;
-  color: rgba(255, 255, 255, 0.65);
-}
-
-.car-thumb {
-  width: 120px;
-  height: 80px;
-  border-radius: var(--radius-sm);
-  overflow: hidden;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  background: rgba(15, 26, 48, 0.75);
+/* Грид автомобилей */
+.cars-grid {
   display: grid;
-  place-items: center;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: var(--spacing-lg);
+}
+
+/* Карточка автомобиля */
+.car-card {
+  background: #fff;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+  transition: var(--transition);
+  cursor: pointer;
+}
+
+.car-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-md);
+  border-color: var(--color-primary);
+}
+
+.car-card-image {
+  width: 100%;
+  height: 220px;
+  object-fit: cover;
+  background: var(--color-background-secondary);
+}
+
+.car-card-body {
+  padding: var(--spacing-lg);
+}
+
+.car-card-header {
+  margin-bottom: var(--spacing-md);
+}
+
+.car-card-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--color-text);
+  margin-bottom: 0.5rem;
+}
+
+.car-card-year {
+  font-size: 0.9rem;
+  color: var(--color-text-muted);
+}
+
+.car-card-price {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--color-primary);
+  margin-bottom: var(--spacing-md);
+}
+
+.car-card-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-sm);
+  margin-bottom: var(--spacing-md);
+}
+
+.car-card-meta .badge {
+  padding: 0.35rem 0.75rem;
+  font-size: 0.8rem;
+}
+
+.car-card-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: var(--spacing-md);
+  border-top: 1px solid var(--color-border);
+}
+
+/* Пустое состояние */
+.loading,
+.empty-state {
+  padding: 3rem;
+  text-align: center;
+  color: var(--color-text-muted);
+  background: #fff;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--color-border);
   box-shadow: var(--shadow-sm);
 }
 
-.car-thumb img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  transition: transform var(--transition-normal);
+.loading i,
+.empty-state i {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+  opacity: 0.3;
+  color: var(--color-text-muted);
 }
 
-.car-thumb:hover img {
-  transform: scale(1.05);
-}
-
-.car-thumb.placeholder {
-  flex-direction: column;
-  gap: 0.35rem;
-  color: rgba(255, 255, 255, 0.55);
-  font-size: 0.75rem;
-}
-
-.car-thumb.placeholder i {
-  font-size: 1.4rem;
-  color: rgba(255, 255, 255, 0.45);
-}
-
-.action-menu {
-  display: inline-flex;
-  flex-wrap: wrap;
-  gap: 0.45rem;
-}
-
-.car-author {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.45rem;
-  color: #374151 !important;
-}
-
-.car-author i {
-  color: #6b7280 !important;
-  font-size: 1.1rem;
-}
-
-.car-office {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.45rem;
-  color: #374151 !important;
-}
-
-.car-office i {
-  color: #3b82f6 !important;
-  font-size: 1.1rem;
-}
-
-.office-missing {
-  color: #9ca3af !important;
-  font-size: 0.82rem;
-}
-
-.data-table thead {
-  background: rgba(15, 28, 52, 0.85);
-}
-
-.data-table tbody tr {
-  background: rgba(12, 22, 42, 0.8);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
-}
-
-.data-table tbody tr:hover {
-  background: rgba(18, 32, 60, 0.88);
-}
-
-.data-table td,
-.data-table th {
-  color: #1a1a1a !important;
-}
-
-/* Force light backgrounds for better text visibility */
-.data-table tbody tr {
-  background: rgba(255, 255, 255, 0.95) !important;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.1) !important;
-}
-
-.data-table tbody tr:hover {
-  background: rgba(248, 250, 252, 0.98) !important;
-}
-
-.data-table thead {
-  background: rgba(249, 250, 251, 0.95) !important;
-}
-
-/* Ensure text is always visible with dark color */
-.car-name strong,
-.car-vin,
-.car-author,
-.author-missing,
-.car-office,
-.office-missing {
-  color: #1a1a1a !important;
-}
-
-.car-name strong {
-  font-weight: 600;
-}
-
-.car-vin {
-  color: #4b5563 !important;
-}
-
-.car-author {
-  color: #374151 !important;
-}
-
-.author-missing {
-  color: #9ca3af !important;
-}
-
-.author-missing {
-  color: rgba(255, 255, 255, 0.48);
-  font-size: 0.82rem;
-}
-
-/* ==========================================================================
-   Modal-specific tweaks leverage the global modal styling
-   ========================================================================== */
-
-.modal-content {
-  max-width: 640px;
-  margin: 0 auto;
-}
-
-/* ==========================================================================
-   Responsive Adjustments
-   ========================================================================== */
-
-@media (max-width: 992px) {
-  .page-header-actions {
-    width: 100%;
-    justify-content: space-between;
-  }
-
-  .stats-chip {
-    flex: 1;
-    justify-content: center;
-  }
-}
-
+/* Адаптивность */
 @media (max-width: 768px) {
-  .page-header-glass {
-    padding: var(--spacing-md);
-  }
-
-  .page-title {
-    font-size: 1.65rem;
-  }
-
-  .page-header-actions {
-    flex-direction: column;
-    align-items: stretch;
-  }
-
-  .stats-chip {
-    width: 100%;
-    justify-content: center;
-  }
-
-  .action-menu {
-    width: 100%;
-    flex-direction: column;
-  }
-
-  .btn-action {
-    width: 100%;
-    justify-content: center;
-  }
-
-  .car-thumb {
-    width: 100%;
-  }
-}
-
-@media (max-width: 576px) {
-  .metrics-grid {
+  .cars-grid {
     grid-template-columns: 1fr;
   }
-
-  .car-name {
+  
+  .metrics-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .filters-row {
     flex-direction: column;
-    align-items: flex-start;
-    gap: 0.45rem;
+  }
+  
+  .filter-group {
+    width: 100%;
   }
 }
