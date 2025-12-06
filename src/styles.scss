@@ -953,24 +953,37 @@ hr {
   }
 }
 
-// NG-SELECT в модальных окнах
+// NG-SELECT в модальных окнах - ПРИНУДИТЕЛЬНЫЕ СТИЛИ
 .modal-content ng-select,
-.modal-body ng-select {
+.modal-body ng-select,
+.modal-content .admin ng-select,
+.modal-body .admin ng-select {
   .ng-select-container {
     background-color: #ffffff !important;
     border-color: #dee2e6 !important;
     color: #212529 !important;
     
-    .ng-value, .ng-value-label {
-      color: #212529 !important;
+    // КРИТИЧНО: Выбранное значение должно быть видно
+    .ng-value-container {
+      .ng-value {
+        color: #212529 !important;
+        background-color: transparent !important;
+        
+        .ng-value-label {
+          color: #212529 !important;
+        }
+      }
+      
+      .ng-placeholder {
+        color: #6c757d !important;
+      }
     }
     
-    .ng-placeholder {
-      color: #6c757d !important;
-    }
-    
-    .ng-input input {
-      color: #212529 !important;
+    .ng-input {
+      input {
+        color: #212529 !important;
+        background-color: transparent !important;
+      }
     }
     
     &:hover {
@@ -989,6 +1002,14 @@ hr {
   
   &.ng-select-opened .ng-arrow-wrapper .ng-arrow {
     border-color: transparent transparent #6c757d !important;
+  }
+  
+  .ng-clear-wrapper {
+    color: #6c757d !important;
+    
+    &:hover {
+      color: #dc3545 !important;
+    }
   }
 }
 

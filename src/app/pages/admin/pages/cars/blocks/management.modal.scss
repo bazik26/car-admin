@@ -43,46 +43,108 @@
     }
   }
   
-  // Стили для ng-select
+  // Стили для ng-select - ПРИНУДИТЕЛЬНЫЕ СТИЛИ ДЛЯ ЧИТАЕМОСТИ
   ng-select {
     .ng-select-container {
-      background-color: #ffffff;
-      border: 1px solid #dee2e6;
+      background-color: #ffffff !important;
+      border: 1px solid #dee2e6 !important;
       border-radius: 0.375rem;
-      color: #212529;
+      color: #212529 !important;
       
       &:hover {
-        border-color: #adb5bd;
+        border-color: #adb5bd !important;
       }
       
       &.ng-select-focused {
-        border-color: #217e02;
-        box-shadow: 0 0 0 0.2rem rgba(33, 126, 2, 0.25);
+        border-color: #217e02 !important;
+        box-shadow: 0 0 0 0.2rem rgba(33, 126, 2, 0.25) !important;
       }
     }
     
-    .ng-placeholder {
-      color: #6c757d;
-    }
-    
-    .ng-input input {
-      color: #212529;
-    }
-    
-    .ng-option {
-      color: #212529;
+    // КРИТИЧНО: Выбранное значение должно быть видно
+    .ng-value-container {
+      color: #212529 !important;
       
-      &.ng-option-highlighted {
-        background-color: #217e02;
-        color: #ffffff;
+      .ng-value {
+        color: #212529 !important;
+        background-color: transparent !important;
+        
+        .ng-value-label {
+          color: #212529 !important;
+        }
       }
       
-      &.ng-option-selected {
-        background-color: #e9ecef;
-        color: #212529;
+      .ng-placeholder {
+        color: #6c757d !important;
+      }
+    }
+    
+    .ng-input {
+      color: #212529 !important;
+      
+      input {
+        color: #212529 !important;
+        background-color: transparent !important;
+      }
+    }
+    
+    .ng-arrow-wrapper .ng-arrow {
+      border-color: #6c757d transparent transparent !important;
+    }
+    
+    &.ng-select-opened .ng-arrow-wrapper .ng-arrow {
+      border-color: transparent transparent #6c757d !important;
+    }
+    
+    .ng-clear-wrapper {
+      color: #6c757d !important;
+      
+      &:hover {
+        color: #dc3545 !important;
       }
     }
   }
+  
+  // Выпадающий список ng-select
+  ::ng-deep .ng-dropdown-panel {
+    background-color: #ffffff !important;
+    border-color: #dee2e6 !important;
+    
+    .ng-option {
+      color: #212529 !important;
+      background-color: #ffffff !important;
+      
+      &:hover,
+      &.ng-option-marked {
+        background-color: #f8f9fa !important;
+        color: #212529 !important;
+      }
+      
+      &.ng-option-selected {
+        background-color: #e9ecef !important;
+        color: #212529 !important;
+        font-weight: 600;
+      }
+    }
+  }
+}
+
+// Глобальные стили для ng-select в модальном окне управления автомобилями
+::ng-deep .modal-content {
+  .admin ng-select {
+    .ng-select-container {
+      .ng-value-container {
+        .ng-value {
+          color: #212529 !important;
+          
+          .ng-value-label {
+            color: #212529 !important;
+          }
+        }
+      }
+    }
+  }
+}
   
   // Стили для accordion
   accordion {
@@ -410,19 +472,21 @@
 
 // Глобальные стили для модального окна
 .modal-content {
-  background-color: #ffffff;
+  background-color: #ffffff !important;
   border: none;
   border-radius: 0.5rem;
   box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+  color: #212529 !important;
   
   .modal-header {
-    background-color: #f8f9fa;
+    background-color: #f8f9fa !important;
     border-bottom: 1px solid #dee2e6;
     border-radius: 0.5rem 0.5rem 0 0;
     padding: 1rem 1.5rem;
+    color: #212529 !important;
     
     .modal-title {
-      color: #212529;
+      color: #212529 !important;
       font-weight: 600;
       font-size: 1.25rem;
     }
@@ -432,6 +496,7 @@
       border: none;
       font-size: 1.5rem;
       color: #6c757d;
+      filter: invert(0) !important;
       
       &:hover {
         color: #212529;
@@ -440,16 +505,48 @@
   }
   
   .modal-body {
-    background-color: #ffffff;
+    background-color: #ffffff !important;
     padding: 0;
     max-height: 70vh;
     overflow-y: auto;
+    color: #212529 !important;
   }
   
   .modal-footer {
-    background-color: #f8f9fa;
+    background-color: #f8f9fa !important;
     border-top: 1px solid #dee2e6;
     border-radius: 0 0 0.5rem 0.5rem;
     padding: 1rem 1.5rem;
+    color: #212529 !important;
+  }
+  
+  // Принудительные стили для ng-select в модальном окне
+  ng-select {
+    .ng-select-container {
+      background-color: #ffffff !important;
+      border-color: #dee2e6 !important;
+      color: #212529 !important;
+      
+      .ng-value-container {
+        .ng-value {
+          color: #212529 !important;
+          background-color: transparent !important;
+          
+          .ng-value-label {
+            color: #212529 !important;
+          }
+        }
+        
+        .ng-placeholder {
+          color: #6c757d !important;
+        }
+      }
+      
+      .ng-input {
+        input {
+          color: #212529 !important;
+        }
+      }
+    }
   }
 }
