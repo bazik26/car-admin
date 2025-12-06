@@ -264,6 +264,150 @@
   }
 }
 
+// === Стили для панели анализа цен ===
+.card.border-info {
+  background-color: #ffffff;
+  
+  .card-header.bg-info {
+    background-color: #17a2b8 !important;
+    color: #ffffff;
+    font-weight: 600;
+  }
+  
+  .card-body {
+    background-color: #ffffff;
+    padding: 1.5rem;
+    
+    // Карточки с ценами
+    .price-card {
+      background-color: #f8f9fa !important;
+      border: 1px solid #dee2e6 !important;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      
+      &:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      }
+      
+      .price-label {
+        font-size: 0.7rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        color: #6c757d !important;
+      }
+      
+      .price-value {
+        font-size: 1rem;
+        font-weight: 700;
+        line-height: 1.2;
+        
+        @media (min-width: 768px) {
+          font-size: 1.25rem;
+        }
+        
+        // Цвета для разных типов цен
+        &.text-success { color: #198754 !important; }
+        &.text-primary { color: #0d6efd !important; }
+        &.text-info { color: #0dcaf0 !important; }
+        &.text-danger { color: #dc3545 !important; }
+      }
+    }
+    
+    // Рекомендуемая цена
+    .alert-success {
+      background-color: #d4edda;
+      border-color: #c3e6cb;
+      color: #155724;
+      
+      strong {
+        color: #155724;
+      }
+    }
+    
+    // Таблица объявлений
+    .table {
+      background-color: #ffffff;
+      color: #212529;
+      margin-bottom: 0;
+      
+      thead.table-light {
+        background-color: #f8f9fa;
+        
+        th {
+          color: #212529;
+          font-weight: 600;
+          border-bottom: 2px solid #dee2e6;
+          padding: 0.75rem;
+          white-space: nowrap;
+        }
+      }
+      
+      tbody {
+        tr {
+          &:hover {
+            background-color: #f8f9fa;
+          }
+          
+          td {
+            color: #212529;
+            padding: 0.75rem;
+            vertical-align: middle;
+            border-bottom: 1px solid #dee2e6;
+            
+            a {
+              color: #0d6efd;
+              
+              &:hover {
+                color: #0a58ca;
+              }
+            }
+            
+            &.fw-bold {
+              color: #212529;
+              font-weight: 600;
+            }
+            
+            .badge.bg-secondary {
+              background-color: #6c757d !important;
+              color: #ffffff;
+            }
+          }
+        }
+      }
+    }
+    
+    // Детали (раскрывающийся блок)
+    details {
+      background-color: #ffffff;
+      border: 1px solid #dee2e6;
+      border-radius: 0.375rem;
+      padding: 0.75rem;
+      
+      summary {
+        color: #0d6efd;
+        font-weight: 500;
+        
+        &:hover {
+          color: #0a58ca;
+        }
+      }
+      
+      > div {
+        margin-top: 1rem;
+        background-color: #ffffff;
+      }
+    }
+    
+    // Бейджи источников
+    .badge.bg-secondary {
+      background-color: #6c757d !important;
+      color: #ffffff;
+      font-weight: 500;
+    }
+  }
+}
+
 // Глобальные стили для модального окна
 .modal-content {
   background-color: #ffffff;

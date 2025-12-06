@@ -47,29 +47,29 @@
                 <div class="card-body">
                   @if (priceCheckResult.success) {
                     <!-- Статистика цен -->
-                    <div class="row mb-4">
-                      <div class="col-6 col-md-3 mb-3">
-                        <div class="border rounded p-3 text-center h-100">
-                          <div class="text-muted small">Минимальная</div>
-                          <div class="h5 mb-0 text-success">{{ formatPrice(priceCheckResult.minPrice) }} ₽</div>
+                    <div class="row mb-4 g-2">
+                      <div class="col-6 col-md-3">
+                        <div class="price-card border rounded p-2 p-md-3 text-center h-100 bg-light">
+                          <div class="price-label text-muted small mb-1">Минимальная</div>
+                          <div class="price-value h5 mb-0 text-success text-nowrap">{{ formatPrice(priceCheckResult.minPrice) }}&nbsp;₽</div>
                         </div>
                       </div>
-                      <div class="col-6 col-md-3 mb-3">
-                        <div class="border rounded p-3 text-center h-100">
-                          <div class="text-muted small">Средняя</div>
-                          <div class="h5 mb-0 text-primary">{{ formatPrice(priceCheckResult.averagePrice) }} ₽</div>
+                      <div class="col-6 col-md-3">
+                        <div class="price-card border rounded p-2 p-md-3 text-center h-100 bg-light">
+                          <div class="price-label text-muted small mb-1">Средняя</div>
+                          <div class="price-value h5 mb-0 text-primary text-nowrap">{{ formatPrice(priceCheckResult.averagePrice) }}&nbsp;₽</div>
                         </div>
                       </div>
-                      <div class="col-6 col-md-3 mb-3">
-                        <div class="border rounded p-3 text-center h-100">
-                          <div class="text-muted small">Медианная</div>
-                          <div class="h5 mb-0 text-info">{{ formatPrice(priceCheckResult.medianPrice) }} ₽</div>
+                      <div class="col-6 col-md-3">
+                        <div class="price-card border rounded p-2 p-md-3 text-center h-100 bg-light">
+                          <div class="price-label text-muted small mb-1">Медианная</div>
+                          <div class="price-value h5 mb-0 text-info text-nowrap">{{ formatPrice(priceCheckResult.medianPrice) }}&nbsp;₽</div>
                         </div>
                       </div>
-                      <div class="col-6 col-md-3 mb-3">
-                        <div class="border rounded p-3 text-center h-100">
-                          <div class="text-muted small">Максимальная</div>
-                          <div class="h5 mb-0 text-danger">{{ formatPrice(priceCheckResult.maxPrice) }} ₽</div>
+                      <div class="col-6 col-md-3">
+                        <div class="price-card border rounded p-2 p-md-3 text-center h-100 bg-light">
+                          <div class="price-label text-muted small mb-1">Максимальная</div>
+                          <div class="price-value h5 mb-0 text-danger text-nowrap">{{ formatPrice(priceCheckResult.maxPrice) }}&nbsp;₽</div>
                         </div>
                       </div>
                     </div>
