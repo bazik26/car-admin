@@ -682,13 +682,15 @@ hr {
    Переопределяют все темные стили приложения
    ========================================================================== */
 
+// КРИТИЧЕСКОЕ ПЕРЕОПРЕДЕЛЕНИЕ: Сбрасываем ВСЕ темные стили для модальных окон
 .modal-content,
-.modal-content *,
+.modal-content *:not(.badge):not(.btn-primary):not(.btn-secondary):not(.btn-success):not(.btn-danger):not(.btn-warning):not(.btn-info),
 .modal-dialog .modal-content,
-.modal-dialog .modal-content * {
-  // Базовые цвета для модального окна
+.modal-dialog .modal-content *:not(.badge):not(.btn-primary):not(.btn-secondary):not(.btn-success):not(.btn-danger):not(.btn-warning):not(.btn-info) {
+  // Базовые цвета для модального окна - переопределяют темную тему
   background-color: #ffffff !important;
   color: #212529 !important;
+  border-color: #dee2e6 !important;
 }
 
 .modal-content {
@@ -746,16 +748,30 @@ hr {
   .form-select, 
   input:not([type="checkbox"]):not([type="radio"]), 
   textarea, 
-  select {
+  select,
+  input[type="text"],
+  input[type="email"],
+  input[type="password"],
+  input[type="number"],
+  input[type="tel"],
+  input[type="url"],
+  input[type="search"],
+  input[type="date"],
+  input[type="datetime-local"],
+  input[type="time"] {
     color: #212529 !important;
     background-color: #ffffff !important;
-    border-color: #dee2e6 !important;
+    border: 1px solid #dee2e6 !important;
+    border-radius: 0.375rem;
+    padding: 0.75rem;
+    font-size: 1rem;
     
     &:focus {
       color: #212529 !important;
       background-color: #ffffff !important;
       border-color: #217e02 !important;
       box-shadow: 0 0 0 0.2rem rgba(33, 126, 2, 0.25) !important;
+      outline: none;
     }
     
     &::placeholder {
@@ -766,6 +782,8 @@ hr {
     &:disabled {
       background-color: #e9ecef !important;
       color: #6c757d !important;
+      cursor: not-allowed;
+      opacity: 0.6;
     }
   }
   
@@ -776,9 +794,56 @@ hr {
     font-weight: 600;
   }
   
-  // Чекбоксы и радиокнопки
-  .form-check-label {
-    color: #212529 !important;
+  // Чекбоксы и радиокнопки - УЛУЧШЕННАЯ ВИДИМОСТЬ
+  .form-check {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.75rem;
+    
+    .form-check-input {
+      width: 20px !important;
+      height: 20px !important;
+      border: 2px solid #6c757d !important;
+      border-radius: 0.25rem !important;
+      background-color: #ffffff !important;
+      cursor: pointer;
+      margin: 0 !important;
+      flex-shrink: 0;
+      
+      &:checked {
+        background-color: #217e02 !important;
+        border-color: #217e02 !important;
+        background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3e%3cpath fill='none' stroke='%23fff' stroke-linecap='round' stroke-linejoin='round' stroke-width='3' d='M6 10l3 3l6-6'/%3e%3c/svg%3e") !important;
+      }
+      
+      &:focus {
+        border-color: #217e02 !important;
+        box-shadow: 0 0 0 0.2rem rgba(33, 126, 2, 0.25) !important;
+        outline: none;
+      }
+      
+      &:hover {
+        border-color: #217e02 !important;
+      }
+    }
+    
+    .form-check-label {
+      color: #212529 !important;
+      font-weight: 500;
+      cursor: pointer;
+      user-select: none;
+      margin: 0 !important;
+    }
+  }
+  
+  // Радиокнопки
+  input[type="radio"].form-check-input {
+    border-radius: 50% !important;
+    
+    &:checked {
+      background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'%3e%3ccircle r='2' fill='%23fff'/%3e%3c/svg%3e") !important;
+    }
   }
   
   // Вспомогательный текст
@@ -953,84 +1018,221 @@ hr {
   }
 }
 
-// NG-SELECT в модальных окнах - ПРИНУДИТЕЛЬНЫЕ СТИЛИ
-.modal-content ng-select,
-.modal-body ng-select,
-.modal-content .admin ng-select,
-.modal-body .admin ng-select {
-  .ng-select-container {
-    background-color: #ffffff !important;
-    border-color: #dee2e6 !important;
-    color: #212529 !important;
-    
-    // КРИТИЧНО: Выбранное значение должно быть видно
-    .ng-value-container {
-      .ng-value {
+// NG-SELECT в модальных окнах - МАКСИМАЛЬНО УСИЛЕННЫЕ СТИЛИ
+.modal-content,
+.modal-body,
+.modal-dialog {
+  ng-select,
+  .ng-select {
+    // Контейнер селекта
+    .ng-select-container {
+      background-color: #ffffff !important;
+      border: 1px solid #dee2e6 !important;
+      border-radius: 0.375rem !important;
+      color: #212529 !important;
+      min-height: 48px !important;
+      
+      // КРИТИЧНО: Контейнер значений
+      .ng-value-container {
+        padding: 0.5rem 0.75rem !important;
         color: #212529 !important;
-        background-color: transparent !important;
+        background-color: #ffffff !important;
         
-        .ng-value-label {
+        // КРИТИЧНО: Выбранное значение
+        .ng-value {
           color: #212529 !important;
+          background-color: #e9ecef !important;
+          border: 1px solid #dee2e6 !important;
+          border-radius: 0.25rem !important;
+          padding: 0.25rem 0.5rem !important;
+          margin-right: 0.25rem !important;
+          font-weight: 500 !important;
+          
+          .ng-value-label {
+            color: #212529 !important;
+            font-size: 0.95rem !important;
+          }
+          
+          .ng-value-icon {
+            color: #6c757d !important;
+            
+            &:hover {
+              color: #dc3545 !important;
+            }
+          }
+        }
+        
+        // Placeholder
+        .ng-placeholder {
+          color: #6c757d !important;
+          font-size: 0.95rem !important;
+        }
+        
+        // Поле ввода
+        .ng-input {
+          color: #212529 !important;
+          
+          input {
+            color: #212529 !important;
+            background-color: transparent !important;
+            font-size: 0.95rem !important;
+          }
         }
       }
       
-      .ng-placeholder {
+      // Стрелка
+      .ng-arrow-wrapper {
+        padding-right: 0.75rem !important;
+        
+        .ng-arrow {
+          border-color: #6c757d transparent transparent !important;
+          border-width: 6px 6px 2.5px !important;
+        }
+      }
+      
+      // Кнопка очистки
+      .ng-clear-wrapper {
         color: #6c757d !important;
+        padding-right: 0.5rem !important;
+        
+        .ng-clear {
+          font-size: 18px !important;
+          
+          &:hover {
+            color: #dc3545 !important;
+          }
+        }
+      }
+      
+      // Состояния
+      &:hover {
+        border-color: #adb5bd !important;
+      }
+      
+      &.ng-select-focused {
+        border-color: #217e02 !important;
+        box-shadow: 0 0 0 0.2rem rgba(33, 126, 2, 0.25) !important;
+        outline: none !important;
+      }
+      
+      &.ng-select-disabled {
+        background-color: #e9ecef !important;
+        border-color: #dee2e6 !important;
+        cursor: not-allowed !important;
+        opacity: 0.6 !important;
       }
     }
     
-    .ng-input {
-      input {
-        color: #212529 !important;
-        background-color: transparent !important;
+    // Открытая стрелка
+    &.ng-select-opened {
+      .ng-arrow-wrapper .ng-arrow {
+        border-color: transparent transparent #6c757d !important;
+        border-width: 0 6px 6px !important;
       }
     }
     
-    &:hover {
-      border-color: #adb5bd !important;
-    }
-    
-    &.ng-select-focused {
-      border-color: #217e02 !important;
-      box-shadow: 0 0 0 0.2rem rgba(33, 126, 2, 0.25) !important;
-    }
-  }
-  
-  .ng-arrow-wrapper .ng-arrow {
-    border-color: #6c757d transparent transparent !important;
-  }
-  
-  &.ng-select-opened .ng-arrow-wrapper .ng-arrow {
-    border-color: transparent transparent #6c757d !important;
-  }
-  
-  .ng-clear-wrapper {
-    color: #6c757d !important;
-    
-    &:hover {
-      color: #dc3545 !important;
+    // Множественный выбор
+    &.ng-select-multiple {
+      .ng-value-container {
+        .ng-value {
+          background-color: #217e02 !important;
+          border-color: #1a6b02 !important;
+          
+          .ng-value-label {
+            color: #ffffff !important;
+          }
+          
+          .ng-value-icon {
+            color: #ffffff !important;
+            opacity: 0.8;
+            
+            &:hover {
+              opacity: 1;
+            }
+          }
+        }
+      }
     }
   }
 }
 
-// Выпадающие списки ng-select
+// Выпадающие списки ng-select - УСИЛЕННЫЕ СТИЛИ
 .ng-dropdown-panel {
   background-color: #ffffff !important;
-  border-color: #dee2e6 !important;
+  border: 1px solid #dee2e6 !important;
+  border-radius: 0.375rem !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
+  margin-top: 4px !important;
+  max-height: 300px !important;
   
-  .ng-option {
-    color: #212529 !important;
+  .ng-dropdown-panel-items {
     background-color: #ffffff !important;
+    max-height: 280px !important;
     
-    &:hover, &.ng-option-marked {
+    .ng-optgroup {
+      color: #212529 !important;
+      font-weight: 600 !important;
+      padding: 0.5rem 0.75rem !important;
       background-color: #f8f9fa !important;
-      color: #212529 !important;
+      border-bottom: 1px solid #dee2e6 !important;
     }
     
-    &.ng-option-selected {
-      background-color: #e9ecef !important;
+    .ng-option {
       color: #212529 !important;
+      background-color: #ffffff !important;
+      padding: 0.75rem 1rem !important;
+      font-size: 0.95rem !important;
+      border-bottom: 1px solid #f8f9fa !important;
+      cursor: pointer !important;
+      transition: all 0.2s ease !important;
+      
+      &:last-child {
+        border-bottom: none !important;
+      }
+      
+      &:hover,
+      &.ng-option-marked {
+        background-color: #f8f9fa !important;
+        color: #212529 !important;
+      }
+      
+      &.ng-option-selected {
+        background-color: #e9ecef !important;
+        color: #212529 !important;
+        font-weight: 600 !important;
+        
+        &::before {
+          content: '✓ ';
+          color: #217e02 !important;
+          font-weight: bold !important;
+          margin-right: 0.5rem !important;
+        }
+      }
+      
+      &.ng-option-disabled {
+        color: #6c757d !important;
+        cursor: not-allowed !important;
+        opacity: 0.6 !important;
+      }
+      
+      &.ng-option-child {
+        padding-left: 2rem !important;
+      }
     }
+  }
+  
+  .ng-dropdown-header {
+    background-color: #f8f9fa !important;
+    border-bottom: 1px solid #dee2e6 !important;
+    padding: 0.75rem 1rem !important;
+    color: #212529 !important;
+  }
+  
+  .ng-dropdown-footer {
+    background-color: #f8f9fa !important;
+    border-top: 1px solid #dee2e6 !important;
+    padding: 0.75rem 1rem !important;
+    color: #212529 !important;
   }
 }
 
