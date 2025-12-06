@@ -453,4 +453,25 @@ export class AppService {
       .get(`${this.API_URL}/stats/admin/${adminId}/productivity`)
       .pipe(map((response) => response));
   }
+
+  // ==================== MARKET PRICE CHECK ====================
+  /**
+   * Проверка цены автомобиля на российских площадках
+   * @param params Параметры автомобиля для поиска
+   * @returns Результат анализа цен с рекомендуемой ценой
+   */
+  checkMarketPrice(params: {
+    brand: string;
+    model: string;
+    year: number;
+    mileage?: number;
+    engine?: number;
+    gearbox?: string;
+    fuel?: string;
+    drive?: string;
+  }): Observable<any> {
+    return this.http
+      .post(`${this.API_URL}/cars/check-market-price`, params)
+      .pipe(map((response) => response));
+  }
 }

@@ -49,6 +49,11 @@ export class AdminCarsManagementModal implements OnInit {
   result?: { reload: boolean };
   
   public isSubmitting = false; // Флаг для предотвращения множественных отправок
+  
+  // === Проверка рыночной цены ===
+  public isCheckingPrice = false;
+  public priceCheckResult: any = null;
+  public showPriceResults = false;
 
   ngOnInit() {
     this.form = this.fb.group({
@@ -530,11 +535,97 @@ export class AdminCarsManagementModal implements OnInit {
     return !!(brand && model && year);
   }
 
+  canCheckPrice(): boolean {
+    const brand = this.form.get('brand')?.value;
+    const model = this.form.get('model')?.value;
+    const year = this.form.get('year')?.value;
+    return !!(brand && model && year) && !this.isCheckingPrice;
+  }
+
   getSelectedCarInfo(): string {
     const brand = this.form.get('brand')?.value;
     const model = this.form.get('model')?.value;
     const year = this.form.get('year')?.value;
     return `${brand} ${model} ${year}`;
+  }
+
+  /**
+   * Проверка рыночной цены на российских площадках
+   */
+  checkMarketPrice() {
+    if (!this.canCheckPrice()) return;
+    
+    this.isCheckingPrice = true;
+    this.priceCheckResult = null;
+    this.showPriceResults = false;
+
+    const params = {
+      brand: this.form.get('brand')?.value,
+      model: this.form.get('model')?.value,
+      year: parseInt(this.form.get('year')?.value, 10),
+      mileage: this.form.get('mileage')?.value ? parseInt(this.form.get('mileage')?.value, 10) : undefined,
+      engine: this.form.get('engine')?.value ? parseFloat(this.form.get('engine')?.value) : undefined,
+      gearbox: this.form.get('gearbox')?.value || undefined,
+      fuel: this.form.get('fuel')?.value || undefined,
+      drive: this.form.get('drive')?.value || undefined,
+    };
+
+    this.appService.checkMarketPrice(params).subscribe({
+      next: (result) => {
+        this.isCheckingPrice = false;
+        this.priceCheckResult = result;
+        this.showPriceResults = true;
+        
+        if (result.success) {
+          this.showNotification(
+            `Найдено ${result.totalFound} объявлений. Средняя цена: ${this.formatPrice(result.averagePrice)} ₽`,
+            'success'
+          );
+        } else {
+          this.showNotification(result.error || 'Не удалось найти объявления', 'info');
+        }
+      },
+      error: (err) => {
+        this.isCheckingPrice = false;
+        this.showNotification('Ошибка при проверке цены: ' + (err.error?.message || err.message), 'error');
+      }
+    });
+  }
+
+  /**
+   * Применить рекомендуемую цену к форме
+   */
+  applyPrice(price: number) {
+    this.form.patchValue({ price: price });
+    this.showNotification(`Цена ${this.formatPrice(price)} ₽ применена`, 'success');
+    this.showPriceResults = false;
+  }
+
+  /**
+   * Закрыть панель с результатами проверки цены
+   */
+  closePriceResults() {
+    this.showPriceResults = false;
+  }
+
+  /**
+   * Форматирование цены с разделителями
+   */
+  formatPrice(price: number): string {
+    return price?.toLocaleString('ru-RU') || '0';
+  }
+
+  /**
+   * Получить название источника на русском
+   */
+  getSourceName(source: string): string {
+    const names: { [key: string]: string } = {
+      'auto.ru': 'Auto.ru',
+      'drom.ru': 'Drom.ru',
+      'avito.ru': 'Avito',
+      'local_db': 'Наша база'
+    };
+    return names[source] || source;
   }
 
   autoFillForm() {
