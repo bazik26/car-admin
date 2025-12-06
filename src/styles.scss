@@ -683,6 +683,11 @@ hr {
   border: 1px solid #dee2e6 !important;
   box-shadow: var(--shadow-xl);
   color: #212529 !important;
+  
+  // Принудительно устанавливаем темный цвет для всех текстовых элементов
+  * {
+    color: inherit;
+  }
 }
 
 .modal-header,
@@ -691,8 +696,9 @@ hr {
 }
 
 .modal-header {
-  background: #ffffff !important;
+  background: #f8f9fa !important;
   border-bottom: 1px solid #dee2e6 !important;
+  color: #212529 !important;
 }
 
 .modal-title {
@@ -704,6 +710,29 @@ hr {
 .modal-body {
   color: #212529 !important;
   background: #ffffff !important;
+  
+  // Исправление для всех текстовых элементов
+  p, span, div, label, small, h1, h2, h3, h4, h5, h6 {
+    color: #212529 !important;
+  }
+  
+  // Формы
+  .form-control, .form-select, input, textarea, select {
+    color: #212529 !important;
+    background-color: #ffffff !important;
+    
+    &::placeholder {
+      color: #6c757d !important;
+    }
+  }
+  
+  .form-label {
+    color: #212529 !important;
+  }
+  
+  .form-text, .text-muted, small.text-muted {
+    color: #6c757d !important;
+  }
 }
 
 .modal-body .text-muted,
@@ -713,7 +742,9 @@ hr {
 
 .modal-body h5,
 .modal-body h4,
-.modal-body h3 {
+.modal-body h3,
+.modal-body h2,
+.modal-body h1 {
   color: #212529 !important;
 }
 

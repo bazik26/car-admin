@@ -1,30 +1,36 @@
 // Стили для модального окна управления лидами
 .admin {
-  background-color: #ffffff;
-  color: #212529;
+  background-color: #ffffff !important;
+  color: #212529 !important;
   padding: 1.5rem;
   border-radius: 0.5rem;
   
+  // Принудительно устанавливаем темный цвет для всех текстовых элементов
+  * {
+    color: inherit;
+  }
+  
   .form-control {
-    background-color: #ffffff;
+    background-color: #ffffff !important;
     border: 1px solid #dee2e2;
     border-radius: 0.375rem;
-    color: #212529;
+    color: #212529 !important;
     padding: 0.75rem;
     
     &:focus {
       border-color: #217e02;
       box-shadow: 0 0 0 0.2rem rgba(33, 126, 2, 0.25);
-      background-color: #ffffff;
+      background-color: #ffffff !important;
+      color: #212529 !important;
     }
     
     &::placeholder {
-      color: #6c757d;
+      color: #6c757d !important;
     }
   }
   
   .form-label {
-    color: #212529;
+    color: #212529 !important;
     font-weight: 600;
     margin-bottom: 0.5rem;
     display: block;
@@ -33,6 +39,10 @@
       content: " *";
       color: #dc3545;
     }
+  }
+  
+  .form-text {
+    color: #6c757d !important;
   }
   
   .form-group {
@@ -56,7 +66,23 @@
     .form-check-label {
       margin: 0;
       cursor: pointer;
+      color: #212529 !important;
     }
+  }
+  
+  select.form-control {
+    background-color: #ffffff !important;
+    color: #212529 !important;
+    
+    option {
+      background-color: #ffffff;
+      color: #212529;
+    }
+  }
+  
+  textarea.form-control {
+    background-color: #ffffff !important;
+    color: #212529 !important;
   }
   
   .btn {
@@ -68,28 +94,31 @@
     &.btn-primary {
       background-color: #217e02;
       border-color: #217e02;
-      color: white;
+      color: #ffffff !important;
       
       &:hover:not(:disabled) {
         background-color: #1a6b02;
         border-color: #1a6b02;
+        color: #ffffff !important;
       }
       
       &:disabled {
         background-color: #6c757d;
         border-color: #6c757d;
         opacity: 0.65;
+        color: #ffffff !important;
       }
     }
     
     &.btn-secondary {
       background-color: #6c757d;
       border-color: #6c757d;
-      color: #ffffff;
+      color: #ffffff !important;
       
       &:hover:not(:disabled) {
         background-color: #5a6268;
         border-color: #545b62;
+        color: #ffffff !important;
       }
     }
   }
@@ -97,26 +126,109 @@
   .gap-2 {
     gap: 0.5rem;
   }
+  
+  // Исправление для всех текстовых элементов
+  p, span, div, label, small, h1, h2, h3, h4, h5, h6 {
+    color: #212529 !important;
+  }
+  
+  small.text-muted {
+    color: #6c757d !important;
+  }
+  
+  // Стили для ng-select в модальном окне
+  ng-select {
+    .ng-select-container {
+      background-color: #ffffff !important;
+      border: 1px solid #dee2e6 !important;
+      color: #212529 !important;
+      
+      .ng-value, .ng-value-label {
+        color: #212529 !important;
+      }
+      
+      .ng-placeholder {
+        color: #6c757d !important;
+      }
+      
+      .ng-input input {
+        color: #212529 !important;
+      }
+      
+      &:hover {
+        border-color: #adb5bd !important;
+      }
+      
+      &.ng-select-focused {
+        border-color: #217e02 !important;
+        box-shadow: 0 0 0 0.2rem rgba(33, 126, 2, 0.25) !important;
+      }
+    }
+    
+    .ng-arrow-wrapper .ng-arrow {
+      border-color: #6c757d transparent transparent !important;
+    }
+    
+    &.ng-select-opened .ng-arrow-wrapper .ng-arrow {
+      border-color: transparent transparent #6c757d !important;
+    }
+  }
+  
+  // Стили для выпадающего списка ng-select
+  ::ng-deep .ng-dropdown-panel {
+    background-color: #ffffff !important;
+    border: 1px solid #dee2e6 !important;
+    
+    .ng-option {
+      color: #212529 !important;
+      background-color: #ffffff !important;
+      
+      &:hover, &.ng-option-marked {
+        background-color: #f8f9fa !important;
+        color: #212529 !important;
+      }
+      
+      &.ng-option-selected {
+        background-color: #e9ecef !important;
+        color: #212529 !important;
+      }
+    }
+  }
 }
 
-// Глобальные стили для модального окна (уже есть в management.modal.scss для cars)
-// Но убедимся, что они применяются
+// Глобальные стили для модального окна управления лидами
 ::ng-deep .modal-content {
   background-color: #ffffff !important;
   border: none !important;
   border-radius: 0.5rem !important;
   box-shadow: 0 10px 30px rgba(0,0,0,0.2) !important;
+  color: #212529 !important;
+  
+  // Принудительно устанавливаем темный цвет для всех текстовых элементов
+  * {
+    color: inherit;
+  }
   
   .modal-header {
     background-color: #f8f9fa !important;
     border-bottom: 1px solid #dee2e6 !important;
     border-radius: 0.5rem 0.5rem 0 0 !important;
     padding: 1rem 1.5rem !important;
+    color: #212529 !important;
     
     .modal-title {
       color: #212529 !important;
       font-weight: 600 !important;
       font-size: 1.25rem !important;
+    }
+    
+    .btn-close {
+      filter: invert(0) !important;
+      opacity: 0.5;
+      
+      &:hover {
+        opacity: 1;
+      }
     }
   }
   
@@ -125,6 +237,29 @@
     padding: 0 !important;
     max-height: 70vh !important;
     overflow-y: auto !important;
+    color: #212529 !important;
+    
+    // Исправление для всех текстовых элементов в body
+    p, span, div, label, small, h1, h2, h3, h4, h5, h6, input, textarea, select {
+      color: #212529 !important;
+    }
+    
+    .text-muted {
+      color: #6c757d !important;
+    }
+    
+    .form-control {
+      color: #212529 !important;
+      background-color: #ffffff !important;
+      
+      &::placeholder {
+        color: #6c757d !important;
+      }
+    }
+    
+    .form-label {
+      color: #212529 !important;
+    }
   }
   
   .modal-footer {
@@ -132,6 +267,7 @@
     border-top: 1px solid #dee2e6 !important;
     border-radius: 0 0 0.5rem 0.5rem !important;
     padding: 1rem 1.5rem !important;
+    color: #212529 !important;
   }
 }
 
