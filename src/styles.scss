@@ -1034,6 +1034,149 @@ hr {
   }
 }
 
+// Класс .admin в модальных окнах - единые стили для всех форм
+.modal-content .admin,
+.modal-body .admin {
+  background-color: #ffffff !important;
+  color: #212529 !important;
+  padding: 1.5rem;
+  border-radius: 0.5rem;
+  
+  // Все текстовые элементы наследуют цвет
+  * {
+    color: inherit;
+  }
+  
+  // Формы
+  .form-control,
+  .form-select,
+  input:not([type="checkbox"]):not([type="radio"]),
+  textarea,
+  select {
+    background-color: #ffffff !important;
+    color: #212529 !important;
+    border-color: #dee2e6 !important;
+    
+    &::placeholder {
+      color: #6c757d !important;
+    }
+    
+    &:focus {
+      background-color: #ffffff !important;
+      color: #212529 !important;
+      border-color: #217e02 !important;
+      box-shadow: 0 0 0 0.2rem rgba(33, 126, 2, 0.25) !important;
+    }
+    
+    &:disabled {
+      background-color: #e9ecef !important;
+      color: #6c757d !important;
+    }
+  }
+  
+  // Метки форм
+  .form-label,
+  label:not(.form-check-label):not(.btn) {
+    color: #212529 !important;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    display: block;
+    
+    &.required::after {
+      content: " *";
+      color: #dc3545;
+    }
+  }
+  
+  .form-check-label {
+    color: #212529 !important;
+    cursor: pointer;
+  }
+  
+  // Чекбоксы
+  .form-check-input {
+    &:checked {
+      background-color: #217e02 !important;
+      border-color: #217e02 !important;
+    }
+    
+    &:focus {
+      border-color: #217e02 !important;
+      box-shadow: 0 0 0 0.2rem rgba(33, 126, 2, 0.25) !important;
+    }
+  }
+  
+  // Текст
+  p, span, div, h1, h2, h3, h4, h5, h6 {
+    color: #212529 !important;
+  }
+  
+  .text-muted,
+  .form-text {
+    color: #6c757d !important;
+  }
+  
+  // Кнопки
+  .btn {
+    border-radius: 0.375rem;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    
+    &.btn-primary {
+      background-color: #217e02 !important;
+      border-color: #217e02 !important;
+      color: #ffffff !important;
+      
+      &:hover:not(:disabled) {
+        background-color: #1a6b02 !important;
+        border-color: #1a6b02 !important;
+      }
+      
+      &:disabled {
+        background-color: #6c757d !important;
+        border-color: #6c757d !important;
+        opacity: 0.65;
+      }
+    }
+    
+    &.btn-secondary {
+      background-color: #6c757d !important;
+      border-color: #6c757d !important;
+      color: #ffffff !important;
+      
+      &:hover:not(:disabled) {
+        background-color: #5a6268 !important;
+        border-color: #545b62 !important;
+      }
+    }
+  }
+  
+  // Группы форм
+  .form-group {
+    margin-bottom: 1rem;
+    
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+  
+  // Чекбоксы группа
+  .form-check {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    
+    .form-check-input {
+      width: auto;
+      margin: 0;
+    }
+    
+    .form-check-label {
+      margin: 0;
+    }
+  }
+}
+
 // Желтые карточки (например, Lead Manager) в модальных окнах
 .modal-content,
 .modal-body {

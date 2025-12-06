@@ -1,135 +1,9 @@
 // Стили для модального окна управления автомобилями
-.admin {
-  background-color: #ffffff;
-  color: #212529;
-  padding: 1.5rem;
-  border-radius: 0.5rem;
-  
-  .form-control {
-    background-color: #ffffff;
-    border: 1px solid #dee2e6;
-    border-radius: 0.375rem;
-    color: #212529;
-    padding: 0.75rem;
-    
-    &:focus {
-      border-color: #217e02;
-      box-shadow: 0 0 0 0.2rem rgba(33, 126, 2, 0.25);
-      background-color: #ffffff;
-    }
-    
-    &::placeholder {
-      color: #6c757d;
-    }
-  }
-  
-  .form-label {
-    color: #212529;
-    font-weight: 600;
-    margin-bottom: 0.5rem;
-    display: block;
-    
-    &.required::after {
-      content: " *";
-      color: #dc3545;
-    }
-  }
-  
-  .form-group {
-    margin-bottom: 1rem;
-    
-    &:last-child {
-      margin-bottom: 0;
-    }
-  }
-  
-  // Стили для ng-select - ПРИНУДИТЕЛЬНЫЕ СТИЛИ ДЛЯ ЧИТАЕМОСТИ
-  ng-select {
-    .ng-select-container {
-      background-color: #ffffff !important;
-      border: 1px solid #dee2e6 !important;
-      border-radius: 0.375rem;
-      color: #212529 !important;
-      
-      &:hover {
-        border-color: #adb5bd !important;
-      }
-      
-      &.ng-select-focused {
-        border-color: #217e02 !important;
-        box-shadow: 0 0 0 0.2rem rgba(33, 126, 2, 0.25) !important;
-      }
-    }
-    
-    // КРИТИЧНО: Выбранное значение должно быть видно
-    .ng-value-container {
-      color: #212529 !important;
-      
-      .ng-value {
-        color: #212529 !important;
-        background-color: transparent !important;
-        
-        .ng-value-label {
-          color: #212529 !important;
-        }
-      }
-      
-      .ng-placeholder {
-        color: #6c757d !important;
-      }
-    }
-    
-    .ng-input {
-      color: #212529 !important;
-      
-      input {
-        color: #212529 !important;
-        background-color: transparent !important;
-      }
-    }
-    
-    .ng-arrow-wrapper .ng-arrow {
-      border-color: #6c757d transparent transparent !important;
-    }
-    
-    &.ng-select-opened .ng-arrow-wrapper .ng-arrow {
-      border-color: transparent transparent #6c757d !important;
-    }
-    
-    .ng-clear-wrapper {
-      color: #6c757d !important;
-      
-      &:hover {
-        color: #dc3545 !important;
-      }
-    }
-  }
-  
-  // Выпадающий список ng-select
-  ::ng-deep .ng-dropdown-panel {
-    background-color: #ffffff !important;
-    border-color: #dee2e6 !important;
-    
-    .ng-option {
-      color: #212529 !important;
-      background-color: #ffffff !important;
-      
-      &:hover,
-      &.ng-option-marked {
-        background-color: #f8f9fa !important;
-        color: #212529 !important;
-      }
-      
-      &.ng-option-selected {
-        background-color: #e9ecef !important;
-        color: #212529 !important;
-        font-weight: 600;
-      }
-    }
-  }
-  
-  // Стили для accordion
-  accordion {
+// Основные стили наследуются из глобального styles.scss
+// Здесь только уникальные стили для этого конкретного модального окна
+
+// Стили для accordion
+accordion {
     .card {
       border: 1px solid #dee2e6;
       border-radius: 0.375rem;
@@ -161,8 +35,8 @@
     }
   }
   
-  // Стили для чекбоксов
-  .form-check {
+// Стили для чекбоксов
+.form-check {
     .form-check-input {
       &:checked {
         background-color: #217e02;
@@ -184,8 +58,8 @@
     }
   }
   
-  // Стили для загрузки файлов
-  .file-upload-area {
+// Стили для загрузки файлов
+.file-upload-area {
     border: 2px dashed #dee2e6;
     border-radius: 0.375rem;
     background-color: #f8f9fa;
@@ -223,8 +97,8 @@
     }
   }
   
-  // Стили для кнопок
-  .btn {
+// Стили для кнопок
+.btn {
     border-radius: 0.375rem;
     font-weight: 500;
     transition: all 0.2s ease;
@@ -261,8 +135,8 @@
     }
   }
   
-  // Стили для кнопок в начале формы
-  .mb-3.d-flex.justify-content-center {
+// Стили для кнопок в начале формы
+.mb-3.d-flex.justify-content-center {
     margin-bottom: 1.5rem !important;
     padding: 1rem 0;
     border-bottom: 2px solid #dee2e6;
@@ -275,8 +149,8 @@
     }
   }
   
-  // Стили для кнопки сохранения
-  .mt-3.d-flex.justify-content-center {
+// Стили для кнопки сохранения
+.mt-3.d-flex.justify-content-center {
     margin-top: 2rem !important;
     padding: 1rem 0;
     border-top: 2px solid #dee2e6;
@@ -289,8 +163,8 @@
     }
   }
   
-  // Стили для ошибок валидации
-  .form-control.ng-invalid.ng-touched {
+// Стили для ошибок валидации
+.form-control.ng-invalid.ng-touched {
     border-color: #dc3545;
     
     &:focus {
@@ -299,12 +173,11 @@
     }
   }
   
-  // Стили для обязательных полей
-  .required-field {
-    .form-label::after {
-      content: " *";
-      color: #dc3545;
-    }
+// Стили для обязательных полей
+.required-field {
+  .form-label::after {
+    content: " *";
+    color: #dc3545;
   }
 }
 
@@ -452,83 +325,5 @@
   }
 }
 
-// Глобальные стили для модального окна
-.modal-content {
-  background-color: #ffffff !important;
-  border: none;
-  border-radius: 0.5rem;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-  color: #212529 !important;
-  
-  .modal-header {
-    background-color: #f8f9fa !important;
-    border-bottom: 1px solid #dee2e6;
-    border-radius: 0.5rem 0.5rem 0 0;
-    padding: 1rem 1.5rem;
-    color: #212529 !important;
-    
-    .modal-title {
-      color: #212529 !important;
-      font-weight: 600;
-      font-size: 1.25rem;
-    }
-    
-    .btn-close {
-      background: none;
-      border: none;
-      font-size: 1.5rem;
-      color: #6c757d;
-      filter: invert(0) !important;
-      
-      &:hover {
-        color: #212529;
-      }
-    }
-  }
-  
-  .modal-body {
-    background-color: #ffffff !important;
-    padding: 0;
-    max-height: 70vh;
-    overflow-y: auto;
-    color: #212529 !important;
-  }
-  
-  .modal-footer {
-    background-color: #f8f9fa !important;
-    border-top: 1px solid #dee2e6;
-    border-radius: 0 0 0.5rem 0.5rem;
-    padding: 1rem 1.5rem;
-    color: #212529 !important;
-  }
-  
-  // Принудительные стили для ng-select в модальном окне
-  ng-select {
-    .ng-select-container {
-      background-color: #ffffff !important;
-      border-color: #dee2e6 !important;
-      color: #212529 !important;
-      
-      .ng-value-container {
-        .ng-value {
-          color: #212529 !important;
-          background-color: transparent !important;
-          
-          .ng-value-label {
-            color: #212529 !important;
-          }
-        }
-        
-        .ng-placeholder {
-          color: #6c757d !important;
-        }
-      }
-      
-      .ng-input {
-        input {
-          color: #212529 !important;
-        }
-      }
-    }
-  }
-}
+// Специфичные стили для модального окна управления автомобилями
+// Базовые стили модального окна наследуются из глобального styles.scss

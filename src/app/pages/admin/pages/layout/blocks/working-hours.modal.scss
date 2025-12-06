@@ -1,37 +1,9 @@
+// Стили для модального окна рабочих часов
+// Основные стили модального окна наследуются из глобального styles.scss
+// Здесь только уникальные стили для этого конкретного модального окна
+
 .working-hours-modal {
-  .modal-header {
-    background-color: #ffffff !important;
-    border-bottom: 1px solid #dee2e6;
-    padding: 1rem 1.5rem;
-    
-    .modal-title {
-      color: #212529 !important;
-      font-weight: 600;
-      margin: 0;
-    }
-    
-    .btn-close {
-      filter: invert(0) !important;
-      opacity: 0.5;
-      
-      &:hover {
-        opacity: 1;
-      }
-    }
-  }
-  
   .modal-body {
-    background-color: #ffffff !important;
-    color: #212529 !important;
-    padding: 1.5rem;
-    
-    p {
-      color: #212529 !important;
-    }
-    
-    .text-muted {
-      color: #6c757d !important;
-    }
     
     .day-row {
       padding: 0.75rem;
@@ -81,38 +53,8 @@
   }
   
   .modal-footer {
-    background-color: #ffffff !important;
-    border-top: 1px solid #dee2e6;
-    padding: 1rem 1.5rem;
-    
     .btn {
       min-width: 100px;
-      
-      &.btn-primary {
-        background-color: #217e02;
-        border-color: #217e02;
-        color: #ffffff;
-        
-        &:hover:not(:disabled) {
-          background-color: #1a6b02;
-          border-color: #1a6b02;
-        }
-        
-        &:disabled {
-          opacity: 0.65;
-        }
-      }
-      
-      &.btn-secondary {
-        background-color: #6c757d;
-        border-color: #6c757d;
-        color: #ffffff;
-        
-        &:hover {
-          background-color: #5a6268;
-          border-color: #545b62;
-        }
-      }
     }
   }
 }
