@@ -127,24 +127,6 @@
       }
     }
   }
-}
-
-// Глобальные стили для ng-select в модальном окне управления автомобилями
-::ng-deep .modal-content {
-  .admin ng-select {
-    .ng-select-container {
-      .ng-value-container {
-        .ng-value {
-          color: #212529 !important;
-          
-          .ng-value-label {
-            color: #212529 !important;
-          }
-        }
-      }
-    }
-  }
-}
   
   // Стили для accordion
   accordion {
