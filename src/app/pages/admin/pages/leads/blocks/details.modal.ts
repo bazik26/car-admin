@@ -12,8 +12,6 @@ import { FormsModule } from '@angular/forms';
 import { BsModalRef } from 'ngx-bootstrap/modal';
 import { AppService } from '../../../../../services/app.service';
 import { take } from 'rxjs';
-import { LeadPipelineComponent } from './lead-pipeline.component';
-import { TaskCardComponent } from './task-card.component';
 import { filterTasksByPipelineStage, getTasksForCurrentStage, PipelineStage as PipelineStageEnum } from '../../../../../utils/pipeline-helpers';
 
 interface Lead {
@@ -113,7 +111,7 @@ interface ChatMessage {
 @Component({
   selector: 'app-lead-details-modal',
   standalone: true,
-  imports: [CommonModule, FormsModule, LeadPipelineComponent, TaskCardComponent],
+  imports: [CommonModule, FormsModule],
   templateUrl: './details.modal.html',
   styleUrls: ['./details.modal.scss'],
   encapsulation: ViewEncapsulation.None,
