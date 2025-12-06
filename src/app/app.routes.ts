@@ -66,11 +66,12 @@ export const routes: Routes = [
             component: LeadsPage,
             title: 'Управление лидами',
           },
-          {
-            path: 'tasks',
-            component: TasksPageComponent,
-            title: 'Мои задачи',
-          },
+          // Временно скрыта страница задач
+          // {
+          //   path: 'tasks',
+          //   component: TasksPageComponent,
+          //   title: 'Мои задачи',
+          // },
           {
             path: 'my-stats',
             component: AdminStatsPage,

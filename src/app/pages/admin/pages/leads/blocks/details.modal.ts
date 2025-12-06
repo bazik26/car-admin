@@ -125,7 +125,7 @@ export class LeadDetailsModal implements OnInit {
   @Input()
   lead!: Lead;
 
-  public activeTab = signal<'pipeline' | 'info' | 'collected' | 'tasks' | 'activity'>('pipeline'); // Начинаем с вкладки "Воронка"
+  public activeTab = signal<'pipeline' | 'info' | 'collected' | 'tasks' | 'activity'>('info'); // Начинаем с вкладки "Информация" (вкладки "Воронка" и "Задачи" временно скрыты)
   public collectedData = signal<Map<string, {value: string; source: string; taskId: number; category?: string}>>(new Map());
   public leadData = signal<Lead | null>(null);
   public isLoading = signal(true);

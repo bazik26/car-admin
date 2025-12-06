@@ -31,7 +31,8 @@
     <div class="modal-body">
       <!-- Tabs Navigation -->
       <ul class="nav nav-tabs mb-4" role="tablist">
-        <li class="nav-item" role="presentation">
+        <!-- Вкладки "Воронка" и "Задачи" временно скрыты -->
+        <!-- <li class="nav-item" role="presentation">
           <button 
             class="nav-link" 
             [class.active]="activeTab() === 'pipeline'"
@@ -40,7 +41,7 @@
             <i class="fas fa-route me-2"></i>Воронка
             <span class="badge bg-warning text-dark ms-2">{{ getCompletedTasksCount() }}/{{ getTotalTasksCount() }}</span>
           </button>
-        </li>
+        </li> -->
         <li class="nav-item" role="presentation">
           <button 
             class="nav-link" 
@@ -62,7 +63,7 @@
             }
           </button>
         </li>
-        <li class="nav-item" role="presentation">
+        <!-- <li class="nav-item" role="presentation">
           <button 
             class="nav-link" 
             [class.active]="activeTab() === 'tasks'"
@@ -73,7 +74,7 @@
               <span class="badge bg-primary ms-2">{{ leadTasks().length }}</span>
             }
           </button>
-        </li>
+        </li> -->
         <li class="nav-item" role="presentation">
           <button 
             class="nav-link" 
@@ -87,8 +88,8 @@
 
       <!-- Tab Content -->
       <div class="tab-content">
-        <!-- НОВАЯ ВКЛАДКА: Pipeline (ПЕРВАЯ) -->
-        @if (activeTab() === 'pipeline') {
+        <!-- Вкладка "Воронка" временно скрыта -->
+        <!-- @if (activeTab() === 'pipeline') {
           <div class="tab-pane fade show active">
             <app-lead-pipeline 
               [currentStage]="getCurrentPipelineStage()"
@@ -97,7 +98,6 @@
               (onStageChange)="updatePipelineStage($event)">
             </app-lead-pipeline>
             
-            <!-- Быстрая информация о лиде -->
             <div class="quick-info-cards">
               <div class="row g-3">
                 @if (lead.budget) {
@@ -136,7 +136,7 @@
               </div>
             </div>
           </div>
-        }
+        } -->
         
         <!-- Info Tab -->
         @if (activeTab() === 'info') {
@@ -346,8 +346,8 @@
           </div>
         }
 
-        <!-- Tasks Tab -->
-        @if (activeTab() === 'tasks') {
+        <!-- Вкладка "Задачи" временно скрыта -->
+        <!-- @if (activeTab() === 'tasks') {
           <div class="tab-pane fade show active">
             <div class="d-flex justify-content-between align-items-center mb-3">
               <h5 class="mb-0">
@@ -384,7 +384,6 @@
               </div>
             }
             
-            <!-- Задачи текущего этапа -->
             @if (getCurrentStageTasks().length > 0) {
               <div class="alert alert-info mb-3">
                 <i class="fas fa-info-circle me-2"></i>
@@ -401,7 +400,6 @@
               }
             }
             
-            <!-- Остальные задачи (скрыты под спойлером) -->
             @if (leadTasks().length > getCurrentStageTasks().length) {
               <div class="mt-4">
                 <details class="other-tasks-details">
@@ -429,7 +427,7 @@
               <p class="text-muted">Задач пока нет</p>
             }
           </div>
-        }
+        } -->
 
 
         <!-- Activity Tab -->
