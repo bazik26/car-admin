@@ -677,28 +677,43 @@ hr {
   color: var(--white);
 }
 
+/* ==========================================================================
+   МОДАЛЬНЫЕ ОКНА - ПРИНУДИТЕЛЬНЫЕ СТИЛИ ДЛЯ СВЕТЛОЙ ТЕМЫ
+   Переопределяют все темные стили приложения
+   ========================================================================== */
+
+.modal-content,
+.modal-content *,
+.modal-dialog .modal-content,
+.modal-dialog .modal-content * {
+  // Базовые цвета для модального окна
+  background-color: #ffffff !important;
+  color: #212529 !important;
+}
+
 .modal-content {
   background: #ffffff !important;
   border-radius: var(--radius-lg);
   border: 1px solid #dee2e6 !important;
   box-shadow: var(--shadow-xl);
   color: #212529 !important;
-  
-  // Принудительно устанавливаем темный цвет для всех текстовых элементов
-  * {
-    color: inherit;
-  }
 }
 
 .modal-header,
 .modal-footer {
   border-color: #dee2e6 !important;
+  background-color: #f8f9fa !important;
+  color: #212529 !important;
 }
 
 .modal-header {
   background: #f8f9fa !important;
   border-bottom: 1px solid #dee2e6 !important;
   color: #212529 !important;
+  
+  * {
+    color: #212529 !important;
+  }
 }
 
 .modal-title {
@@ -711,27 +726,194 @@ hr {
   color: #212529 !important;
   background: #ffffff !important;
   
-  // Исправление для всех текстовых элементов
-  p, span, div, label, small, h1, h2, h3, h4, h5, h6 {
+  // ВСЕ текстовые элементы - темный цвет
+  p, span, div, label, small, h1, h2, h3, h4, h5, h6, 
+  strong, b, em, i, a, li, td, th, dt, dd {
     color: #212529 !important;
   }
   
-  // Формы
-  .form-control, .form-select, input, textarea, select {
+  // Ссылки
+  a {
+    color: #0d6efd !important;
+    
+    &:hover {
+      color: #0a58ca !important;
+    }
+  }
+  
+  // Формы - ПРИНУДИТЕЛЬНО светлый фон и темный текст
+  .form-control, 
+  .form-select, 
+  input:not([type="checkbox"]):not([type="radio"]), 
+  textarea, 
+  select {
     color: #212529 !important;
     background-color: #ffffff !important;
+    border-color: #dee2e6 !important;
+    
+    &:focus {
+      color: #212529 !important;
+      background-color: #ffffff !important;
+      border-color: #217e02 !important;
+      box-shadow: 0 0 0 0.2rem rgba(33, 126, 2, 0.25) !important;
+    }
     
     &::placeholder {
+      color: #6c757d !important;
+      opacity: 1;
+    }
+    
+    &:disabled {
+      background-color: #e9ecef !important;
       color: #6c757d !important;
     }
   }
   
-  .form-label {
+  // Метки форм
+  .form-label,
+  label:not(.form-check-label):not(.btn) {
+    color: #212529 !important;
+    font-weight: 600;
+  }
+  
+  // Чекбоксы и радиокнопки
+  .form-check-label {
     color: #212529 !important;
   }
   
-  .form-text, .text-muted, small.text-muted {
+  // Вспомогательный текст
+  .form-text, 
+  .text-muted, 
+  small.text-muted,
+  .text-secondary {
     color: #6c757d !important;
+  }
+  
+  // Заголовки
+  h1, h2, h3, h4, h5, h6 {
+    color: #212529 !important;
+  }
+  
+  // Карточки
+  .card {
+    background-color: #ffffff !important;
+    border-color: #dee2e6 !important;
+    color: #212529 !important;
+    
+    .card-header {
+      background-color: #f8f9fa !important;
+      border-bottom-color: #dee2e6 !important;
+      color: #212529 !important;
+    }
+    
+    .card-body {
+      background-color: #ffffff !important;
+      color: #212529 !important;
+      
+      * {
+        color: inherit;
+      }
+    }
+  }
+  
+  // Таблицы
+  .table {
+    color: #212529 !important;
+    background-color: #ffffff !important;
+    
+    thead th {
+      color: #212529 !important;
+      background-color: #f8f9fa !important;
+    }
+    
+    tbody td {
+      color: #212529 !important;
+      background-color: #ffffff !important;
+    }
+  }
+  
+  // Алерты
+  .alert {
+    background-color: #ffffff !important;
+    border-color: #dee2e6 !important;
+    color: #212529 !important;
+    
+    &.alert-info {
+      background-color: #d1ecf1 !important;
+      border-color: #bee5eb !important;
+      color: #0c5460 !important;
+    }
+    
+    &.alert-success {
+      background-color: #d4edda !important;
+      border-color: #c3e6cb !important;
+      color: #155724 !important;
+    }
+    
+    &.alert-warning {
+      background-color: #fff3cd !important;
+      border-color: #ffeeba !important;
+      color: #856404 !important;
+    }
+    
+    &.alert-danger {
+      background-color: #f8d7da !important;
+      border-color: #f5c6cb !important;
+      color: #721c24 !important;
+    }
+  }
+  
+  // Бейджи
+  .badge {
+    color: #ffffff !important;
+    
+    &.bg-secondary {
+      background-color: #6c757d !important;
+    }
+    
+    &.bg-primary {
+      background-color: #0d6efd !important;
+    }
+    
+    &.bg-success {
+      background-color: #198754 !important;
+    }
+    
+    &.bg-warning {
+      background-color: #ffc107 !important;
+      color: #000000 !important;
+    }
+    
+    &.bg-danger {
+      background-color: #dc3545 !important;
+    }
+  }
+  
+  // Навигационные табы
+  .nav-tabs {
+    border-bottom-color: #dee2e6 !important;
+    
+    .nav-link {
+      color: #495057 !important;
+      
+      &:hover {
+        color: #212529 !important;
+      }
+      
+      &.active {
+        color: #0d6efd !important;
+        border-bottom-color: #0d6efd !important;
+      }
+    }
+  }
+  
+  // Списки
+  ul, ol {
+    color: #212529 !important;
+    
+    li {
+      color: #212529 !important;
+    }
   }
 }
 
@@ -752,12 +934,294 @@ hr {
   color: #212529 !important;
 }
 
+.modal-footer {
+  background-color: #f8f9fa !important;
+  border-top-color: #dee2e6 !important;
+  color: #212529 !important;
+  
+  * {
+    color: inherit;
+  }
+}
+
 .btn-close {
   filter: invert(0) !important;
   opacity: 0.5;
   
   &:hover {
     opacity: 1;
+  }
+}
+
+// NG-SELECT в модальных окнах
+.modal-content ng-select,
+.modal-body ng-select {
+  .ng-select-container {
+    background-color: #ffffff !important;
+    border-color: #dee2e6 !important;
+    color: #212529 !important;
+    
+    .ng-value, .ng-value-label {
+      color: #212529 !important;
+    }
+    
+    .ng-placeholder {
+      color: #6c757d !important;
+    }
+    
+    .ng-input input {
+      color: #212529 !important;
+    }
+    
+    &:hover {
+      border-color: #adb5bd !important;
+    }
+    
+    &.ng-select-focused {
+      border-color: #217e02 !important;
+      box-shadow: 0 0 0 0.2rem rgba(33, 126, 2, 0.25) !important;
+    }
+  }
+  
+  .ng-arrow-wrapper .ng-arrow {
+    border-color: #6c757d transparent transparent !important;
+  }
+  
+  &.ng-select-opened .ng-arrow-wrapper .ng-arrow {
+    border-color: transparent transparent #6c757d !important;
+  }
+}
+
+// Выпадающие списки ng-select
+.ng-dropdown-panel {
+  background-color: #ffffff !important;
+  border-color: #dee2e6 !important;
+  
+  .ng-option {
+    color: #212529 !important;
+    background-color: #ffffff !important;
+    
+    &:hover, &.ng-option-marked {
+      background-color: #f8f9fa !important;
+      color: #212529 !important;
+    }
+    
+    &.ng-option-selected {
+      background-color: #e9ecef !important;
+      color: #212529 !important;
+    }
+  }
+}
+
+// Желтые карточки (например, Lead Manager) в модальных окнах
+.modal-content,
+.modal-body {
+  .bg-warning,
+  .bg-opacity-10,
+  .border-warning {
+    background-color: #fff3cd !important;
+    border-color: #ffc107 !important;
+    color: #856404 !important;
+    
+    * {
+      color: #856404 !important;
+    }
+    
+    .form-check-label,
+    label,
+    strong,
+    .form-text,
+    small,
+    .text-muted {
+      color: #856404 !important;
+    }
+    
+    i.text-warning {
+      color: #ffc107 !important;
+    }
+  }
+  
+  // Bootstrap utility классы для фона
+  .bg-light {
+    background-color: #f8f9fa !important;
+    color: #212529 !important;
+  }
+  
+  .bg-white {
+    background-color: #ffffff !important;
+    color: #212529 !important;
+  }
+  
+  .bg-secondary {
+    background-color: #6c757d !important;
+    color: #ffffff !important;
+  }
+  
+  .bg-success {
+    background-color: #198754 !important;
+    color: #ffffff !important;
+  }
+  
+  .bg-danger {
+    background-color: #dc3545 !important;
+    color: #ffffff !important;
+  }
+  
+  .bg-info {
+    background-color: #0dcaf0 !important;
+    color: #000000 !important;
+  }
+  
+  // Bootstrap utility классы для текста
+  .text-dark {
+    color: #212529 !important;
+  }
+  
+  .text-muted {
+    color: #6c757d !important;
+  }
+  
+  .text-white {
+    color: #ffffff !important;
+  }
+  
+  .text-primary {
+    color: #0d6efd !important;
+  }
+  
+  .text-success {
+    color: #198754 !important;
+  }
+  
+  .text-danger {
+    color: #dc3545 !important;
+  }
+  
+  .text-warning {
+    color: #ffc107 !important;
+  }
+  
+  .text-info {
+    color: #0dcaf0 !important;
+  }
+  
+  // Bootstrap utility классы для границ
+  .border {
+    border-color: #dee2e6 !important;
+  }
+  
+  .border-primary {
+    border-color: #0d6efd !important;
+  }
+  
+  .border-success {
+    border-color: #198754 !important;
+  }
+  
+  .border-danger {
+    border-color: #dc3545 !important;
+  }
+  
+  .border-warning {
+    border-color: #ffc107 !important;
+  }
+  
+  .border-info {
+    border-color: #0dcaf0 !important;
+  }
+  
+  .border-light {
+    border-color: #f8f9fa !important;
+  }
+  
+  .border-dark {
+    border-color: #212529 !important;
+  }
+  
+  // Select и option элементы
+  select,
+  select.form-select,
+  select.form-control {
+    background-color: #ffffff !important;
+    color: #212529 !important;
+    border-color: #dee2e6 !important;
+    
+    option {
+      background-color: #ffffff !important;
+      color: #212529 !important;
+    }
+    
+    &:focus {
+      background-color: #ffffff !important;
+      color: #212529 !important;
+      border-color: #217e02 !important;
+    }
+  }
+  
+  // Чекбоксы и радиокнопки
+  .form-check-input {
+    &:checked {
+      background-color: #217e02 !important;
+      border-color: #217e02 !important;
+    }
+    
+    &:focus {
+      border-color: #217e02 !important;
+      box-shadow: 0 0 0 0.2rem rgba(33, 126, 2, 0.25) !important;
+    }
+  }
+  
+  .form-check-label {
+    color: #212529 !important;
+  }
+  
+  // Списки
+  ul, ol {
+    color: #212529 !important;
+    
+    li {
+      color: #212529 !important;
+    }
+  }
+  
+  // Определения списков
+  dl {
+    color: #212529 !important;
+    
+    dt {
+      color: #212529 !important;
+      font-weight: 600;
+    }
+    
+    dd {
+      color: #212529 !important;
+    }
+  }
+  
+  // Горизонтальные линии
+  hr {
+    border-color: #dee2e6 !important;
+    opacity: 1;
+  }
+  
+  // Блоки кода
+  code,
+  pre {
+    background-color: #f8f9fa !important;
+    color: #212529 !important;
+    border-color: #dee2e6 !important;
+  }
+  
+  // Mark (выделение текста)
+  mark {
+    background-color: #fff3cd !important;
+    color: #856404 !important;
+  }
+  
+  // Blockquote
+  blockquote {
+    border-left-color: #dee2e6 !important;
+    color: #212529 !important;
   }
 }
 
